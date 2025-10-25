@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+pytest_cache/
+outbound/*
+src/coverage_engine/outbound/*
+src/postman_export/outbound/*
+src/analytics/outbound/*
+.env
+.env

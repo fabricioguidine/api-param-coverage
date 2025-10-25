@@ -1,0 +1,6 @@
+pytest
+python-dotenv
+networkx
+matplotlib
+pydantic
+openai

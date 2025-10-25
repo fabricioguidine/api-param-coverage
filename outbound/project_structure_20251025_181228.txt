@@ -1,0 +1,56 @@
+├── .env
+├── .gitignore
+├── README.md
+├── outbound
+│   ├── project_structure_20251025_172724.txt
+│   ├── project_structure_20251025_181228.txt
+├── print_structure.py
+├── pytest.ini
+├── reorganize.py
+├── requirements.txt
+├── src
+│   ├── analytics
+│   │   ├── __init__.py
+│   │   ├── coverage_graph.py
+│   │   ├── outbound
+│   │   │   ├── coverage_graph.png
+│   ├── coverage_engine
+│   │   ├── __init__.py
+│   │   ├── coverage_calculator.py
+│   │   ├── exceptions.py
+│   │   ├── llm_bdd_generator.py
+│   │   ├── models.py
+│   │   ├── outbound
+│   │   │   ├── .gitkeep
+│   │   │   ├── bdd_scenarios.csv
+│   │   ├── runner.py
+│   │   ├── utils.py
+│   ├── postman_export
+│   │   ├── __init__.py
+│   │   ├── csv_to_postman_collection.py
+│   │   ├── outbound
+│   │   │   ├── postman_collection_1761436373.json
+│   │   │   ├── postman_collection_1761437135.json
+│   ├── test_lab
+│   │   ├── collections
+│   │   │   ├── 1761425572_generated.json
+│   │   │   ├── 1761426335_generated.json
+│   │   ├── dummy-data-generator.py
+│   │   ├── dummy_data_generator.py
+├── test
+│   ├── analytics
+│   │   ├── __init__.py
+│   │   ├── test_coverage_graph.py
+│   ├── coverage_engine
+│   │   ├── __init__.py
+│   │   ├── test_coverage_calculator.py
+│   │   ├── test_llm_bdd_generator.py
+│   │   ├── test_runner_flow.py
+│   ├── postman_export
+│   │   ├── test_csv_to_postman_collection.py
+│   ├── test_lab
+│   │   ├── __init__.py
+│   │   ├── test_coverage_calculator.py
+│   │   ├── test_dummy_data.py
+│   │   ├── test_llm_bdd_generator.py
+│   │   ├── test_runner_flow.py
