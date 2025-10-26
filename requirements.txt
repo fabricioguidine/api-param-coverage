@@ -4,3 +4,6 @@ networkx
 matplotlib
 pydantic
 openai
+pandas
+matplotlib
+networkx
