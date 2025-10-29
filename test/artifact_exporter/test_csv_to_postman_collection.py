@@ -1,6 +1,6 @@
 import os
 import csv
-from src.postman_export.csv_to_postman_collection import build_collection
+from modules.artifact_exporter.csv_to_postman_collection import build_collection
 
 def test_build_collection(tmp_path):
     csv_path = tmp_path / "bdd_scenarios.csv"

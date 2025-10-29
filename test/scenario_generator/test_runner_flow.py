@@ -1,6 +1,6 @@
 import os
 import json
-from src.coverage_engine.runner import generate_bdd
+from modules.scenario_generator.runner import generate_bdd
 
 def test_runner_generates_csv(tmp_path, monkeypatch):
     # Build a dummy collection file like the generator expects

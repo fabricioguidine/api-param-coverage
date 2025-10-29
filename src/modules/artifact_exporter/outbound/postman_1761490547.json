@@ -1,0 +1,1277 @@
+{
+  "info": {
+    "name": "Coverage Collection 2025-10-26T11:55:47.128769",
+    "description": "Generated from bdd_scenarios.csv. BDD steps embedded in Tests tab.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API_1_Service - DELETE_resource_1_1",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_1/resource_1/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_1",
+            "resource_1",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario DELETE_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer VALID_TOKEN', 'header.Accept': 'application/json', 'query.limit': '10', 'query.locale': 'en-US', 'query.sort': 'asc'}",
+              "//   When I call DELETE /api_1/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_1/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Accept': 'application/json', 'query.limit': '50', 'query.locale': 'pt-BR', 'query.sort': 'desc'}",
+              "//   When I call DELETE /api_1/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_1/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Accept': 'application/json', 'query.limit': '100', 'query.locale': 'es-CL', 'query.sort': 'asc'}",
+              "//   When I call DELETE /api_1/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_1/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_1_Service - PATCH_resource_2_2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_1/resource_2",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_1",
+            "resource_2"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'query.locale': 'en-US', 'body.currency': 'USD'}",
+              "//   When I call PATCH /api_1/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'query.locale': 'pt-BR', 'body.currency': 'BRL'}",
+              "//   When I call PATCH /api_1/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'query.locale': 'es-CL', 'body.currency': 'EUR'}",
+              "//   When I call PATCH /api_1/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_1_Service - PATCH_resource_3_3",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_1/resource_3/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_1",
+            "resource_3",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_3_3_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.Content-Type': 'application/json', 'header.X-Tenant-ID': 'tenant_a', 'query.limit': '10', 'body.role': 'admin'}",
+              "//   When I call PATCH /api_1/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_3_3_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Content-Type': 'application/xml', 'header.X-Tenant-ID': 'tenant_b', 'query.limit': '50', 'body.role': 'user'}",
+              "//   When I call PATCH /api_1/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_3_3_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Content-Type': 'application/json', 'header.X-Tenant-ID': 'tenant_a', 'query.limit': '100', 'body.role': 'readonly'}",
+              "//   When I call PATCH /api_1/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_1_Service - PATCH_resource_4_4",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_1/resource_4/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_1",
+            "resource_4",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_4_4_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer VALID_TOKEN', 'query.locale': 'en-US', 'query.limit': '10', 'query.sort': 'asc', 'body.role': 'admin', 'body.currency': 'USD'}",
+              "//   When I call PATCH /api_1/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_4_4_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer EXPIRED_TOKEN', 'query.locale': 'pt-BR', 'query.limit': '50', 'query.sort': 'desc', 'body.role': 'user', 'body.currency': 'BRL'}",
+              "//   When I call PATCH /api_1/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_4_4_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer MISSING_SCOPE', 'query.locale': 'es-CL', 'query.limit': '100', 'query.sort': 'asc', 'body.role': 'readonly', 'body.currency': 'EUR'}",
+              "//   When I call PATCH /api_1/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_1/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_2_Service - PATCH_resource_1_1",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_2/resource_1/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_2",
+            "resource_1",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Content-Type': 'application/json', 'query.locale': 'en-US', 'query.sort': 'asc', 'body.role': 'admin', 'body.currency': 'USD'}",
+              "//   When I call PATCH /api_2/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_2/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Content-Type': 'application/xml', 'query.locale': 'pt-BR', 'query.sort': 'desc', 'body.role': 'user', 'body.currency': 'BRL'}",
+              "//   When I call PATCH /api_2/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_2/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Content-Type': 'application/json', 'query.locale': 'es-CL', 'query.sort': 'asc', 'body.role': 'readonly', 'body.currency': 'EUR'}",
+              "//   When I call PATCH /api_2/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_2/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_2_Service - DELETE_resource_2_2",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_2/resource_2/details",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_2",
+            "resource_2",
+            "details"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario DELETE_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'query.locale': 'en-US', 'query.limit': '10'}",
+              "//   When I call DELETE /api_2/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_2/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'query.locale': 'pt-BR', 'query.limit': '50'}",
+              "//   When I call DELETE /api_2/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_2/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'query.locale': 'es-CL', 'query.limit': '100'}",
+              "//   When I call DELETE /api_2/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_2/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_3_Service - PUT_resource_1_1",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_3/resource_1/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_3",
+            "resource_1",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PUT_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.sort': 'asc', 'query.limit': '10', 'body.status': 'active'}",
+              "//   When I call PUT /api_3/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_3/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PUT_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Accept': 'application/json', 'query.sort': 'desc', 'query.limit': '50', 'body.status': 'blocked'}",
+              "//   When I call PUT /api_3/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_3/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PUT_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.sort': 'asc', 'query.limit': '100', 'body.status': 'pending'}",
+              "//   When I call PUT /api_3/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_3/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_3_Service - GET_resource_2_2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_3/resource_2",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_3",
+            "resource_2"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario GET_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.Content-Type': 'application/json', 'query.locale': 'en-US'}",
+              "//   When I call GET /api_3/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_3/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Accept': 'application/json', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Content-Type': 'application/xml', 'query.locale': 'pt-BR'}",
+              "//   When I call GET /api_3/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_3/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Content-Type': 'application/json', 'query.locale': 'es-CL'}",
+              "//   When I call GET /api_3/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_3/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_4_Service - DELETE_resource_1_1",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_4/resource_1/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_4",
+            "resource_1",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario DELETE_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.locale': 'en-US'}",
+              "//   When I call DELETE /api_4/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_4/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Accept': 'application/json', 'query.locale': 'pt-BR'}",
+              "//   When I call DELETE /api_4/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_4/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.locale': 'es-CL'}",
+              "//   When I call DELETE /api_4/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_4/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_4_Service - GET_resource_2_2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_4/resource_2/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_4",
+            "resource_2",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario GET_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.Accept': 'application/json', 'query.locale': 'en-US'}",
+              "//   When I call GET /api_4/resource_2/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_4/resource_2/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/xml', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Accept': 'application/json', 'query.locale': 'pt-BR'}",
+              "//   When I call GET /api_4/resource_2/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_4/resource_2/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Accept': 'application/json', 'query.locale': 'es-CL'}",
+              "//   When I call GET /api_4/resource_2/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_4/resource_2/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_5_Service - DELETE_resource_1_1",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_5/resource_1",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_5",
+            "resource_1"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario DELETE_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Authorization': 'Bearer VALID_TOKEN', 'query.sort': 'asc', 'query.limit': '10'}",
+              "//   When I call DELETE /api_5/resource_1",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_5/resource_1",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'query.sort': 'desc', 'query.limit': '50'}",
+              "//   When I call DELETE /api_5/resource_1",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_5/resource_1",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Authorization': 'Bearer MISSING_SCOPE', 'query.sort': 'asc', 'query.limit': '100'}",
+              "//   When I call DELETE /api_5/resource_1",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_5/resource_1",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_6_Service - PATCH_resource_1_1",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_6/resource_1/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_6",
+            "resource_1",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.Content-Type': 'application/json', 'query.locale': 'en-US', 'body.status': 'active', 'body.role': 'admin'}",
+              "//   When I call PATCH /api_6/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Content-Type': 'application/xml', 'query.locale': 'pt-BR', 'body.status': 'blocked', 'body.role': 'user'}",
+              "//   When I call PATCH /api_6/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Content-Type': 'application/json', 'query.locale': 'es-CL', 'body.status': 'pending', 'body.role': 'readonly'}",
+              "//   When I call PATCH /api_6/resource_1/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_1/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_6_Service - GET_resource_2_2",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_6/resource_2",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_6",
+            "resource_2"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario GET_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'query.limit': '10', 'query.locale': 'en-US'}",
+              "//   When I call GET /api_6/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_6/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/xml', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'query.limit': '50', 'query.locale': 'pt-BR'}",
+              "//   When I call GET /api_6/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_6/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'query.limit': '100', 'query.locale': 'es-CL'}",
+              "//   When I call GET /api_6/resource_2",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_6/resource_2",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_6_Service - DELETE_resource_3_3",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_6/resource_3/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_6",
+            "resource_3",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario DELETE_resource_3_3_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer VALID_TOKEN', 'header.Accept': 'application/json', 'query.sort': 'asc', 'query.limit': '10'}",
+              "//   When I call DELETE /api_6/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_6/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_3_3_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Accept': 'application/json', 'query.sort': 'desc', 'query.limit': '50'}",
+              "//   When I call DELETE /api_6/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_6/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario DELETE_resource_3_3_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Accept': 'application/json', 'query.sort': 'asc', 'query.limit': '100'}",
+              "//   When I call DELETE /api_6/resource_3/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X DELETE /api_6/resource_3/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_6_Service - PATCH_resource_4_4",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_6/resource_4/{id}",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_6",
+            "resource_4",
+            "{id}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_4_4_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.Content-Type': 'application/json', 'query.sort': 'asc', 'query.limit': '10', 'query.locale': 'en-US', 'body.currency': 'USD', 'body.status': 'active'}",
+              "//   When I call PATCH /api_6/resource_4/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_4/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_4_4_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.Content-Type': 'application/xml', 'query.sort': 'desc', 'query.limit': '50', 'query.locale': 'pt-BR', 'body.currency': 'BRL', 'body.status': 'blocked'}",
+              "//   When I call PATCH /api_6/resource_4/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_4/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_4_4_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.Content-Type': 'application/json', 'query.sort': 'asc', 'query.limit': '100', 'query.locale': 'es-CL', 'body.currency': 'EUR', 'body.status': 'pending'}",
+              "//   When I call PATCH /api_6/resource_4/{id}",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_6/resource_4/{id}",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_7_Service - GET_resource_1_1",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_7/resource_1/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_7",
+            "resource_1",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario GET_resource_1_1_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'query.locale': 'en-US', 'query.limit': '10', 'query.sort': 'asc'}",
+              "//   When I call GET /api_7/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_7/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_1_1_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/xml', 'query.locale': 'pt-BR', 'query.limit': '50', 'query.sort': 'desc'}",
+              "//   When I call GET /api_7/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_7/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario GET_resource_1_1_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Content-Type': 'application/json', 'query.locale': 'es-CL', 'query.limit': '100', 'query.sort': 'asc'}",
+              "//   When I call GET /api_7/resource_1/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X GET /api_7/resource_1/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_7_Service - PATCH_resource_2_2",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_7/resource_2/details",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_7",
+            "resource_2",
+            "details"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PATCH_resource_2_2_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer VALID_TOKEN', 'query.limit': '10', 'body.status': 'active'}",
+              "//   When I call PATCH /api_7/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_7/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_2_2_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer EXPIRED_TOKEN', 'query.limit': '50', 'body.status': 'blocked'}",
+              "//   When I call PATCH /api_7/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_7/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PATCH_resource_2_2_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Authorization': 'Bearer MISSING_SCOPE', 'query.limit': '100', 'body.status': 'pending'}",
+              "//   When I call PATCH /api_7/resource_2/details",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PATCH /api_7/resource_2/details",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_7_Service - PUT_resource_3_3",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_7/resource_3",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_7",
+            "resource_3"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario PUT_resource_3_3_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer VALID_TOKEN', 'header.X-Tenant-ID': 'tenant_a', 'query.locale': 'en-US', 'body.status': 'active', 'body.role': 'admin'}",
+              "//   When I call PUT /api_7/resource_3",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_7/resource_3",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PUT_resource_3_3_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer EXPIRED_TOKEN', 'header.X-Tenant-ID': 'tenant_b', 'query.locale': 'pt-BR', 'body.status': 'blocked', 'body.role': 'user'}",
+              "//   When I call PUT /api_7/resource_3",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_7/resource_3",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario PUT_resource_3_3_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.Accept': 'application/json', 'header.Authorization': 'Bearer MISSING_SCOPE', 'header.X-Tenant-ID': 'tenant_a', 'query.locale': 'es-CL', 'body.status': 'pending', 'body.role': 'readonly'}",
+              "//   When I call PUT /api_7/resource_3",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X PUT /api_7/resource_3",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_7_Service - POST_resource_4_4",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api_7/resource_4/sync",
+          "host": [
+            "http://localhost:8080"
+          ],
+          "path": [
+            "api_7",
+            "resource_4",
+            "sync"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "// Scenario POST_resource_4_4_scn_1",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.locale': 'en-US', 'body.role': 'admin', 'body.currency': 'USD'}",
+              "//   When I call POST /api_7/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X POST /api_7/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario POST_resource_4_4_scn_2",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_b', 'header.Accept': 'application/json', 'query.locale': 'pt-BR', 'body.role': 'user', 'body.currency': 'BRL'}",
+              "//   When I call POST /api_7/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X POST /api_7/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Scenario POST_resource_4_4_scn_3",
+              "// BDD:",
+              "// Scenario: happy path",
+              "//   Given parameters {'header.X-Tenant-ID': 'tenant_a', 'header.Accept': 'application/json', 'query.locale': 'es-CL', 'body.role': 'readonly', 'body.currency': 'EUR'}",
+              "//   When I call POST /api_7/resource_4/sync",
+              "//   Then I should receive 200 OK",
+              "//   And I can run:",
+              "//     curl -X POST /api_7/resource_4/sync",
+              "// ",
+              "pm.test('should return 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              ""
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

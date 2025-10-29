@@ -1,0 +1,47 @@
+=== API PARAM COVERAGE REPORT ===
+Generated at: 2025-10-26T16:05:19.053359
+
+>> GLOBAL TOTALS
+- APIs:        8
+- Endpoints:   18
+- Scenarios:   264
+
+>> PER-API SUMMARY (sorted by total scenarios)
+      apiName  endpoint_count  scenario_count
+API_4_Service               5              48
+API_2_Service               5              45
+API_6_Service               4              40
+API_5_Service               4              35
+API_3_Service               4              33
+API_1_Service               4              30
+API_7_Service               2              18
+API_8_Service               2              15
+
+>> TOP 10 ENDPOINTS BY SCENARIOS
+      apiName       endpointName  scenario_count
+API_1_Service   PUT_resource_4_4              13
+API_2_Service   PUT_resource_3_3              13
+API_7_Service   PUT_resource_1_1              13
+API_5_Service PATCH_resource_3_3              12
+API_4_Service   PUT_resource_2_2              12
+API_6_Service PATCH_resource_3_3              12
+API_6_Service  POST_resource_2_2              12
+API_3_Service   PUT_resource_2_2              11
+API_4_Service   PUT_resource_3_3              11
+API_4_Service   PUT_resource_1_1              11
+
+>> BOTTOM 10 ENDPOINTS BY SCENARIOS
+      apiName        endpointName  scenario_count
+API_1_Service    GET_resource_3_3               4
+API_2_Service DELETE_resource_1_1               4
+API_4_Service DELETE_resource_5_5               5
+API_3_Service DELETE_resource_1_1               5
+API_7_Service   POST_resource_2_2               5
+API_1_Service DELETE_resource_2_2               6
+API_6_Service  PATCH_resource_1_1               6
+API_1_Service DELETE_resource_1_1               7
+API_5_Service   POST_resource_4_4               7
+API_8_Service DELETE_resource_2_2               7
+
+>> UNDER-TESTED (scenario_count <= 1)
+None 🎉

@@ -1,4 +1,4 @@
-from src.analytics.coverage_graph import build_graph_from_csv
+from modules.coverage_analyzer.coverage_graph import build_graph_from_csv
 
 def test_build_graph_from_csv(tmp_path):
     csvf = tmp_path / "bdd_scenarios.csv"

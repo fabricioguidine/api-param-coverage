@@ -1,4 +1,4 @@
-from src.coverage_engine.coverage_calculator import greedy_min_cover
+from modules.scenario_generator.coverage_calculator import greedy_min_cover
 
 def test_greedy_min_cover_basic():
     param_space = {

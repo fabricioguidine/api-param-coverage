@@ -1,0 +1,790 @@
+{
+  "info": {
+    "_postman_id": "685d8303-c51d-4e4a-80d9-40bff8d7002c",
+    "name": "Generated Collection 2025-10-26T18:49:13.718547Z",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "API_1_Service",
+      "item": [
+        {
+          "name": "DELETE_resource_1_1",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_1/resource_1",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_1",
+                "resource_1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE_resource_2_2",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_1/resource_2/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_1",
+                "resource_2",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET_resource_3_3",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_1/resource_3/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_1",
+                "resource_3",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_4_4",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_1/resource_4/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_1",
+                "resource_4",
+                "details"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_2_Service",
+      "item": [
+        {
+          "name": "DELETE_resource_1_1",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_2/resource_1/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_2",
+                "resource_1",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST_resource_2_2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_2/resource_2/sync",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_2",
+                "resource_2",
+                "sync"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_3_3",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_2/resource_3",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_2",
+                "resource_3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH_resource_4_4",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_2/resource_4/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_2",
+                "resource_4",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET_resource_5_5",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_2/resource_5",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_2",
+                "resource_5"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_3_Service",
+      "item": [
+        {
+          "name": "DELETE_resource_1_1",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_3/resource_1/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_3",
+                "resource_1",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_2_2",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_3/resource_2/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_3",
+                "resource_2",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST_resource_3_3",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_3/resource_3",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_3",
+                "resource_3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_4_4",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_3/resource_4",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_3",
+                "resource_4"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_4_Service",
+      "item": [
+        {
+          "name": "PUT_resource_1_1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_4/resource_1/sync",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_4",
+                "resource_1",
+                "sync"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_2_2",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_4/resource_2",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_4",
+                "resource_2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT_resource_3_3",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_4/resource_3/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_4",
+                "resource_3",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET_resource_4_4",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_4/resource_4/sync",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_4",
+                "resource_4",
+                "sync"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE_resource_5_5",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_4/resource_5/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_4",
+                "resource_5",
+                "{id}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_5_Service",
+      "item": [
+        {
+          "name": "DELETE_resource_1_1",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_5/resource_1/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_5",
+                "resource_1",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET_resource_2_2",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_5/resource_2/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_5",
+                "resource_2",
+                "details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH_resource_3_3",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_5/resource_3/sync",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_5",
+                "resource_3",
+                "sync"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST_resource_4_4",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_5/resource_4/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_5",
+                "resource_4",
+                "{id}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_6_Service",
+      "item": [
+        {
+          "name": "PATCH_resource_1_1",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_6/resource_1/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_6",
+                "resource_1",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST_resource_2_2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_6/resource_2",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_6",
+                "resource_2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH_resource_3_3",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_6/resource_3",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_6",
+                "resource_3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PATCH_resource_4_4",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_6/resource_4/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_6",
+                "resource_4",
+                "{id}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_7_Service",
+      "item": [
+        {
+          "name": "PUT_resource_1_1",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_7/resource_1/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_7",
+                "resource_1",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST_resource_2_2",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_7/resource_2/details",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_7",
+                "resource_2",
+                "details"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API_8_Service",
+      "item": [
+        {
+          "name": "GET_resource_1_1",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_8/resource_1/{id}",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_8",
+                "resource_1",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE_resource_2_2",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "https://api.example.com/api_8/resource_2",
+              "host": [
+                "api",
+                "example",
+                "com"
+              ],
+              "path": [
+                "api_8",
+                "resource_2"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

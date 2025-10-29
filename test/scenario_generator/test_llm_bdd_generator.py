@@ -1,4 +1,4 @@
-from src.coverage_engine.llm_bdd_generator import generate_bdd_for_endpoint
+from modules.scenario_generator.llm_bdd_generator import generate_bdd_for_endpoint
 
 def test_generate_bdd_for_endpoint_stub():
     endpoint_meta = {
