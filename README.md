@@ -42,10 +42,10 @@ It’s designed for extensibility and smooth automation in continuous testing pi
 +-------------+-------------+
               |
               v
-+---------------------------+
-|  Coverage Engine (Runner) |
++-----------------------------+
+|  Coverage Engine (Runner)   |
 |  - Writes bdd_scenarios.csv |
-+-------------+-------------+
++-------------+---------------+
               |
               +-------------------------------+
               |                               |
