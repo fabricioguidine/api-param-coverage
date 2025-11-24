@@ -46,8 +46,20 @@ class BRDLoader:
                 data = json.load(f)
             
             return self._parse_brd_data(data)
+        except FileNotFoundError:
+            print(f"✗ Error: BRD file not found: {filename}")
+            print(f"   Expected location: {brd_path}")
+            print(f"   Tip: Ensure the file exists in {self.brd_dir}")
+            return None
+        except json.JSONDecodeError as e:
+            print(f"✗ Error: Invalid JSON in BRD file {filename}: {e}")
+            print(f"   File location: {brd_path}")
+            print(f"   Tip: Validate the JSON format using a JSON validator.")
+            return None
         except Exception as e:
-            print(f"Error loading BRD file {filename}: {e}")
+            error_type = type(e).__name__
+            print(f"✗ Error loading BRD file {filename} ({error_type}): {e}")
+            print(f"   File location: {brd_path}")
             return None
     
     def list_available_brds(self) -> list:

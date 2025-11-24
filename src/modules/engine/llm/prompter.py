@@ -4,6 +4,7 @@ LLM Prompter
 This module handles prompting LLMs with processed schema data.
 """
 
+import os
 import time
 from typing import Dict, Any, Optional, List
 
@@ -13,18 +14,20 @@ from ..analytics import MetricsCollector
 class LLMPrompter:
     """Handles LLM prompting with processed schema information."""
     
-    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None, analytics_dir: Optional[str] = None):
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None, provider: str = "openai", analytics_dir: Optional[str] = None):
         """
         Initialize the LLM Prompter.
         
         Args:
             model: LLM model to use (e.g., 'gpt-4', 'claude-3', etc.)
             api_key: API key for the LLM service (if required)
+            provider: LLM provider ('openai', 'anthropic', 'google', 'azure')
             analytics_dir: Optional directory for analytics output (uses default if None)
                           Typically should be: <run_output_dir>/analytics/
         """
         self.model = model
         self.api_key = api_key
+        self.provider = provider.lower() if provider else "openai"
         analytics_path = analytics_dir or "output/analytics"
         self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
         # Store context for metrics collection
@@ -323,15 +326,40 @@ Please check for:
         api_response = None
         
         try:
-            from openai import OpenAI
+            # Use the model if specified, otherwise default based on provider
+            if not self.model:
+                if self.provider == "anthropic":
+                    model = "claude-3-sonnet"
+                elif self.provider == "google":
+                    model = "gemini-pro"
+                else:
+                    model = "gpt-4"
+            else:
+                model = self.model
             
-            # Initialize OpenAI client
-            client = OpenAI(api_key=self.api_key)
+            print(f"🤖 Sending prompt to {model} ({self.provider})...")
             
-            # Use the model if specified, otherwise default to gpt-4
-            model = self.model or "gpt-4"
+            # For now, support OpenAI primarily. Other providers can be added later
+            if self.provider not in ["openai", "azure"]:
+                print(f"⚠ Warning: Provider '{self.provider}' not fully supported yet. Using OpenAI-compatible mode.")
             
-            print(f"🤖 Sending prompt to {model}...")
+            # Initialize client based on provider
+            if self.provider == "azure":
+                from openai import AzureOpenAI
+                endpoint = os.getenv('AZURE_OPENAI_ENDPOINT', '')
+                api_version = os.getenv('AZURE_OPENAI_API_VERSION', '2023-05-15')
+                if not endpoint:
+                    print("✗ Error: AZURE_OPENAI_ENDPOINT not set for Azure provider")
+                    return None
+                client = AzureOpenAI(
+                    api_key=self.api_key,
+                    azure_endpoint=endpoint,
+                    api_version=api_version
+                )
+            else:
+                # Default to OpenAI (works for most OpenAI-compatible APIs)
+                from openai import OpenAI
+                client = OpenAI(api_key=self.api_key)
             
             # Check prompt size (OpenAI has limits)
             # More accurate: ~1 token = 4 characters for English text
