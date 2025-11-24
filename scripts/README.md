@@ -26,3 +26,4 @@ python scripts/run_weather_api.py
 - `OPENAI_API_KEY` must be set in `.env` file
 - Internet connection for downloading schema
 
+

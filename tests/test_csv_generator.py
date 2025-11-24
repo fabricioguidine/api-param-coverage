@@ -87,7 +87,7 @@ Feature: Test API
         filepath = generator.save_to_csv(data, "test")
         
         assert Path(filepath).exists()
-        assert "test-" in filepath
+        assert "gherkin_scenarios_test_" in filepath
         assert filepath.endswith(".csv")
     
     def test_save_to_csv_empty_data(self, generator):
@@ -100,7 +100,7 @@ Feature: Test API
         filepath = generator.gherkin_to_csv(sample_gherkin, "test_api")
         
         assert Path(filepath).exists()
-        assert "test_api-" in filepath
+        assert "gherkin_scenarios_test_api_" in filepath
         
         # Verify CSV has content
         with open(filepath, 'r') as f:

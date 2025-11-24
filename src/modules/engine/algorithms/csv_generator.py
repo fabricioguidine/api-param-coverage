@@ -238,9 +238,11 @@ class CSVGenerator:
         if not data:
             raise ValueError("No data to write to CSV")
         
-        # Generate filename with timestamp
+        # Generate filename with timestamp and context
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        csv_filename = f"{filename}-{timestamp}.csv"
+        # Clean filename to remove extension if present
+        clean_filename = filename.replace('.json', '').replace('.yaml', '').replace('.yml', '')
+        csv_filename = f"gherkin_scenarios_{clean_filename}_{timestamp}.csv"
         csv_path = self.output_dir / csv_filename
         
         # Determine fieldnames

@@ -14,7 +14,7 @@ import json
 class MetricsCollector:
     """Collects and saves complexity analysis metrics for LLM API executions."""
     
-    def __init__(self, analytics_dir: str = "docs/output/analytics"):
+    def __init__(self, analytics_dir: str = "output/analytics"):
         """
         Initialize the Metrics Collector.
         
@@ -24,12 +24,8 @@ class MetricsCollector:
         """
         self.analytics_dir = Path(analytics_dir)
         self.analytics_dir.mkdir(parents=True, exist_ok=True)
-        # Create reports subdirectory for algorithm-specific reports
-        self.reports_dir = self.analytics_dir / "reports"
-        self.reports_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Create summary file directory
-        self.summary_dir = self.analytics_dir.parent if self.analytics_dir.name == "analytics" else self.analytics_dir
+        # Save reports directly in the same directory (flat structure)
+        self.reports_dir = self.analytics_dir
     
     def collect_metrics(
         self,

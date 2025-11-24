@@ -21,10 +21,12 @@ class LLMPrompter:
             model: LLM model to use (e.g., 'gpt-4', 'claude-3', etc.)
             api_key: API key for the LLM service (if required)
             analytics_dir: Optional directory for analytics output (uses default if None)
+                          Typically should be: <run_output_dir>/analytics/
         """
         self.model = model
         self.api_key = api_key
-        self.metrics_collector = MetricsCollector(analytics_dir=analytics_dir) if analytics_dir else MetricsCollector()
+        analytics_path = analytics_dir or "output/analytics"
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
         # Store context for metrics collection
         self._current_processed_data = None
         self._current_analysis_data = None
