@@ -1,0 +1,141 @@
+================================================================================
+Test Suite: test_brd_generator
+================================================================================
+
+Timestamp: 20251124_181854
+Total Tests: 24
+
+Summary:
+  - Passed: 23
+  - Failed: 1
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_generator_initialization
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.080185
+
+--------------------------------------------------------------------------------
+Test: test_generator_initialization_no_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.082762
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_exact_percentage
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.086265
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_random
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.089015
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_empty_list
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.092284
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_prioritizes_critical
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.095423
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_critical_methods
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.098442
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_get_simple
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.101191
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_get_complex
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.104456
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_get
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.107623
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_post
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.111078
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_put
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.114560
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_delete
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.117942
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_with_required_params
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.121795
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_with_optional_params
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.124801
+
+--------------------------------------------------------------------------------
+Test: test_create_test_plan_heuristic
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.129437
+
+--------------------------------------------------------------------------------
+Test: test_extract_json_from_response_code_block
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.133348
+
+--------------------------------------------------------------------------------
+Test: test_extract_json_from_response_direct
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.136551
+
+--------------------------------------------------------------------------------
+Test: test_parse_llm_brd_response_success
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.139639
+
+--------------------------------------------------------------------------------
+Test: test_parse_llm_brd_response_invalid_json
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.142919
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_success
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.148068
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_no_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.150882
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_llm_failure
+Status: PASSED
+Timestamp: 2025-11-24T18:18:54.154668
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_with_coverage_percentage
+Status: FAILED
+Timestamp: 2025-11-24T18:18:54.278959
+
+Error Details:
+tests\brd_generator\test_brd_generator.py:391: in test_generate_brd_from_swagger_with_coverage_percentage
+    assert call_args[0][2] == 60.0  # coverage_percentage parameter
+           ^^^^^^^^^^^^^^^
+E   IndexError: tuple index out of range
+
+================================================================================

@@ -1,0 +1,37 @@
+================================================================================
+Algorithm Analysis Report: BRDValidator
+================================================================================
+
+ALGORITHM INFORMATION
+--------------------------------------------------------------------------------
+Algorithm Name: BRDValidator
+Algorithm Type: validator
+Timestamp: 2025-11-24T16:27:47.768373
+Execution Time: 0.00 seconds
+LLM Call: No
+
+INPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 89
+Element Count: 2
+Nested Depth: 1
+Structure Complexity: low
+
+OUTPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 68
+Element Count: 1
+Nested Depth: 1
+Structure Complexity: low
+Output Quality: unknown
+
+ALGORITHM-SPECIFIC COMPLEXITY METRICS
+--------------------------------------------------------------------------------
+brd_endpoints_count: 5
+swagger_endpoints_count: 59
+match_percentage: 8.47
+orphaned_count: 0
+missing_count: 54
+error_count: 0
+
+================================================================================

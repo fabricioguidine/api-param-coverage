@@ -108,3 +108,4 @@ class TestSchemaCrossReference:
         assert filtered["brd_covered_endpoints"] == 0
         assert filtered["coverage_percentage"] == 0.0
 
+

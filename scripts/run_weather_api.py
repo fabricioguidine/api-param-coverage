@@ -62,15 +62,10 @@ def main():
     schema_filename = Path(schema_path).name
     swagger_name = Path(schema_path).stem
     
-    # Create run directory structure directly in docs/
+    # Create run directory structure directly in docs/ (flat structure)
     run_id = f"{run_timestamp}_{swagger_name}"
     run_output_dir = Path(f"docs/{run_id}")
     run_output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Create subdirectories for organized output
-    (run_output_dir / "csv").mkdir(exist_ok=True)
-    (run_output_dir / "analytics").mkdir(exist_ok=True)
-    (run_output_dir / "analytics" / "reports").mkdir(exist_ok=True)
     
     print(f"📁 Output directory: {run_output_dir}")
     
@@ -152,9 +147,9 @@ def main():
     print("Step 6: Generating Gherkin test scenarios via LLM...")
     print("=" * 70)
     
-    # Initialize components with run-specific output directories
-    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(run_output_dir / "analytics"))
-    csv_generator = CSVGenerator(output_dir=str(run_output_dir / "csv"))
+    # Initialize components with run-specific output directories (flat structure)
+    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(run_output_dir))
+    csv_generator = CSVGenerator(output_dir=str(run_output_dir))
     
     try:
         gherkin_scenarios = prompter.generate_gherkin_scenarios(processed_data, filtered_analysis_data)
@@ -205,9 +200,9 @@ def main():
     print(f"Output: {csv_path}")
     print("\n✓ Processing complete!")
     print(f"\n📁 All outputs saved to: {run_output_dir}")
-    print(f"📊 Check analytics in: {run_output_dir}/analytics/")
-    print(f"📈 Check algorithm reports in: {run_output_dir}/analytics/reports/")
-    print(f"📄 Check CSV in: {run_output_dir}/csv/")
+    print(f"📄 CSV file: {run_output_dir}/*.csv")
+    print(f"📊 Analytics: {run_output_dir}/*.txt")
+    print(f"📈 Reports: {run_output_dir}/*_algorithm_*.txt")
 
 if __name__ == "__main__":
     main()

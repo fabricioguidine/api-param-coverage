@@ -53,9 +53,13 @@ data/schemas/*.json
 data/schemas/*.yaml
 data/schemas/*.yml
 # Output files (organized by timestamp runs)
-docs/20*/**/*.csv
-docs/20*/**/*.txt
-docs/20*/**/*.json
+output/20*/*.csv
+output/20*/*.txt
+output/20*/*.json
+output/analytics/**
+# Keep one example output folder
+!output/20251124_162747_api_weather_gov_openapi.json/
+!output/20251124_162747_api_weather_gov_openapi.json/**
 # Keep documentation files
 !docs/README.md
 !docs/*.md

@@ -69,15 +69,10 @@ def main():
     schema_filename = Path(schema_path).name
     swagger_name = Path(schema_path).stem  # filename without extension
     
-    # Create run directory structure directly in docs/
+    # Create run directory structure in output/ folder
     run_id = f"{run_timestamp}_{swagger_name}"
-    run_output_dir = Path(f"docs/{run_id}")
+    run_output_dir = Path(f"output/{run_id}")
     run_output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Create subdirectories for organized output
-    (run_output_dir / "csv").mkdir(exist_ok=True)
-    (run_output_dir / "analytics").mkdir(exist_ok=True)
-    (run_output_dir / "analytics" / "reports").mkdir(exist_ok=True)
     
     print(f"📁 Output directory: {run_output_dir}")
     
@@ -205,8 +200,35 @@ def main():
     if brd_choice == "3" or not brd:
         # Generate BRD using LLM
         print("\n📋 Generating BRD from Swagger schema...")
+        
+        # Ask for coverage percentage
+        print("\nWhat percentage of API endpoints would you like to cover?")
+        print("  - Enter a number between 1-100 (e.g., 50 for 50% coverage)")
+        print("  - Or press Enter to use default (100% - all endpoints)")
+        
+        coverage_input = input("\nCoverage percentage (default: 100): ").strip()
+        
+        try:
+            if coverage_input:
+                coverage_percentage = float(coverage_input)
+                if coverage_percentage < 1 or coverage_percentage > 100:
+                    print("⚠ Invalid percentage. Using default (100%).")
+                    coverage_percentage = 100.0
+            else:
+                coverage_percentage = 100.0
+        except ValueError:
+            print("⚠ Invalid input. Using default (100%).")
+            coverage_percentage = 100.0
+        
+        print(f"  → Coverage set to: {coverage_percentage}%")
+        
         brd_generator = BRDGenerator(api_key=api_key, model="gpt-4")
-        brd = brd_generator.generate_brd_from_swagger(processed_data, analysis_data, schema_filename)
+        brd = brd_generator.generate_brd_from_swagger(
+            processed_data, 
+            analysis_data, 
+            schema_filename,
+            coverage_percentage=coverage_percentage
+        )
         
         if brd:
             print(f"✓ BRD generated: {brd.title}")
@@ -220,8 +242,9 @@ def main():
             print("✗ Failed to generate BRD. Continuing without BRD filtering...")
             brd = None
     
-    # Step 6: Cross-reference BRD with Swagger schema
+    # Step 6: Cross-reference BRD with Swagger schema or apply coverage filter
     filtered_analysis_data = analysis_data
+    coverage_applied = False
     
     if brd:
         print("\n" + "=" * 70)
@@ -243,15 +266,59 @@ def main():
         if coverage_report['not_covered_endpoints'] > 0:
             print(f"\n⚠ Note: {coverage_report['not_covered_endpoints']} endpoints are not covered by BRD")
             print("   Only BRD-covered endpoints will be included in test scenarios.")
+        coverage_applied = True
+    else:
+        # No BRD - ask if user wants to limit coverage
+        print("\n⚠ No BRD provided. All endpoints will be tested by default.")
+        print("   Would you like to limit the coverage percentage?")
+        coverage_choice = input("   Enter coverage % (1-100, or press Enter for 100%): ").strip()
+        
+        if coverage_choice:
+            try:
+                coverage_percentage = float(coverage_choice)
+                if 1 <= coverage_percentage <= 100:
+                    # Filter endpoints by coverage percentage
+                    all_endpoints = analysis_data.get('endpoints', [])
+                    total_endpoints = len(all_endpoints)
+                    target_count = max(1, int(total_endpoints * (coverage_percentage / 100.0)))
+                    
+                    # Sort by priority (POST/PUT/DELETE first, then GET, then others)
+                    def endpoint_priority(endpoint):
+                        method = endpoint.get('method', '').upper()
+                        params = endpoint.get('parameters', [])
+                        score = 0.0
+                        if method in ['POST', 'PUT', 'DELETE']:
+                            score += 100.0
+                        elif method == 'GET':
+                            score += 50.0
+                        else:
+                            score += 30.0
+                        score += min(len(params) * 5.0, 50.0)
+                        return score
+                    
+                    sorted_endpoints = sorted(all_endpoints, key=endpoint_priority, reverse=True)
+                    selected_endpoints = sorted_endpoints[:target_count]
+                    
+                    filtered_analysis_data = {
+                        **analysis_data,
+                        'endpoints': selected_endpoints
+                    }
+                    
+                    print(f"   → Limited to {len(selected_endpoints)} out of {total_endpoints} endpoints ({coverage_percentage}% coverage)")
+                    coverage_applied = True
+                else:
+                    print("   ⚠ Invalid percentage. Using all endpoints.")
+            except ValueError:
+                print("   ⚠ Invalid input. Using all endpoints.")
     
     # Step 7: Generate Gherkin scenarios via LLM
     print("\n" + "=" * 70)
     print("Step 6: Generating Gherkin test scenarios via LLM...")
     print("=" * 70)
     
-    # Initialize components with run-specific output directories
-    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(run_output_dir / "analytics"))
-    csv_generator = CSVGenerator(output_dir=str(run_output_dir / "csv"))
+    # Initialize components with run-specific output directories (flat structure)
+    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(run_output_dir))
+    csv_generator = CSVGenerator(output_dir=str(run_output_dir))
     
     try:
         # Use filtered analysis data (only BRD-covered endpoints if BRD exists)
@@ -326,6 +393,14 @@ def main():
         print(f"BRD: {brd.title}")
         print(f"BRD Coverage: {filtered_analysis_data.get('coverage_percentage', 0)}%")
         print(f"Tested Endpoints: {filtered_analysis_data.get('brd_covered_endpoints', 0)}")
+    elif coverage_applied:
+        tested_count = len(filtered_analysis_data.get('endpoints', []))
+        total_count = len(analysis_data.get('endpoints', []))
+        coverage_pct = round((tested_count / total_count * 100), 2) if total_count > 0 else 0
+        print(f"Coverage Applied: {coverage_pct}%")
+        print(f"Tested Endpoints: {tested_count} out of {total_count}")
+    else:
+        print(f"Tested Endpoints: {len(filtered_analysis_data.get('endpoints', []))} (all endpoints)")
     print(f"Output: {csv_path}")
     print("\n✓ Processing complete!")
 

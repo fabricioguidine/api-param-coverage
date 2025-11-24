@@ -1,59 +1,29 @@
-# Documentation and Execution Outputs
+# Documentation
 
-This directory contains project documentation and execution outputs organized by timestamp.
+This directory contains project documentation files.
 
 ## Structure
 
 ```
 docs/
-├── latex/                         # LaTeX monography files
-├── <YYYYMMDD_HHMMSS>_<schema>/    # Execution run folders
-│   ├── csv/                       # Generated CSV files with Gherkin scenarios
-│   └── analytics/                 # Analytics and metrics for this run
-│       ├── *.txt                  # LLM execution metrics
-│       └── reports/                # Algorithm-specific reports
-│           └── *_algorithm_*.txt   # Detailed algorithm analysis
-├── PROJECT_STATUS.md              # Project status
-└── NEXT_STEPS.md                  # Roadmap
+├── latex/                    # LaTeX monography files
+├── PROJECT_STATUS.md         # Project status and current implementation
+├── NEXT_STEPS.md             # Implementation roadmap
+└── README.md                 # This file
 ```
 
-## Execution Runs
+## Contents
 
-Each time you run the tool, a new folder is created with the format:
-`<YYYYMMDD_HHMMSS>_<schema_name>/`
+### LaTeX Files (`latex/`)
+Contains LaTeX source files for monography/documentation generation.
 
-This folder contains all artifacts from that execution:
-- **CSV files**: Gherkin test scenarios in CSV format
-- **Analytics**: LLM execution metrics and performance data
-- **Reports**: Detailed algorithm analysis reports
-
-## Benefits
-
-- **Clear organization**: Each run has its own timestamped folder
-- **Easy tracking**: Find all files from a specific execution quickly
-- **Simple cleanup**: Delete old runs by removing their folders
-- **Better traceability**: Timestamp shows exactly when each run occurred
-
-## Example
-
-```
-docs/
-├── 20251124_140913_api_weather_gov_openapi.json/
-│   ├── csv/
-│   │   └── api_weather_gov_openapi.json-20251124_141012.csv
-│   └── analytics/
-│       ├── 20251124_141012.txt
-│       └── reports/
-│           └── 20251124_141012_llm_prompter_llmprompter.txt
-└── 20251124_150000_petstore_api/
-    ├── csv/
-    └── analytics/
-```
+### Documentation Files
+- **PROJECT_STATUS.md**: Current implementation status, completed features, and project structure
+- **NEXT_STEPS.md**: Roadmap of pending features and enhancements
+- **README.md**: This documentation file
 
 ## Notes
 
-- Folders are automatically created when you run the tool
-- All output files are organized within their respective run folders
-- Old runs can be safely deleted to free up space
-- Documentation files (README.md, PROJECT_STATUS.md, etc.) are kept separate
-
+- All execution outputs are stored in the `output/` folder at the project root
+- Documentation files are kept separate from execution outputs for better organization
+- LaTeX files are used for generating academic/research documentation
