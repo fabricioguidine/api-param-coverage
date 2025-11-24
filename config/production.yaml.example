@@ -1,0 +1,18 @@
+# Production Environment Configuration
+# Copy to config/production.yaml
+
+environment: production
+
+algorithm:
+  chunk_size: 15
+  chunking_threshold: 20
+  max_tokens: 4000
+
+llm:
+  model: gpt-4
+  temperature: 0.5
+
+debug: false
+verbose: false
+
+

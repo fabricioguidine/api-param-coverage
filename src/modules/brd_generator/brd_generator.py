@@ -15,25 +15,28 @@ from ..brd.brd_schema import (
 )
 from ..engine.llm import LLMPrompter
 from ..engine.analytics import MetricsCollector
+from ..utils import extract_json_from_response, DEFAULT_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, MIN_COVERAGE_PERCENTAGE
 import time
 
 
 class BRDGenerator:
     """Generates BRD schemas from Swagger schemas using LLM."""
     
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", analytics_dir: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", provider: str = "openai", analytics_dir: Optional[str] = None):
         """
         Initialize the BRD Generator.
         
         Args:
-            api_key: OpenAI API key
+            api_key: LLM API key
             model: LLM model to use
+            provider: LLM provider ('openai', 'anthropic', 'google', 'azure')
             analytics_dir: Analytics directory (default: "output/analytics")
                           Typically should be: <run_output_dir>/analytics/
         """
         self.api_key = api_key
         self.model = model
-        self.llm_prompter = LLMPrompter(model=model, api_key=api_key) if api_key else None
+        self.provider = provider
+        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider) if api_key else None
         analytics_path = analytics_dir or "output/analytics"
         self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
     
@@ -57,13 +60,20 @@ class BRDGenerator:
             BRDSchema object, or None if generation fails
         """
         if not self.llm_prompter:
-            print("⚠ Error: No API key provided for BRD generation")
+            error_msg = (
+                "BRD generation requires an OpenAI API key. "
+                "Please provide an API key via OPENAI_API_KEY environment variable "
+                "or pass it to BRDGenerator constructor."
+            )
+            print(f"✗ Error: {error_msg}")
             return None
         
         # Validate coverage percentage
-        if coverage_percentage < 1 or coverage_percentage > 100:
-            print(f"⚠ Invalid coverage percentage ({coverage_percentage}). Using 100%.")
-            coverage_percentage = 100.0
+        if coverage_percentage < MIN_COVERAGE_PERCENTAGE or coverage_percentage > MAX_COVERAGE_PERCENTAGE:
+            print(f"⚠ Warning: Invalid coverage percentage ({coverage_percentage}). "
+                  f"Expected value between {MIN_COVERAGE_PERCENTAGE} and {MAX_COVERAGE_PERCENTAGE}. "
+                  f"Using {DEFAULT_COVERAGE_PERCENTAGE}% as default.")
+            coverage_percentage = DEFAULT_COVERAGE_PERCENTAGE
         
         print(f"📋 Generating BRD from Swagger schema using heuristic analysis...")
         print(f"   Target coverage: {coverage_percentage}% of endpoints")
@@ -110,7 +120,10 @@ class BRDGenerator:
             return brd
         except Exception as e:
             execution_time = time.time() - start_time
-            print(f"⚠ Error in BRD generation: {e}")
+            error_type = type(e).__name__
+            print(f"✗ Error in BRD generation ({error_type}): {e}")
+            print(f"   Execution time: {execution_time:.2f}s")
+            print(f"   Schema: {schema_filename}")
             raise
     
     def _create_test_plan_heuristic(
@@ -196,26 +209,18 @@ class BRDGenerator:
             Priority score (float)
         """
         method_upper = method.upper()
-        score = 0.0
-        
-        # Method-based scoring
-        if method_upper in ['POST', 'PUT', 'DELETE']:
-            score += 100.0  # Critical operations
-        elif method_upper == 'GET':
-            score += 50.0  # Read operations
-        else:
-            score += 30.0  # Other methods
+        score = HTTP_METHOD_PRIORITY.get(method_upper, 30.0)
         
         # Parameter complexity bonus
-        score += min(len(params) * 5.0, 50.0)  # Up to 50 points for complexity
+        score += min(len(params) * PARAM_COMPLEXITY_MULTIPLIER, PARAM_COMPLEXITY_MAX)
         
         # Required parameters bonus
         required_params = [p for p in params if p.get('required', False)]
-        score += len(required_params) * 3.0
+        score += len(required_params) * REQUIRED_PARAM_MULTIPLIER
         
         return score
     
-    def _determine_priority_heuristic(self, method: str, params: List[Dict]) -> str:
+    def _determine_priority_heuristic(self, method: str, params: List[Dict[str, Any]]) -> str:
         """Determine priority based on HTTP method and parameter complexity."""
         method_upper = method.upper()
         
@@ -232,7 +237,7 @@ class BRDGenerator:
         # Other methods
         return "medium"
     
-    def _suggest_test_scenarios(self, method: str, params: List[Dict]) -> List[str]:
+    def _suggest_test_scenarios(self, method: str, params: List[Dict[str, Any]]) -> List[str]:
         """Suggest test scenarios based on method and parameters."""
         scenarios = []
         method_upper = method.upper()
@@ -289,7 +294,7 @@ class BRDGenerator:
             return None
         
         # Try to extract JSON from response
-        return self._extract_json_from_response(response)
+        return extract_json_from_response(response)
     
     def _create_brd_generation_prompt(
         self,
@@ -299,17 +304,9 @@ class BRDGenerator:
     ) -> str:
         """Create prompt for LLM to generate BRD."""
         api_info = processed_data.get('info', {})
-        
-        # Use endpoints from test_plan (already filtered by coverage percentage)
-        endpoint_analysis = test_plan.get('endpoint_analysis', [])
-        
-        # Create compact endpoint summary from selected endpoints
-        endpoint_summary = []
-        for endpoint_info in endpoint_analysis:
-            path = endpoint_info.get('path', '')
-            method = endpoint_info.get('method', '')
-            params_count = endpoint_info.get('parameter_count', 0)
-            endpoint_summary.append(f"- {method} {path} ({params_count} parameters)")
+        endpoint_summary = self._build_endpoint_summary(test_plan)
+        instructions = self._build_brd_instructions()
+        example_structure = self._build_brd_example_structure(api_info)
         
         prompt = f"""You are an expert in API testing and business requirement documentation.
 
@@ -327,7 +324,30 @@ Note: This BRD covers {test_plan.get('selected_endpoints', 0)} out of {test_plan
 Test Plan Heuristic:
 {json.dumps(test_plan, indent=2)}
 
-INSTRUCTIONS:
+{instructions}
+
+OUTPUT FORMAT:
+Return ONLY valid JSON in this exact structure:
+{example_structure}
+
+Generate the complete BRD JSON now:
+"""
+        return prompt
+    
+    def _build_endpoint_summary(self, test_plan: Dict[str, Any]) -> List[str]:
+        """Build a compact summary of selected endpoints."""
+        endpoint_analysis = test_plan.get('endpoint_analysis', [])
+        endpoint_summary = []
+        for endpoint_info in endpoint_analysis:
+            path = endpoint_info.get('path', '')
+            method = endpoint_info.get('method', '')
+            params_count = endpoint_info.get('parameter_count', 0)
+            endpoint_summary.append(f"- {method} {path} ({params_count} parameters)")
+        return endpoint_summary
+    
+    def _build_brd_instructions(self) -> str:
+        """Build the instructions section for BRD generation prompt."""
+        return """INSTRUCTIONS:
 1. Create a BRD schema with requirements for each endpoint
 2. Each requirement should have:
    - requirement_id: unique identifier (e.g., "REQ-001")
@@ -347,11 +367,11 @@ INSTRUCTIONS:
 
 3. Focus on realistic business requirements and test scenarios
 4. Include positive, negative, and edge case scenarios
-5. Prioritize based on business impact
-
-OUTPUT FORMAT:
-Return ONLY valid JSON in this exact structure:
-{{
+5. Prioritize based on business impact"""
+    
+    def _build_brd_example_structure(self, api_info: Dict[str, Any]) -> str:
+        """Build the example JSON structure for BRD generation prompt."""
+        return f"""{{
   "brd_id": "BRD-001",
   "title": "API Test Requirements Document",
   "description": "Business requirements for testing the API",
@@ -390,27 +410,8 @@ Return ONLY valid JSON in this exact structure:
     }}
   ],
   "metadata": {{}}
-}}
-
-Generate the complete BRD JSON now:
-"""
-        return prompt
+}}"""
     
-    def _extract_json_from_response(self, response: str) -> Optional[str]:
-        """Extract JSON from LLM response (may be wrapped in markdown)."""
-        import re
-        
-        # Try to find JSON in code blocks
-        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', response, re.DOTALL)
-        if json_match:
-            return json_match.group(1)
-        
-        # Try to find JSON object directly
-        json_match = re.search(r'\{.*\}', response, re.DOTALL)
-        if json_match:
-            return json_match.group(0)
-        
-        return response  # Return as-is, let parser handle it
     
     def _parse_llm_brd_response(
         self,
@@ -421,8 +422,10 @@ Generate the complete BRD JSON now:
         try:
             data = json.loads(brd_json)
         except json.JSONDecodeError as e:
-            print(f"⚠ Error parsing BRD JSON: {e}")
+            print(f"✗ Error parsing BRD JSON: {e}")
             print(f"   Response preview: {brd_json[:200]}...")
+            print(f"   Tip: The LLM response may not be valid JSON. "
+                  f"Check the analytics report for the raw response.")
             return None
         
         # Parse requirements

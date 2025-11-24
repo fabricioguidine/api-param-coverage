@@ -13,7 +13,7 @@ import yaml
 class SchemaProcessor:
     """Processes and analyzes Swagger/OpenAPI schemas."""
     
-    def __init__(self, schemas_dir: str = "data/schemas"):
+    def __init__(self, schemas_dir: str = "reference/schemas"):
         """
         Initialize the SchemaProcessor.
         
