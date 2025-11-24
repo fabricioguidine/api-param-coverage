@@ -4,22 +4,31 @@ LLM Prompter
 This module handles prompting LLMs with processed schema data.
 """
 
+import time
 from typing import Dict, Any, Optional, List
+
+from ..analytics import MetricsCollector
 
 
 class LLMPrompter:
     """Handles LLM prompting with processed schema information."""
     
-    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None):
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None, analytics_dir: Optional[str] = None):
         """
         Initialize the LLM Prompter.
         
         Args:
             model: LLM model to use (e.g., 'gpt-4', 'claude-3', etc.)
             api_key: API key for the LLM service (if required)
+            analytics_dir: Optional directory for analytics output (uses default if None)
         """
         self.model = model
         self.api_key = api_key
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_dir) if analytics_dir else MetricsCollector()
+        # Store context for metrics collection
+        self._current_processed_data = None
+        self._current_analysis_data = None
+        self._current_task = None
     
     def create_prompt(self, processed_data: Dict[str, Any], task: str = "analyze", analysis_data: Optional[Dict[str, Any]] = None) -> str:
         """
@@ -307,6 +316,10 @@ Please check for:
             print("\n[LLM response would appear here after API key is set]")
             return None
         
+        # Track execution time
+        start_time = time.time()
+        api_response = None
+        
         try:
             from openai import OpenAI
             
@@ -335,7 +348,7 @@ Please check for:
             max_retries = 3
             for attempt in range(max_retries):
                 try:
-                    response = client.chat.completions.create(
+                    api_response = client.chat.completions.create(
                         model=model,
                         messages=[
                             {
@@ -355,18 +368,17 @@ Please check for:
                     if attempt < max_retries - 1:
                         wait_time = (attempt + 1) * 2
                         print(f"⚠ Retry {attempt + 1}/{max_retries} after {wait_time}s...")
-                        import time
                         time.sleep(wait_time)
                         continue
                     else:
                         raise retry_error
             
             # Extract the response content
-            if not response.choices or not response.choices[0].message.content:
+            if not api_response.choices or not api_response.choices[0].message.content:
                 print("✗ Error: Empty response from LLM")
                 return None
             
-            gherkin_content = response.choices[0].message.content.strip()
+            gherkin_content = api_response.choices[0].message.content.strip()
             
             # Validate that we got actual Gherkin content
             if not gherkin_content or len(gherkin_content) < 50:
@@ -416,6 +428,51 @@ Please check for:
                 print(f"   → Full error: {e}")
             
             return None
+        finally:
+            # Collect and save metrics after API call (whether successful or not)
+            execution_time = time.time() - start_time
+            try:
+                # Collect general LLM metrics
+                metrics = self.metrics_collector.collect_metrics(
+                    processed_data=self._current_processed_data,
+                    analysis_data=self._current_analysis_data,
+                    prompt=prompt,
+                    api_response=api_response,
+                    execution_time=execution_time,
+                    model=self.model or "gpt-4",
+                    task=self._current_task
+                )
+                metrics_file = self.metrics_collector.save_metrics(metrics)
+                print(f"📊 Analytics saved: {metrics_file}")
+                
+                # Collect algorithm-specific metrics for LLM call
+                llm_metrics = {
+                    'prompt_metrics': metrics.get('prompt_metrics', {}),
+                    'api_usage': metrics.get('api_usage', {}),
+                    'response_metrics': metrics.get('response_metrics', {})
+                }
+                
+                # Prepare output data
+                output_data = {}
+                if 'gherkin_content' in locals() and gherkin_content:
+                    output_data = {"response_length": len(gherkin_content), "has_response": True}
+                else:
+                    output_data = {"has_response": False}
+                
+                algorithm_metrics = self.metrics_collector.collect_algorithm_metrics(
+                    algorithm_name="LLMPrompter",
+                    algorithm_type="llm_prompter",
+                    input_data=self._current_processed_data,
+                    output_data=output_data,
+                    execution_time=execution_time,
+                    complexity_metrics=metrics.get('complexity_analysis', {}),
+                    llm_call=True,
+                    llm_metrics=llm_metrics
+                )
+                algorithm_report = self.metrics_collector.save_algorithm_report(algorithm_metrics)
+                print(f"📈 Algorithm report saved: {algorithm_report}")
+            except Exception as metrics_error:
+                print(f"⚠ Warning: Failed to save analytics: {metrics_error}")
     
     def process_and_prompt(self, processed_data: Dict[str, Any], task: str = "analyze", analysis_data: Optional[Dict[str, Any]] = None) -> Optional[str]:
         """
@@ -429,6 +486,11 @@ Please check for:
         Returns:
             LLM response, or None if not implemented
         """
+        # Store context for metrics collection
+        self._current_processed_data = processed_data
+        self._current_analysis_data = analysis_data
+        self._current_task = task
+        
         prompt = self.create_prompt(processed_data, task, analysis_data)
         return self.send_prompt(prompt)
     

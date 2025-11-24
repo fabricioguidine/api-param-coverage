@@ -14,7 +14,7 @@ from datetime import datetime
 class CSVGenerator:
     """Generates CSV files from Gherkin test scenarios."""
     
-    def __init__(self, output_dir: str = "output"):
+    def __init__(self, output_dir: str = "docs/output/csv"):
         """
         Initialize the CSV Generator.
         
@@ -101,8 +101,10 @@ class CSVGenerator:
                 line_lower = line.lower()
                 for keyword in step_keywords:
                     if line_lower.startswith(keyword.lower() + ' ') or line_lower.startswith(keyword.lower() + ':'):
-                        # Normalize the step (capitalize keyword)
-                        normalized_step = keyword + line[len(keyword):].lstrip(':').lstrip()
+                        # Normalize the step (capitalize keyword and ensure space after)
+                        remaining = line[len(keyword):].lstrip(':').lstrip()
+                        # Ensure there's a space after the keyword
+                        normalized_step = keyword + (' ' + remaining if remaining else '')
                         current_steps.append(normalized_step)
                         break
                 else:
@@ -181,9 +183,30 @@ class CSVGenerator:
         tags: List[str]
     ) -> Dict[str, Any]:
         """Create a CSV row from scenario data."""
-        given_steps = [s for s in steps if s.startswith('Given') or (s.startswith('And ') and 'Given' in ' '.join(steps[:steps.index(s)]))]
-        when_steps = [s for s in steps if s.startswith('When') or (s.startswith('And ') and 'When' in ' '.join(steps[:steps.index(s)]))]
-        then_steps = [s for s in steps if s.startswith('Then') or (s.startswith('And ') and 'Then' in ' '.join(steps[:steps.index(s)]))]
+        # Separate steps by type, ensuring proper keyword matching
+        given_steps = []
+        when_steps = []
+        then_steps = []
+        
+        for step in steps:
+            step_lower = step.lower().strip()
+            if step_lower.startswith('given '):
+                given_steps.append(step)
+            elif step_lower.startswith('when '):
+                when_steps.append(step)
+            elif step_lower.startswith('then '):
+                then_steps.append(step)
+            elif step_lower.startswith('and '):
+                # Determine context from previous steps
+                all_previous = given_steps + when_steps + then_steps
+                if given_steps and (not when_steps or given_steps[-1] == all_previous[-1]):
+                    given_steps.append(step)
+                elif when_steps and (not then_steps or when_steps[-1] == all_previous[-1]):
+                    when_steps.append(step)
+                elif then_steps:
+                    then_steps.append(step)
+                else:
+                    given_steps.append(step)  # Default to Given if unclear
         
         return {
             'Feature': feature or '',
