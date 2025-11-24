@@ -1,0 +1,440 @@
+\NeedsTeXFormat{LaTeX2e}
+\documentclass[a4paper,12pt]{monografia}
+
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage[portuguese, colorinlistoftodos, textsize=tiny]{todonotes}
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage[mathcal]{eucal}
+\usepackage{latexsym}
+\usepackage[portuguese]{babel}  
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage{bm}
+\usepackage[portuguese,algoruled,longend, linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks,
+   debug=false,
+   linkcolor=black,
+   citecolor=black,
+   urlcolor=black,
+   bookmarksopen=true,
+}
+\usepackage[alf,bibjustif]{abntex2cite}
+\usepackage{pifont}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{ragged2e}
+
+\lstset{
+    backgroundcolor=\color{gray!10}, % Fundo cinza claro
+    basicstyle=\ttfamily\footnotesize\color{gray!80}, % Fonte em cinza escuro
+    breaklines=true, % Quebra de linha automática
+    frame=single, % Moldura ao redor do código
+    numbers=left, % Números à esquerda
+    numberstyle=\tiny\color{gray!50}, % Números em cinza claro
+    keywordstyle=\color{gray!80}, % Palavras-chave em cinza escuro
+    commentstyle=\color{gray!50}, % Comentários em cinza claro
+    stringstyle=\color{gray!80}, % Strings em cinza escuro
+    showstringspaces=false, % Não mostrar espaços em strings
+    tabsize=4, % Tamanho da tabulação
+    literate= % Configuração para caracteres especiais
+      {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+      {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+      {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+      {ã}{{\~a}}1 {õ}{{\~o}}1 {Ã}{{\~A}}1 {Õ}{{\~O}}1
+      {ç}{{\c c}}1 {Ç}{{\c C}}1
+}
+
+\newcounter{todocounter}
+\newcommand{\comment}[2][]
+{\stepcounter{todocounter}\todo[caption={\thetodocounter: #2}, #1] 
+{\begin{spacing}{1}\thetodocounter: #2\end{spacing}}}
+\reversemarginpar
+\setlength{\marginparwidth}{2.5cm}
+\lstloadlanguages{C}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{axiom}{Axioma}[section]
+\newtheorem{corollary}{Corolário}[section]
+\newtheorem{lemma}{Lema}[section]
+\newtheorem{proposition}{Proposição}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definição}[section]
+\newtheorem{example}{Exemplo}[section]
+
+\theoremstyle{remark}
+\newtheorem{remark}{Observação}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\id}{\mathbf{1}}
+\newcommand{\U}{\mathcal{U}}
+\newcommand{\V}{{\cal V}}
+\def\ind{\hbox{ ind }}
+
+\begin{document}
+\include{pretexto}
+\include{hifenizacao}
+
+%----------------------------dedicatória --------------
+\begin{dedicatoria}
+\begin{flushright}
+Dedico às minhas mecenas,\\
+Denise \ding{96} Margarida.\\
+\end{flushright}
+\end{dedicatoria}
+
+%--------Resumo--------------
+\resumo{Resumo} 
+\label{resumo} 
+Este trabalho apresenta o desenvolvimento de uma ferramenta de automação para geração de cenários de teste, cálculo de cobertura de parâmetros e exportação de artefatos de teste para APIs REST. O sistema proposto realiza a leitura de especificações de serviços, gera combinações representativas de parâmetros de entrada, converte essas combinações em cenários comportamentais no formato \textit{Behavior-Driven Development} (BDD), e produz arquivos de saída em formatos consumíveis por ferramentas populares como Postman. Além disso, a ferramenta calcula métricas de cobertura estruturais entre endpoints e parâmetros, gerando relatórios de rastreabilidade. O objetivo central é reduzir esforço manual e ampliar a confiabilidade de suítes de teste de APIs em cenários de integração entre serviços distribuídos, aderindo a boas práticas discutidas em literatura recente sobre teste de APIs REST, geração automatizada de cenários e análise de cobertura \cite{martinlopez2019coverage,baniassurvey2021api,abdelfattah2024microservice}.
+
+\noindent \textbf{Palavras-chave:} Testes de API. Cobertura. BDD. Automação.
+
+%-----------Abstract--------------
+\resumo{Abstract}
+\label{abstract}
+This work presents the design and implementation of an automated pipeline for generating test scenarios, computing parameter coverage, and exporting test artifacts for REST APIs. The proposed system ingests API specifications, derives representative parameter combinations, turns these combinations into behavior-oriented BDD scenarios, and emits artifacts consumable by external tools such as Postman. The tool also computes lightweight coverage metrics relating APIs, endpoints, and input parameters, thus supporting traceability and test completeness in distributed service ecosystems. The approach aims to reduce manual effort in authoring test suites for REST APIs and to increase test robustness through systematic parameter exploration, as motivated by recent literature on REST API testing, automated scenario synthesis, and coverage analysis \cite{martinlopez2019coverage,zameni2023bdd,abdelfattah2024microservice}.
+
+\noindent \textbf{Keywords:} API testing. Coverage. BDD. Automation.
+
+%-----------Agradecimentos--------------
+\agradecimento{Agradecimentos}
+\indent\indent 
+\label{agradecimentos}
+A Denise, que me fez uma de suas prioridades e que me educou para ser uma pessoa que valida os sentimentos em primeiro lugar, e me ensinou a ser um bom menino, e agora, um homem. Não consigo imaginar meios para te retornar tudo que me foi provido. Ao meu pai, Hélio, que a seu modo pôde se fazer presente e sempre útil e prestativo quanto ao meu crescimento, é meu companheiro e eu seu panheirinho. À minha irmã, Larissa, que além de eu amar muito, fez outra parte de si para eu amar ainda mais: Mateus, que veio com meus traços.\\
+À minha rocha, vó Margarida (in memoriam), que viveu sua vida trabalhando tanto em prol da nossa família e daqueles que faziam parte da sua vida, salvo exceções, de acordo com suas ideias irrevogáveis... foi a primeira a me fazer acreditar que as coisas iriam dar certo na minha caminhada acadêmica. E à minha tia, Rosângela (in memoriam), que estará eternamente em meus pensamentos sobre como cresci em sua gestão em Cataguarino — sempre vou te amar. Ao restante da minha família: avô Cosme (in memoriam), tios e tias, afilhados e afilhadas, primos e primas, cunhado e sua família, me conforto por entenderem que a distância e os sacrifícios que tive seriam insuportáveis sem o seu apoio.\\
+Ao meu ex-futuro marido, Erick, poder estar em sua companhia é tão natural e me fez experimentar a felicidade em seu mais calmo e puro estado. Eu amei compartilhar a minha vida com você.\\
+A Alana, Fabrício, Thaís e Milena: eu amo vocês. Aos meus amigos da faculdade no geral, o nome de vocês não caberia aqui. Mas, em especial à Débora, que me forneceu uma lanterna da lua\footnote{Lanterna da Lua: \url{https://bg3.wiki/wiki/Moonlantern}} para seguir no umbral.\\
+Aos docentes do meu departamento que proveram da metodologia, aos modos do sistema, para meu desenvolvimento acadêmico. Em especial a Luciano, André e Victor. Essas pessoas viram em mim algo que nem eu acreditava: eu importo e sou capaz.
+
+\newpage
+
+%---------------------- EPÍGRAFE I (OPCIONAL)--------------
+\begin{epigrafe}
+\label{epigrafe}
+Ontem fui feliz, excessivamente feliz, como não se pode sê-lo mais! Até que enfim, uma vez na vida, você, sempre tão inacessível, satisfez os meus desejos! Eram cerca de oito horas, já quase noite, quando acordei da soneca que costumo dormir todos os dias, depois do trabalho. Acendi a luz e tinha já os papéis em ordem, faltando-me apenas aguçar a pena, quando, de súbito, levantei, casualmente, os olhos e deparou-se-me um espetáculo extraordinário, que me fez pular o coração. Decerto adivinhou já do que se trata, compreendeu o motivo do meu alvoroço!\\
+\hfill Fiódor Dostoiévski (Gente Pobre)
+\end{epigrafe}
+
+%----Sumário, lista de figura e de tabela ------------
+ \tableofcontents \thispagestyle{empty} \listoffigures
+\thispagestyle{empty} \listoftables \thispagestyle{empty}
+
+%----Glossário ------------
+\chapter*{Lista de Abreviações} \addcontentsline{toc}{chapter}{Lista de Abreviações}
+\label{lista-de-abreviacoes}
+\doublespacing  
+\begin{tabular}{l l}
+API & \textit{Application Programming Interface} \\
+BDD & \textit{Behavior-Driven Development} \\
+CSV & \textit{Comma-Separated Values} \\
+HTTP & \textit{Hypertext Transfer Protocol} \\
+REST & \textit{Representational State Transfer} \\
+UFJF & Universidade Federal de Juiz de Fora \\
+\end{tabular}  
+\thispagestyle{empty}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%--------------Início do Conteúdo---------------------------
+%
+%
+\pagestyle{ruledheader}
+
+\chapter{Introdução}
+\label{introducao}
+% https://x.com/pamydev/status/1987720000430395568?s=46
+Serviços baseados em APIs REST (\textit{Representational State Transfer}) tornaram-se elemento central em arquiteturas modernas de software distribuído, especialmente em ecossistemas orientados a microsserviços. Esses serviços expõem endpoints HTTP que recebem parâmetros (cabeçalhos, corpo, \textit{query strings}) e retornam respostas estruturadas, frequentemente em JSON. A confiabilidade desses contratos de API influencia diretamente a integridade de integrações internas e externas, bem como a experiência do usuário final \cite{baniassurvey2021api, zhong2020pararules}.
+
+Apesar disso, testar APIs de forma sistemática permanece um desafio. Dois problemas recorrentes são: (i) a explosão combinatória de valores de parâmetros — por exemplo, múltiplos métodos de autenticação, formatos de corpo e variações de moedas — e (ii) a ausência de rastreabilidade entre requisitos funcionais e cenários de teste executáveis \cite{martinlopez2019coverage, zameni2023bdd}. Cobrir ``todas'' as combinações manualmente é caro e muitas vezes inviável.
+
+Na prática industrial, equipes de QA e desenvolvimento frequentemente dependem de ferramentas como Postman ou suítes unitárias escritas em \textit{pytest}. Essas ferramentas permitem executar requisições e verificar respostas, mas não resolvem automaticamente: (a) a geração de cenários de teste a partir das regras de parâmetros; (b) a priorização de combinações que maximizem a cobertura com custo reduzido; e (c) a produção de artefatos reutilizáveis e rastreáveis \cite{abdelfattah2024microservice}.
+
+Este trabalho propõe e implementa uma ferramenta integrada, denominada aqui \textbf{API Param Coverage}, cujo objetivo é automatizar esse fluxo. O sistema desenvolvido:
+
+\begin{enumerate}
+    \item Lê uma especificação simplificada de APIs e endpoints;
+    \item Gera combinações representativas de parâmetros de entrada, usando uma heurística gulosa de cobertura mínima;
+    \item Converte cada combinação em um cenário comportamental no estilo BDD (\textit{Behavior-Driven Development});
+    \item Enriquece o cenário com uma linha de comando \texttt{curl}, simulando uma chamada HTTP concreta;
+    \item Consolida todos os cenários no arquivo \texttt{bdd\_scenarios.csv};
+    \item Exporta a mesma informação como uma coleção compatível com Postman;
+    \item Calcula métricas de cobertura de endpoints e produz relatórios que relacionam APIs, endpoints e cenários cobertos.
+\end{enumerate}
+
+Com isso, busca-se (i) aumentar a cobertura de teste de APIs sem exigir escrita manual de todos os cenários, (ii) padronizar o nível de documentação comportamental via BDD, e (iii) facilitar a inspeção de lacunas de cobertura entre endpoints e parâmetros.
+
+Além da motivação prática, este trabalho se ancora em linhas de pesquisa sobre critérios de cobertura específicos para APIs REST \cite{martinlopez2019coverage}, técnicas de geração de cenários baseadas em BDD \cite{zameni2023bdd}, e análise de qualidade de testes em arquiteturas de microsserviços \cite{abdelfattah2024microservice}.
+
+A estrutura deste documento é a seguinte. O Capítulo~\ref{fundamentacao-teorica} apresenta a fundamentação teórica e trabalhos relacionados. O Capítulo~\ref{chap:materiais-e-metodos} descreve a arquitetura do sistema, a implementação e o fluxo de execução. No Capítulo~\ref{estudo-de-caso} é apresentado um estudo de caso demonstrando a aplicação da ferramenta e seus resultados. Por fim, o Capítulo~\ref{conclusao-e-trabalhos-futuros} discute conclusões e trabalhos futuros.
+
+\chapter{Fundamentação Teórica}
+\label{fundamentacao-teorica}
+
+\section{Testes de APIs REST}
+APIs REST estabelecem contratos claros entre produtor e consumidor de serviços. Testes de API buscam validar tanto funcionalidade (respostas corretas, códigos HTTP esperados) quanto robustez (tratamento de parâmetros inválidos, autenticação ausente, limites de taxa, etc.). Revisões da literatura mostram que, embora a automação de testes de API tenha evoluído, ainda há falta de consenso sobre métricas de cobertura específicas para APIs, diferentemente do que ocorre com cobertura de código tradicional \cite{baniassurvey2021api}.
+
+Martin-López et al. propõem critérios de cobertura para APIs REST que consideram desde a simples invocação de cada endpoint até combinações mais complexas de parâmetros, métodos e estados de recurso \cite{martinlopez2019coverage}. Esses critérios sugerem que ``cobrir um endpoint'' não é suficiente; é necessário cobrir \textit{como} esse endpoint é chamado, com quais parâmetros, em que contexto.
+
+Em paralelo, trabalhos recentes sobre arquiteturas em microsserviços tratam cobertura não só como uma métrica interna, mas como garantia de contrato entre serviços independentes. Abdelfattah et al. discutem cobertura de endpoints em sistemas distribuídos e introduzem noções como \textit{endpoint coverage} e \textit{test-suite endpoint coverage}, aproximando a análise à confiabilidade sistêmica \cite{abdelfattah2024microservice}.
+
+\section{Regras de Parâmetros e Geração de Combinações}
+Uma dificuldade clássica em testar APIs é a fidelidade das regras de parâmetros. Parâmetros aceitam domínios específicos de valores (por exemplo, \texttt{currency} em \{\texttt{USD}, \texttt{BRL}\}) ou impõem pré-condições (por exemplo, cabeçalho de autorização válido). Estudos empíricos indicam que essas regras muitas vezes não estão totalmente documentadas, permanecendo apenas no código da API e dificultando a automação de testes \cite{zhong2020pararules}.
+
+Para lidar com a explosão combinatória desses valores, abordagens de teste costumam recorrer a técnicas de \textit{amostragem} de combinações: partição de equivalência, análise de valores-limite, ou ainda heurísticas de cobertura mínima que procuram reduzir o total de cenários mantendo representatividade. Neste trabalho, utilizamos uma heurística gulosa que, para cada conjunto de parâmetros e possíveis valores, tenta selecionar um pequeno subconjunto de combinações que cubra todos os valores relevantes ao menos uma vez.
+
+\section{Behavior-Driven Development (BDD) e Cenários Executáveis}
+BDD (\textit{Behavior-Driven Development}) é um estilo de especificação que descreve o comportamento esperado do sistema em linguagem quase natural, geralmente seguindo a estrutura Dado/Quando/Então (\textit{Given/When/Then}). O uso de BDD tem sido associado à melhoria de comunicação entre times técnicos e stakeholders não técnicos, bem como à rastreabilidade entre requisitos e testes \cite{zameni2023bdd}.
+
+Pesquisas recentes exploram a geração automática de cenários BDD a partir de modelos ou descrições de alto nível, inclusive com apoio de grandes modelos de linguagem (LLMs), para reduzir esforço humano na elaboração de casos de teste e alinhar especificações e execução \cite{zameni2023bdd}. O presente trabalho segue a mesma direção: traduzir combinações de parâmetros em cenários BDD programaticamente, preservando uma forma textual clara para auditoria humana, e agregando uma linha de comando \texttt{curl} que representa a chamada HTTP concreta.
+
+\section{Exportação de Artefatos e Integração com Ferramentas de Teste}
+Ferramentas como Postman e seus \textit{runners} de coleção são de uso comum em indústrias de software para validar endpoints e gerar evidência de teste. Ao exportar cenários de teste para um formato compatível com Postman, facilitamos a integração com pipelines existentes de QA, CI/CD e monitoramento contínuo dos endpoints. Além disso, gerar um relatório de cobertura auxilia na priorização de cenários, identificação de lacunas e planejamento de testes regressivos \cite{abdelfattah2024microservice}.
+
+\section{Resumo do Capítulo}
+A literatura sugere três forças convergentes: (i) a necessidade de cobertura explícita e mensurável de APIs REST \cite{martinlopez2019coverage}; (ii) a importância de capturar regras de parâmetros e transformá-las em cenários testáveis \cite{zhong2020pararules}; e (iii) o uso de representações legíveis (BDD) e exportáveis (Postman) para aproximar especificação técnica e execução \cite{zameni2023bdd}. Essas diretrizes nortearam a concepção da ferramenta proposta neste trabalho.
+
+\chapter{Materiais e Métodos}
+\label{chap:materiais-e-metodos}
+
+\section{Visão Geral}
+Este capítulo descreve os requisitos do sistema, a arquitetura interna, os módulos implementados, o fluxo de execução e a metodologia de teste adotada. O software foi desenvolvido em Python, estruturado em módulos independentes sob \texttt{src/}, e validado via \texttt{pytest}.
+
+\section{Requisitos do Sistema}
+\subsection{Requisitos Funcionais}
+Os requisitos funcionais são as capacidades obrigatórias do sistema:
+\begin{enumerate}
+    \item RF01 -- Ler uma especificação de API contendo serviços, endpoints, métodos HTTP, caminhos e espaços de parâmetros;
+    \item RF02 -- Gerar combinações representativas de parâmetros de entrada (cabeçalhos, corpo, consulta);
+    \item RF03 -- Converter combinações em cenários textuais no formato BDD, incluindo uma linha \texttt{curl};
+    \item RF04 -- Consolidar cenários em um artefato tabular (\texttt{bdd\_scenarios.csv});
+    \item RF05 -- Exportar um artefato compatível com Postman contendo cada cenário como requisição de teste;
+    \item RF06 -- Construir métricas de cobertura entre APIs e endpoints e gerar um relatório resumido;
+    \item RF07 -- Disponibilizar uma interface de linha de comando (CLI) para orquestrar as etapas anteriores.
+\end{enumerate}
+
+\subsection{Requisitos Não Funcionais}
+Os requisitos não funcionais expressam restrições de qualidade:
+\begin{itemize}
+    \item RNF01 -- O sistema deve ser implementado em Python 3.x e compatível com ambientes Windows, Linux e macOS;
+    \item RNF02 -- A arquitetura deve ser modular, permitindo substituição/produção independente de partes (por exemplo, trocando a heurística de cobertura ou o gerador de BDD);
+    \item RNF03 -- Todos os módulos principais devem possuir testes unitários automatizados via \texttt{pytest};
+    \item RNF04 -- A ferramenta deve gerar artefatos de saída sem exigir dependências proprietárias para inspeção (CSV e JSON legíveis);
+    \item RNF05 -- A execução padrão deve completar em tempo aceitável para coleções de pelo menos dezenas de endpoints, visando uso interativo em fase de desenvolvimento \cite{abdelfattah2024microservice}.
+\end{itemize}
+
+\section{Arquitetura do Sistema}
+
+A arquitetura lógica do sistema é organizada em módulos especializados. A Tabela~\ref{tab:arquitetura-modulos} resume os principais componentes presentes em \texttt{src/}.
+
+\usepackage{longtable}
+
+\begin{longtable}{|>{\RaggedRight}p{6.5cm}|>{\RaggedRight}p{7.5cm}|}
+\caption{Arquitetura Modular: Componentes Principais e Responsabilidades.}
+\label{tab:arquitetura-modulos} \\
+
+\hline
+\textbf{Componente / Módulo} & \textbf{Responsabilidade Principal} \\
+\hline
+\endfirsthead
+
+\multicolumn{2}{c}{{\bfseries Tabela \thetable\ (continuação)}} \\
+\hline
+\textbf{Componente / Módulo} & \textbf{Responsabilidade Principal} \\
+\hline
+\endhead
+
+\hline
+\multicolumn{2}{r}{{Continua na próxima página...}} \\
+\hline
+\endfoot
+
+\hline
+\multicolumn{2}{r}{{Fim da Tabela \thetable}} \\
+\hline
+\endlastfoot
+
+% ---------- Camada de Orquestração ----------
+\multicolumn{2}{|c|}{\textbf{Camada de Orquestração (Fluxo E2E)}} \\
+\hline
+
+\texttt{src/main.py} &
+Fornece a interface de linha de comando (CLI) com os subcomandos \texttt{scenarios}, \texttt{postman} e \texttt{coverage}. \textbf{Orquestra} o fluxo principal: chama o parser, o gerador de cenários e o exportador final. \\
+\hline
+
+% ---------- Módulos de Processamento ----------
+\multicolumn{2}{|c|}{\textbf{Módulos de Processamento (Lógica de Negócio)}} \\
+\hline
+
+\texttt{modules/scenario\_generator/} &
+\textbf{Gerenciamento do Ciclo de Vida do Cenário:} Lida com coordenação de geração de cenários a partir das definições de API (entrada) até os cenários E2E prontos para exportação. \\
+\hline
+
+\texttt{modules/scenario\_generator/} &
+\textbf{coverage\_logic.py} — Heurística de Redução de Teste: implementa a lógica \textit{greedy} que escolhe subconjuntos reduzidos de combinações de parâmetros, maximizando a cobertura com o menor número possível de cenários. \\
+\hline
+
+\texttt{modules/scenario\_generator/} &
+\textbf{bdd\_scenario\_generator.py} — Transformação para BDD: gera cenários estruturados em estilo BDD (\texttt{Scenario / When / Then}) e inclui a chamada \texttt{curl} como documentação de teste. \\
+\hline
+
+\texttt{modules/artifact\_exporter/} &
+\textbf{postman\_exporter.py} — Conversão de Artefatos (Saída): converte o arquivo \texttt{bdd\_scenarios.csv} em uma coleção Postman compatível, mapeando cada cenário como um item executável para pipelines de QA. \\
+\hline
+
+\texttt{modules/coverage\_analyzer/} &
+\textbf{metrics\_visualization.py} — Análise de Cobertura e Risco: monta o grafo de dependências (\texttt{apiName} e endpoints) e gera métricas de cobertura, permitindo enxergar lacunas e priorizar risco. \\
+\hline
+
+% ---------- Infraestrutura ----------
+\multicolumn{2}{|c|}{\textbf{Módulos de Infraestrutura e Apoio}} \\
+\hline
+
+\texttt{common/shared\_utils.py} &
+\textbf{Utilitários Comuns:} Funções auxiliares como manipulação de diretórios, formatação de dados e expansão do espaço de parâmetros (\texttt{headers}, \texttt{query}, \texttt{body}) em combinações concretas. \\
+\hline
+
+\texttt{domain\_models/base\_models.py} &
+\textbf{Modelos de Dados (DTOs):} Define classes e estruturas de dados internas (DTOs) para representar APIs, endpoints e parâmetros, garantindo comunicação tipada entre módulos. \\
+\hline
+
+\texttt{common/logger.py} &
+Módulo de registro de eventos. (\textit{Essencial para o requisito não funcional de log e rastreabilidade}). \\
+\hline
+
+\end{longtable}
+
+\section{Estratégia de Teste e Validação}
+Foram implementados testes automatizados com \texttt{pytest} para validar:
+\begin{itemize}
+    \item a geração de cenários BDD e o acréscimo correto da linha \texttt{curl};
+    \item a construção do CSV final com campos esperados;
+    \item a transformação desse CSV em uma coleção Postman consistente (\texttt{item}, \texttt{request.method}, \texttt{request.url.raw}, etc.);
+    \item a criação do grafo de cobertura incluindo nós de APIs, nós de endpoints e arestas API~$\rightarrow$~endpoint;
+    \item a execução integrada do \textit{runner} que produz saídas no diretório configurável.
+\end{itemize}
+
+Os testes asseguram que cada parte do pipeline funcione isoladamente e em conjunto, reforçando confiabilidade e reprodutibilidade.
+
+\chapter{Estudo de Caso}
+\label{estudo-de-caso}
+
+\section{Descrição do Cenário}
+Para avaliar o sistema em um cenário representativo, foi utilizada uma especificação sintética contendo um serviço (\texttt{API\_1\_Service}) com um endpoint de criação de usuário:
+
+\begin{lstlisting}[language={},caption={Amostra reduzida de especificação de entrada.}]
+{
+  "apis": [
+    {
+      "apiName": "API_1_Service",
+      "endpoints": [
+        {
+          "name": "CreateUser",
+          "method": "POST",
+          "path": "/users",
+          "param_space": {
+            "headers": { "Authorization": [
+              "Bearer VALID",
+              "Bearer EXPIRED"
+            ]},
+            "body": { "currency": ["USD", "BRL"] }
+          }
+        }
+      ]
+    }
+  ]
+}
+\end{lstlisting}
+
+\section{Geração de Combinações}
+O módulo \texttt{coverage\_logic.py} aplica uma heurística gulosa para combinar cabeçalhos e corpo, cobrindo todos os valores relevantes ao menos uma vez. Para o exemplo acima, são gerados cenários que variam simultaneamente a autorização e a moeda.
+
+\section{Cenários BDD e Linha Curl}
+Cada combinação de parâmetros é traduzida em um cenário BDD incluindo uma descrição comportamental (\textit{``When I call POST /users''}) e uma linha de comando \texttt{curl}:
+
+\begin{lstlisting}[language={},caption={Exemplo de saída gerada para um cenário.}]
+Scenario: CreateUser variation 1
+  When I call POST /users
+  Then I should receive 200
+    And header.Authorization = Bearer VALID
+    And body.currency = USD
+
+curl -X POST /users
+\end{lstlisting}
+
+Cada cenário recebe um identificador único (\texttt{scenario\_id}, por exemplo \texttt{CreateUser\_scn\_1}) e é persistido no arquivo \texttt{bdd\_scenarios.csv} em colunas normalizadas.
+
+\section{Exportação para Postman}
+O módulo \texttt{csv\_to\_postman\_collection.py} converte o CSV final em uma estrutura de coleção compatível com Postman. Cada linha do CSV torna-se um item contendo:
+\begin{itemize}
+    \item \texttt{request.method} (\texttt{POST}, \texttt{GET}, etc.);
+    \item \texttt{request.url.raw} (por exemplo, \texttt{/users});
+    \item \texttt{event.script.exec}, contendo o corpo BDD + a linha \texttt{curl}.
+\end{itemize}
+
+Essa coleção pode ser importada diretamente no Postman para execução automatizada ou monitoramento contínuo dos endpoints.
+
+\section{Análise de Cobertura}
+Com base no CSV, o sistema constrói um grafo de cobertura simples (\texttt{coverage\_graph.py}). Esse grafo possui nós representando APIs e endpoints, e arestas API~$\rightarrow$~endpoint quando há pelo menos um cenário associado. A partir desse grafo, o módulo \texttt{metrics\_visualization.py} gera um relatório textual contendo:
+\begin{itemize}
+    \item total de cenários gerados;
+    \item quantidade de endpoints únicos cobertos.
+\end{itemize}
+
+Esse relatório auxilia na avaliação de lacunas: endpoints não presentes no grafo são potenciais áreas de risco, indicando ausência de cenários de teste associados \cite{martinlopez2019coverage, abdelfattah2024microservice}.
+
+\section{Discussão dos Resultados}
+O estudo de caso demonstra que:
+\begin{enumerate}
+    \item É possível derivar cenários BDD consistentes e legíveis a partir de uma descrição declarativa de parâmetros;
+    \item A linha \texttt{curl} fornece rastreabilidade executável imediata, aproximando especificação e teste;
+    \item A exportação para Postman torna o resultado utilizável em rotinas de QA e CI/CD existentes;
+    \item A análise de cobertura gera um sumário objetivo da superfície exercitada pelos testes.
+\end{enumerate}
+
+Do ponto de vista de engenharia de software, esse fluxo reduz trabalho manual, fornece documentação viva e cria um elo entre requisitos funcionais e validações automatizadas \cite{zameni2023bdd,baniassurvey2021api}.
+
+\chapter{Considerações Finais}
+\label{conclusao-e-trabalhos-futuros}
+
+Este trabalho apresentou uma ferramenta de automação que integra geração de cenários de teste, documentação comportamental em BDD, exportação de coleções para Postman e análise de cobertura de endpoints e parâmetros de APIs REST. A motivação central foi enfrentar o problema recorrente de explosão combinatória de parâmetros e falta de rastreabilidade entre especificação de serviço e cenários de teste executáveis \cite{zhong2020pararules, martinlopez2019coverage}.
+
+Os resultados obtidos indicam que:
+\begin{itemize}
+    \item a abordagem proposta gera cenários representativos com esforço humano reduzido;
+    \item a incorporação automática de uma linha \texttt{curl} auxilia na auditabilidade e execução manual;
+    \item a exportação para Postman e a geração de métricas de cobertura permitem encaixe natural em processos de QA já utilizados na indústria;
+    \item a arquitetura modular em Python e a presença de testes automatizados favorecem manutenção e evolução incremental.
+\end{itemize}
+
+Como trabalhos futuros, destacam-se:
+\begin{enumerate}
+    \item \textbf{Cobertura semântica}: incorporar validações semânticas (por exemplo, regras de negócio, dependências entre campos) e não apenas variação sintática de parâmetros;
+    \item \textbf{Integração com LLMs}: permitir que modelos de linguagem de grande porte refinem os cenários BDD com descrições mais ricas, mensagens de erro esperadas e condições negativas \cite{zameni2023bdd};
+    \item \textbf{Métricas de robustez}: estender a análise para quantificar não só cobertura de endpoints, mas diversidade de respostas HTTP, incluindo cenários de erro deliberados \cite{abdelfattah2024microservice};
+    \item \textbf{Dashboard contínuo}: disponibilizar visualizações interativas (dashboards web) que acompanhem a evolução da cobertura ao longo do ciclo de desenvolvimento.
+\end{enumerate}
+
+Conclui-se que a automação de cobertura de parâmetros em testes de API, aliada à geração de cenários BDD e exportação para ferramentas consolidadas como Postman, representa uma direção promissora para aumentar a qualidade de serviços orientados a APIs em arquiteturas distribuídas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\singlespacing
+\bibliographystyle{abntex2-alf}
+\bibliography{referencias}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

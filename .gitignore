@@ -40,11 +40,32 @@ ENV/
 *.swo
 *~
 
+# Cursor
+.cursor/
+.cursorrules
+*.cursor
+.cursor-settings/
+.cursorrules.*
+.cursor/
+
 # Project specific
 data/schemas/*.json
 data/schemas/*.yaml
 data/schemas/*.yml
-output/*.csv
+# Output files (organized by timestamp runs)
+docs/20*/**/*.csv
+docs/20*/**/*.txt
+docs/20*/**/*.json
+# Keep documentation files
+!docs/README.md
+!docs/*.md
+!docs/latex/**
+# BRD input files (documents to be parsed)
+reference/brd/input/*
+!reference/brd/input/README.md
+
+# BRD output files (generated schemas)
+reference/brd/output/*.json
 
 # Environment variables
 .env
@@ -57,3 +78,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Scripts output (if any)
+scripts/*.log
+scripts/*.tmp
