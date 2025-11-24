@@ -7,43 +7,38 @@ Parses BRD documents from various formats (PDF, Word, TXT, CSV, etc.) and conver
 import os
 import re
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import json
 
 from .brd_schema import BRDSchema, BRDRequirement, BRDTestScenario, RequirementPriority, RequirementStatus
 from ..engine.llm import LLMPrompter
+from ..utils import extract_json_from_response, SUPPORTED_BRD_FORMATS
 
 
 class BRDParser:
     """Parses BRD documents from various formats and converts to BRD schema."""
     
-    SUPPORTED_FORMATS = {
-        '.txt': 'text',
-        '.csv': 'csv',
-        '.pdf': 'pdf',
-        '.doc': 'word',
-        '.docx': 'word',
-        '.md': 'markdown',
-        '.json': 'json'  # Already in schema format
-    }
+    SUPPORTED_FORMATS = SUPPORTED_BRD_FORMATS
     
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", input_dir: str = "reference/brd/input", output_dir: str = "reference/brd/output"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", provider: str = "openai", input_dir: str = "reference/brd/input", output_dir: str = "reference/brd/output"):
         """
         Initialize the BRD Parser.
         
         Args:
-            api_key: OpenAI API key
+            api_key: LLM API key
             model: LLM model to use
+            provider: LLM provider ('openai', 'anthropic', 'google', 'azure')
             input_dir: Directory where BRD documents are stored
             output_dir: Directory where parsed BRD schemas will be saved
         """
         self.api_key = api_key
         self.model = model
+        self.provider = provider
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir)
         self.input_dir.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.llm_prompter = LLMPrompter(model=model, api_key=api_key) if api_key else None
+        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider) if api_key else None
     
     def parse_document(self, filename: str) -> Optional[BRDSchema]:
         """
@@ -64,8 +59,10 @@ class BRDParser:
             file_path_obj = Path(filename)
         
         if not file_path_obj.exists():
-            print(f"✗ File not found: {filename}")
+            print(f"✗ Error: File not found: {filename}")
             print(f"   Searched in: {self.input_dir}")
+            print(f"   Also checked as absolute path: {Path(filename)}")
+            print(f"   Tip: Ensure the file exists or provide the full path.")
             return None
         
         print(f"📄 Reading document from: {file_path_obj}")
@@ -73,8 +70,9 @@ class BRDParser:
         file_ext = file_path_obj.suffix.lower()
         
         if file_ext not in self.SUPPORTED_FORMATS:
-            print(f"✗ Unsupported file format: {file_ext}")
+            print(f"✗ Error: Unsupported file format: {file_ext}")
             print(f"   Supported formats: {', '.join(self.SUPPORTED_FORMATS.keys())}")
+            print(f"   Tip: Convert your document to one of the supported formats.")
             return None
         
         # If already JSON, it should be in output directory, not input
@@ -151,7 +149,7 @@ class BRDParser:
         
         return None
     
-    def list_available_documents(self) -> list:
+    def list_available_documents(self) -> List[str]:
         """
         List all available BRD documents in the input directory.
         Excludes JSON files (which should be in output directory).
@@ -175,7 +173,12 @@ class BRDParser:
     def _parse_with_llm(self, content: str, filename: str) -> Optional[BRDSchema]:
         """Use LLM to parse document content and convert to BRD schema."""
         if not self.llm_prompter:
-            print("⚠ Error: No API key provided for BRD parsing")
+            error_msg = (
+                "BRD parsing requires an OpenAI API key. "
+                "Please provide an API key via OPENAI_API_KEY environment variable "
+                "or pass it to BRDParser constructor."
+            )
+            print(f"✗ Error: {error_msg}")
             return None
         
         print(f"📄 Parsing BRD document: {filename}...")
@@ -193,7 +196,7 @@ class BRDParser:
             return None
         
         # Extract JSON from response
-        brd_json = self._extract_json_from_response(response)
+        brd_json = extract_json_from_response(response)
         
         if not brd_json:
             return None
@@ -278,19 +281,6 @@ Return ONLY valid JSON, no additional text or markdown formatting:
 """
         return prompt
     
-    def _extract_json_from_response(self, response: str) -> Optional[str]:
-        """Extract JSON from LLM response (may be wrapped in markdown)."""
-        # Try to find JSON in code blocks
-        json_match = re.search(r'```(?:json)?\s*(\{.*?\})\s*```', response, re.DOTALL)
-        if json_match:
-            return json_match.group(1)
-        
-        # Try to find JSON object directly
-        json_match = re.search(r'\{.*\}', response, re.DOTALL)
-        if json_match:
-            return json_match.group(0)
-        
-        return response  # Return as-is, let parser handle it
     
     def _parse_llm_brd_response(self, brd_json: str) -> Optional[BRDSchema]:
         """Parse LLM-generated JSON into BRDSchema object."""

@@ -29,8 +29,27 @@
 
 #### 5. Output Generation
 - **CSV Generator**: Converts Gherkin scenarios to CSV format
+- **CSV Exporter**: Exports test scenarios to CSV format
 - **Analytics Reports**: Comprehensive analytics in `output/analytics/`
 - **Algorithm Reports**: Detailed reports in `output/analytics/reports/`
+
+#### 6. Test Coverage Analysis
+- **Coverage Analyzer**: Compares Gherkin scenarios with BRD requirements
+- **Coverage Metrics**: Calculates coverage percentage per requirement
+- **Gap Identification**: Identifies missing test scenarios
+- **Coverage Reports**: Generates detailed coverage analysis reports
+
+#### 7. Analytics Dashboard
+- **Analytics Aggregator**: Aggregates analytics across multiple runs
+- **Trend Analysis**: Tracks trends over time
+- **Cost Analysis**: Analyzes LLM API call costs
+- **Summary Reports**: Generates comprehensive summary reports
+
+#### 8. Configuration Management
+- **Config Manager**: Manages configuration from YAML/JSON files
+- **Environment Support**: Environment-specific configurations (development, production, testing)
+- **Algorithm Parameters**: Customizable algorithm parameters
+- **Environment Variables**: Override configuration with environment variables
 
 ### 📁 Project Structure
 
@@ -40,97 +59,120 @@ api-param-coverage/
 │   ├── swagger_tool/          # Schema downloading and validation
 │   ├── engine/                # Processing and LLM generation
 │   │   ├── algorithms/        # Schema processing algorithms
+│   │   │   ├── processor.py
+│   │   │   ├── analyzer.py
+│   │   │   └── csv_generator.py
 │   │   ├── analytics/         # Analytics and reporting
+│   │   │   ├── metrics_collector.py
+│   │   │   ├── algorithm_tracker.py
+│   │   │   ├── aggregator.py
+│   │   │   └── dashboard.py
+│   │   ├── coverage/          # Test coverage analysis
+│   │   │   └── coverage_analyzer.py
+│   │   ├── performance/       # Performance optimization
+│   │   │   ├── profiler.py
+│   │   │   ├── cache.py
+│   │   │   ├── optimizer.py
+│   │   │   └── parallel.py
 │   │   └── llm/              # LLM prompting
 │   ├── brd/                   # Business Requirement Document
 │   │   ├── brd_schema.py
 │   │   ├── brd_loader.py
 │   │   ├── brd_parser.py
+│   │   ├── brd_validator.py
 │   │   └── schema_cross_reference.py
-│   └── brd_generator/        # BRD generation
-│       └── brd_generator.py
-├── data/
-│   └── schemas/              # Downloaded schemas
-├── reference/                # Reference data
-│   └── brd/
-│       └── input/            # BRD schema files
-│           └── README.md     # BRD schema format documentation
-├── output/
-│   ├── *.csv                 # Generated CSV files
-│   └── analytics/
-│       ├── *.txt             # LLM execution metrics
-│       └── reports/          # Algorithm-specific reports
+│   ├── brd_generator/        # BRD generation
+│   │   └── brd_generator.py
+│   ├── config/                # Configuration management
+│   │   └── config_manager.py
+│   ├── cli/                   # CLI utilities
+│   │   └── cli_utils.py
+│   ├── utils/                 # Shared utilities
+│   │   ├── json_utils.py
+│   │   └── constants.py
+│   └── workflow/              # Workflow orchestration
+│       ├── brd_handler.py
+│       ├── scenario_generator.py
+│       └── coverage_handler.py
+├── reference/                 # Reference data
+│   ├── schemas/              # Downloaded schemas
+│   ├── brd/
+│   │   ├── input/            # BRD document input
+│   │   └── output/           # BRD schema output
+│   └── dummy_data/           # Example data and scripts
+│       └── scripts/
+├── output/                    # Execution outputs
+│   └── <timestamp>_<schema>/ # Run-specific folders
+│       ├── analytics/         # Analytics subfolder
+│       ├── *.csv             # Generated CSV files
+├── config/                    # Configuration files
+│   ├── config.yaml.example
+│   ├── development.yaml.example
+│   └── production.yaml.example
 ├── docs/
-│   ├── latex/                # LaTeX monography files
-│   └── PROJECT_STATUS.md     # This file
+│   ├── PROJECT_STATUS.md     # This file
+│   ├── USER_GUIDE.md         # User guide
+│   ├── ARCHITECTURE.md       # Architecture documentation
+│   └── API_DOCUMENTATION.md  # API reference
 └── main.py                   # Main entry point
 ```
 
 ### 🔄 Current Workflow
 
-1. **Schema Download**: User provides Swagger/OpenAPI schema URL
-2. **Schema Processing**: Process and analyze schema
-3. **BRD Handling**: 
+1. **Configuration Loading**: Load settings from config files or environment variables
+2. **Schema Download**: User provides Swagger/OpenAPI schema URL
+3. **Schema Processing**: Process and analyze schema
+4. **BRD Handling**: 
    - Option 1: Load existing BRD file
    - Option 2: Generate BRD from Swagger using LLM
    - Option 3: Parse BRD from document (PDF, Word, TXT, CSV)
-4. **Cross-Reference**: Filter endpoints by BRD requirements
-5. **Test Generation**: Generate Gherkin scenarios only for BRD-covered endpoints
-6. **CSV Export**: Save test scenarios to CSV
-7. **Analytics**: Track all algorithm executions and LLM calls
+5. **Cross-Reference**: Filter endpoints by BRD requirements
+6. **Test Generation**: Generate Gherkin scenarios only for BRD-covered endpoints
+7. **Export**: Save test scenarios to CSV format
+8. **Analytics**: Track all algorithm executions and LLM calls
+9. **Coverage Analysis**: Analyze test coverage against BRD requirements (optional)
 
-## 🎯 Next Steps / Future Enhancements
+## 🎯 Future Enhancements
 
-### High Priority
+### Integration Points
 
-1. **LaTeX Parser Integration**
-   - Parse LaTeX files from `docs/latex/` folder
-   - Extract content for monography/report generation
-   - Integrate with BRD system for documentation
+1. **BRD Enhancement**
+   - Auto-complete missing information
+   - Support versioning
+   - Visualize coverage gaps (enhancement to existing coverage analysis)
 
-2. **Enhanced BRD Parser**
-   - Improve document format support (better PDF/Word parsing)
-   - Add validation for parsed BRD schemas
-   - Support for more document formats (Excel, Markdown)
+2. **Analytics Enhancement**
+   - Add graphical visualizations (charts, graphs)
+   - Interactive dashboard interface
+   - Export analytics data to JSON/CSV formats
 
-3. **Algorithm Performance Optimization**
-   - Analyze algorithm reports for bottlenecks
-   - Optimize complexity calculations
-   - Improve execution time tracking
+3. **Logging System**
+   - Replace print statements with proper logging system
+   - Structured logging with levels
+   - Log file rotation and management
 
-### Medium Priority
+#### 10. Performance Optimization
+- **Performance Profiler**: Profiles algorithm execution and generates detailed reports
+- **Caching System**: File-based caching with TTL for repeated operations
+- **Data Structure Optimizer**: Optimizes dictionary/list operations and pre-computes common values
+- **Parallel Processing**: Parallel execution support for independent operations
 
-4. **Test Coverage Analysis**
-   - Generate coverage reports comparing BRD requirements vs generated tests
-   - Visualize coverage gaps
-   - Suggest missing test scenarios
+#### 11. Workflow Refactoring
+- **Workflow Module**: Extracted workflow logic from main.py into reusable modules
+- **BRD Handler**: Centralized BRD selection, loading, parsing, and generation
+- **Scenario Generator**: Extracted scenario generation and export logic
+- **Coverage Handler**: Centralized coverage filtering logic
 
-5. **BRD Validation**
-   - Validate BRD schemas against Swagger endpoints
-   - Check for missing endpoints in BRD
-   - Suggest BRD improvements
+#### 12. Interactive CLI
+- **CLI Utilities**: Progress bars, status updates, interactive selection
+- **Error Handling**: Comprehensive error handling with recovery options
+- **User Experience**: Enhanced CLI with colored output and better feedback
 
-6. **Advanced Analytics**
-   - Aggregate analytics across multiple runs
-   - Trend analysis for algorithm performance
-   - Cost tracking for LLM API calls
-
-### Low Priority
-
-7. **UI/CLI Improvements**
-   - Interactive mode for BRD selection
-   - Progress bars for long operations
-   - Better error messages and recovery
-
-8. **Configuration Management**
-   - Config file for default settings
-   - Environment-specific configurations
-   - Customizable algorithm parameters
-
-9. **Export Formats**
-   - Export to other test management formats (JIRA, TestRail, etc.)
-   - JSON export for programmatic use
-   - HTML reports with visualizations
+#### 13. Documentation
+- **User Guide**: Comprehensive user guide with examples and troubleshooting
+- **Developer Guide**: Guide for extending modules and adding features
+- **Architecture Documentation**: System architecture and design patterns
+- **API Documentation**: Complete API reference for all modules
 
 ## 📝 Notes
 
@@ -145,26 +187,17 @@ api-param-coverage/
 - Token limits may affect very large prompts (handled with warnings)
 
 ### Testing Status
-- Core algorithms have test coverage
+- Core algorithms have comprehensive test coverage
+- BDD tests using Behave framework
+- Test output saved to `tests/output/<timestamp>/`
 - LLM integration tests may require API key
 - BRD parser tests need sample documents
 
-## 🔧 Maintenance Tasks
-
-1. **Code Quality**
-   - Review and refactor complex algorithms
-   - Improve error handling
-   - Add more comprehensive tests
-
-2. **Documentation**
-   - Update README with new features
-   - Add API documentation
-   - Create user guide
-
-3. **Performance**
-   - Profile algorithm execution
-   - Optimize data structures
-   - Cache frequently used computations
+### Performance Features
+- Algorithm execution profiling available
+- Caching enabled for schema processing and analysis
+- Data structure optimizations applied
+- Parallel processing support for independent operations
 
 ## 📊 Analytics Insights
 

@@ -172,3 +172,4 @@ class TestBRDGenerator:
         result = generator._extract_json_from_response(response_no_json)
         assert result == response_no_json
 
+
