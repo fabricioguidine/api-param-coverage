@@ -118,3 +118,4 @@ class BRDSchema:
             endpoints.add((req.endpoint_path, req.endpoint_method.upper()))
         return list(endpoints)
 
+

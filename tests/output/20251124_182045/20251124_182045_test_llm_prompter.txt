@@ -1,0 +1,39 @@
+================================================================================
+Test Suite: test_llm_prompter
+================================================================================
+
+Timestamp: 20251124_182045
+Total Tests: 1
+
+Summary:
+  - Passed: 0
+  - Failed: 1
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_success
+Status: FAILED
+Timestamp: 2025-11-24T18:20:45.363793
+
+Error Details:
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1423: in patched
+    with self.decoration_helper(patched,
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:141: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1405: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\contextlib.py:530: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1497: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1467: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'src.modules.engine.llm.prompter' from 'C:\\Users\\fabri\\Documents\\repos\\api-param-coverage\\src\\modules\\engine\\llm\\prompter.py'> does not have the attribute 'OpenAI'
+
+================================================================================

@@ -17,21 +17,7 @@
 - `src/modules/docs/__init__.py` (new)
 - Update `main.py` to include LaTeX parsing option
 
-### 2. Enhanced BRD Validation
-**Priority**: High
-**Status**: Pending
-
-- [ ] Add BRD schema validation against Swagger endpoints
-- [ ] Check for orphaned requirements (endpoints not in Swagger)
-- [ ] Validate endpoint paths and methods
-- [ ] Suggest missing endpoints in BRD
-- [ ] Generate validation reports
-
-**Files to create/modify**:
-- `src/modules/brd/brd_validator.py` (new)
-- Update `main.py` to include validation step
-
-### 3. Test Coverage Analysis
+### 2. Test Coverage Analysis
 **Priority**: Medium
 **Status**: Pending
 
@@ -45,7 +31,7 @@
 - `src/modules/engine/coverage/coverage_analyzer.py` (new)
 - `src/modules/engine/coverage/__init__.py` (new)
 
-### 4. Analytics Dashboard
+### 3. Analytics Dashboard
 **Priority**: Medium
 **Status**: Pending
 
@@ -83,7 +69,6 @@
 - [ ] Refactor large methods in `brd_generator.py`
 - [ ] Improve error messages across modules
 - [ ] Add type hints to all functions
-- [ ] Increase test coverage to >80%
 
 ### Documentation
 - [ ] API documentation with Sphinx
@@ -109,11 +94,9 @@ The LaTeX parser should:
 
 ### BRD Enhancement
 The BRD system should:
-1. Validate against Swagger schemas
-2. Suggest improvements
-3. Auto-complete missing information
-4. Generate test coverage reports
-5. Support versioning
+1. Auto-complete missing information
+2. Generate test coverage reports (see Test Coverage Analysis)
+3. Support versioning
 
 ### Analytics Enhancement
 The analytics system should:
@@ -132,16 +115,11 @@ The analytics system should:
 - Extract citations and references
 - Handle figures and tables
 
-### BRD Validator
-- Use fuzzy matching for endpoint paths
-- Handle path parameters correctly
-- Support OpenAPI 3.x and Swagger 2.0
-- Provide actionable suggestions
-
 ### Coverage Analyzer
 - Map Gherkin scenarios to BRD requirements
 - Calculate coverage metrics
 - Identify gaps
 - Suggest missing scenarios
 - Generate visual reports
+
 

@@ -1,0 +1,105 @@
+================================================================================
+Test Suite: test_brd_parser
+================================================================================
+
+Timestamp: 20251124_183016
+Total Tests: 18
+
+Summary:
+  - Passed: 18
+  - Failed: 0
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_parser_initialization
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.645816
+
+--------------------------------------------------------------------------------
+Test: test_parser_default_directories
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.647748
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.653226
+
+--------------------------------------------------------------------------------
+Test: test_parse_nonexistent_document
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.657786
+
+--------------------------------------------------------------------------------
+Test: test_parse_unsupported_format
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.661824
+
+--------------------------------------------------------------------------------
+Test: test_parse_json_in_input_directory
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.666583
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_txt
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.673030
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_markdown
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.678709
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_csv
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.685243
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_encoding_error
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.692162
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_pdf_missing_library
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.698184
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_word_missing_library
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.703825
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_absolute_path
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.723507
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_file_not_found
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.730623
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents_empty_directory
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.735546
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents_mixed_formats
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.742253
+
+--------------------------------------------------------------------------------
+Test: test_parser_without_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.746612
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_without_llm_prompter
+Status: PASSED
+Timestamp: 2025-11-24T18:30:16.751809
+
+================================================================================

@@ -1,0 +1,110 @@
+================================================================================
+Test Suite: test_llm_prompter
+================================================================================
+
+Timestamp: 20251124_181955
+Total Tests: 18
+
+Summary:
+  - Passed: 17
+  - Failed: 1
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_empty_processed_data
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.080708
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_none_processed_data
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.082746
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_invalid_processed_data_type
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.084811
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_gherkin_missing_analysis_data
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.087493
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_gherkin_empty_endpoints
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.089484
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_success
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.091491
+
+--------------------------------------------------------------------------------
+Test: test_create_prompt_gherkin_success
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.093765
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_empty_string
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.098216
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_none
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.101085
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_whitespace_only
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.103470
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_too_short
+Status: PASSED
+Timestamp: 2025-11-24T18:19:56.109116
+
+--------------------------------------------------------------------------------
+Test: test_send_prompt_success
+Status: FAILED
+Timestamp: 2025-11-24T18:19:58.053632
+
+Error Details:
+tests\engine\llm\test_llm_prompter.py:137: in test_send_prompt_success
+    assert result is not None
+E   assert None is not None
+
+--------------------------------------------------------------------------------
+Test: test_generate_gherkin_empty_processed_data
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.056121
+
+--------------------------------------------------------------------------------
+Test: test_generate_gherkin_empty_analysis_data
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.058207
+
+--------------------------------------------------------------------------------
+Test: test_generate_gherkin_no_endpoints
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.060347
+
+--------------------------------------------------------------------------------
+Test: test_optimize_analysis_data_empty
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.063241
+
+--------------------------------------------------------------------------------
+Test: test_optimize_analysis_data_no_endpoints
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.065396
+
+--------------------------------------------------------------------------------
+Test: test_optimize_analysis_data_success
+Status: PASSED
+Timestamp: 2025-11-24T18:19:58.067682
+
+================================================================================

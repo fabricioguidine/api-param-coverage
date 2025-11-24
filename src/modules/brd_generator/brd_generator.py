@@ -21,24 +21,28 @@ import time
 class BRDGenerator:
     """Generates BRD schemas from Swagger schemas using LLM."""
     
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", analytics_dir: Optional[str] = None):
         """
         Initialize the BRD Generator.
         
         Args:
             api_key: OpenAI API key
             model: LLM model to use
+            analytics_dir: Analytics directory (default: "output/analytics")
+                          Typically should be: <run_output_dir>/analytics/
         """
         self.api_key = api_key
         self.model = model
         self.llm_prompter = LLMPrompter(model=model, api_key=api_key) if api_key else None
-        self.metrics_collector = MetricsCollector()
+        analytics_path = analytics_dir or "output/analytics"
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
     
     def generate_brd_from_swagger(
         self,
         processed_data: Dict[str, Any],
         analysis_data: Dict[str, Any],
-        schema_filename: str
+        schema_filename: str,
+        coverage_percentage: float = 100.0
     ) -> Optional[BRDSchema]:
         """
         Generate a BRD schema from Swagger schema using heuristic analysis and LLM.
@@ -47,6 +51,7 @@ class BRDGenerator:
             processed_data: Processed schema data from SchemaProcessor
             analysis_data: Analysis data from SchemaAnalyzer
             schema_filename: Name of the schema file
+            coverage_percentage: Percentage of endpoints to include (1-100, default: 100)
             
         Returns:
             BRDSchema object, or None if generation fails
@@ -55,14 +60,21 @@ class BRDGenerator:
             print("⚠ Error: No API key provided for BRD generation")
             return None
         
-        print("📋 Generating BRD from Swagger schema using heuristic analysis...")
+        # Validate coverage percentage
+        if coverage_percentage < 1 or coverage_percentage > 100:
+            print(f"⚠ Invalid coverage percentage ({coverage_percentage}). Using 100%.")
+            coverage_percentage = 100.0
+        
+        print(f"📋 Generating BRD from Swagger schema using heuristic analysis...")
+        print(f"   Target coverage: {coverage_percentage}% of endpoints")
         start_time = time.time()
         
         try:
-            # Step 1: Analyze Swagger to create test plan heuristic
-            test_plan = self._create_test_plan_heuristic(processed_data, analysis_data)
+            # Step 1: Analyze Swagger to create test plan heuristic with coverage filter
+            test_plan = self._create_test_plan_heuristic(processed_data, analysis_data, coverage_percentage)
             
-            # Step 2: Use LLM to generate structured BRD
+            # Step 2: Use LLM to generate structured BRD (with filtered endpoints)
+            # The test_plan already contains only selected endpoints, so we use it directly
             brd_data = self._generate_brd_with_llm(test_plan, processed_data, analysis_data)
             
             if not brd_data:
@@ -104,7 +116,8 @@ class BRDGenerator:
     def _create_test_plan_heuristic(
         self,
         processed_data: Dict[str, Any],
-        analysis_data: Dict[str, Any]
+        analysis_data: Dict[str, Any],
+        coverage_percentage: float = 100.0
     ) -> Dict[str, Any]:
         """
         Create a test plan heuristic by analyzing the Swagger schema.
@@ -112,22 +125,44 @@ class BRDGenerator:
         Args:
             processed_data: Processed schema data
             analysis_data: Analysis data
+            coverage_percentage: Percentage of endpoints to include (1-100)
             
         Returns:
             Dictionary with test plan heuristic
         """
-        endpoints = analysis_data.get('endpoints', [])
+        all_endpoints = analysis_data.get('endpoints', [])
         api_info = processed_data.get('info', {})
+        
+        # Filter endpoints based on coverage percentage
+        total_endpoints = len(all_endpoints)
+        target_count = max(1, int(total_endpoints * (coverage_percentage / 100.0)))
+        
+        # Select endpoints based on priority (high priority first)
+        # Sort endpoints by priority heuristic
+        endpoints_with_priority = []
+        for endpoint in all_endpoints:
+            method = endpoint.get('method', '')
+            params = endpoint.get('parameters', [])
+            priority_score = self._calculate_priority_score(method, params)
+            endpoints_with_priority.append((priority_score, endpoint))
+        
+        # Sort by priority score (descending) and take top N
+        endpoints_with_priority.sort(key=lambda x: x[0], reverse=True)
+        selected_endpoints = [endpoint for _, endpoint in endpoints_with_priority[:target_count]]
+        
+        print(f"   Selected {len(selected_endpoints)} out of {total_endpoints} endpoints ({coverage_percentage}% coverage)")
         
         # Analyze endpoints and create priority/coverage suggestions
         test_plan = {
             "api_name": api_info.get('title', 'Unknown API'),
             "api_version": api_info.get('version', 'Unknown'),
-            "total_endpoints": len(endpoints),
+            "total_endpoints": total_endpoints,
+            "selected_endpoints": len(selected_endpoints),
+            "coverage_percentage": coverage_percentage,
             "endpoint_analysis": []
         }
         
-        for endpoint in endpoints:
+        for endpoint in selected_endpoints:
             path = endpoint.get('path', '')
             method = endpoint.get('method', '')
             params = endpoint.get('parameters', [])
@@ -147,6 +182,38 @@ class BRDGenerator:
             })
         
         return test_plan
+    
+    def _calculate_priority_score(self, method: str, params: List[Dict]) -> float:
+        """
+        Calculate a numeric priority score for endpoint selection.
+        Higher score = higher priority for inclusion.
+        
+        Args:
+            method: HTTP method
+            params: List of parameters
+            
+        Returns:
+            Priority score (float)
+        """
+        method_upper = method.upper()
+        score = 0.0
+        
+        # Method-based scoring
+        if method_upper in ['POST', 'PUT', 'DELETE']:
+            score += 100.0  # Critical operations
+        elif method_upper == 'GET':
+            score += 50.0  # Read operations
+        else:
+            score += 30.0  # Other methods
+        
+        # Parameter complexity bonus
+        score += min(len(params) * 5.0, 50.0)  # Up to 50 points for complexity
+        
+        # Required parameters bonus
+        required_params = [p for p in params if p.get('required', False)]
+        score += len(required_params) * 3.0
+        
+        return score
     
     def _determine_priority_heuristic(self, method: str, params: List[Dict]) -> str:
         """Determine priority based on HTTP method and parameter complexity."""
@@ -207,7 +274,14 @@ class BRDGenerator:
         analysis_data: Dict[str, Any]
     ) -> Optional[str]:
         """Use LLM to generate structured BRD JSON."""
-        prompt = self._create_brd_generation_prompt(test_plan, processed_data, analysis_data)
+        # Use endpoints from test_plan (already filtered by coverage)
+        filtered_analysis = {
+            **analysis_data,
+            'endpoints': [ep for ep in analysis_data.get('endpoints', [])
+                         if any(ep.get('path') == ea.get('path') and ep.get('method') == ea.get('method')
+                                for ea in test_plan.get('endpoint_analysis', []))]
+        }
+        prompt = self._create_brd_generation_prompt(test_plan, processed_data, filtered_analysis)
         
         response = self.llm_prompter.send_prompt(prompt)
         
@@ -225,14 +299,16 @@ class BRDGenerator:
     ) -> str:
         """Create prompt for LLM to generate BRD."""
         api_info = processed_data.get('info', {})
-        endpoints = analysis_data.get('endpoints', [])
         
-        # Create compact endpoint summary
+        # Use endpoints from test_plan (already filtered by coverage percentage)
+        endpoint_analysis = test_plan.get('endpoint_analysis', [])
+        
+        # Create compact endpoint summary from selected endpoints
         endpoint_summary = []
-        for endpoint in endpoints[:20]:  # Limit to avoid token issues
-            path = endpoint.get('path', '')
-            method = endpoint.get('method', '')
-            params_count = len(endpoint.get('parameters', []))
+        for endpoint_info in endpoint_analysis:
+            path = endpoint_info.get('path', '')
+            method = endpoint_info.get('method', '')
+            params_count = endpoint_info.get('parameter_count', 0)
             endpoint_summary.append(f"- {method} {path} ({params_count} parameters)")
         
         prompt = f"""You are an expert in API testing and business requirement documentation.
@@ -243,8 +319,10 @@ API Information:
 - Name: {api_info.get('title', 'Unknown')}
 - Version: {api_info.get('version', 'Unknown')}
 
-Endpoints to analyze:
-{chr(10).join(endpoint_summary)}
+Selected Endpoints to analyze ({test_plan.get('coverage_percentage', 100)}% coverage):
+{chr(10).join(endpoint_summary) if endpoint_summary else 'No endpoints selected'}
+
+Note: This BRD covers {test_plan.get('selected_endpoints', 0)} out of {test_plan.get('total_endpoints', 0)} total endpoints.
 
 Test Plan Heuristic:
 {json.dumps(test_plan, indent=2)}

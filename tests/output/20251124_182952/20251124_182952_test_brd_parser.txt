@@ -1,0 +1,111 @@
+================================================================================
+Test Suite: test_brd_parser
+================================================================================
+
+Timestamp: 20251124_182952
+Total Tests: 18
+
+Summary:
+  - Passed: 17
+  - Failed: 1
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_parser_initialization
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.453899
+
+--------------------------------------------------------------------------------
+Test: test_parser_default_directories
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.455810
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.460486
+
+--------------------------------------------------------------------------------
+Test: test_parse_nonexistent_document
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.464950
+
+--------------------------------------------------------------------------------
+Test: test_parse_unsupported_format
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.468281
+
+--------------------------------------------------------------------------------
+Test: test_parse_json_in_input_directory
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.473224
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_txt
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.484757
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_markdown
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.496954
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_csv
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.508332
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_encoding_error
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.511925
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_pdf_missing_library
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.515765
+
+--------------------------------------------------------------------------------
+Test: test_extract_text_content_word_missing_library
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.519659
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_absolute_path
+Status: FAILED
+Timestamp: 2025-11-24T18:29:52.642679
+
+Error Details:
+tests\test_brd_parser.py:187: in test_parse_document_absolute_path
+    with pytest.mock.patch.object(parser, '_parse_with_llm', return_value=None):
+         ^^^^^^^^^^^
+E   AttributeError: module 'pytest' has no attribute 'mock'
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_file_not_found
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.647486
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents_empty_directory
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.651719
+
+--------------------------------------------------------------------------------
+Test: test_list_available_documents_mixed_formats
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.659056
+
+--------------------------------------------------------------------------------
+Test: test_parser_without_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.663782
+
+--------------------------------------------------------------------------------
+Test: test_parse_document_without_llm_prompter
+Status: PASSED
+Timestamp: 2025-11-24T18:29:52.676742
+
+================================================================================

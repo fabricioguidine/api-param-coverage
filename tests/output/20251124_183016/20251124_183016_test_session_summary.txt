@@ -1,0 +1,15 @@
+================================================================================
+Test Session Summary
+================================================================================
+
+Timestamp: 20251124_183016
+Total Tests: 34
+Passed: 33
+Failed: 1
+Skipped: 0
+
+Test Suites Run: 2
+  - test_brd_parser: 18 tests (18 passed, 0 failed, 0 skipped)
+  - test_brd_validator: 16 tests (15 passed, 1 failed, 0 skipped)
+
+================================================================================

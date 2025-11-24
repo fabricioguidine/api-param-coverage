@@ -1,0 +1,176 @@
+================================================================================
+Test Suite: test_brd_generator
+================================================================================
+
+Timestamp: 20251124_181656
+Total Tests: 24
+
+Summary:
+  - Passed: 22
+  - Failed: 2
+  - Skipped: 0
+
+================================================================================
+
+--------------------------------------------------------------------------------
+Test: test_generator_initialization
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.332223
+
+--------------------------------------------------------------------------------
+Test: test_generator_initialization_no_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.334689
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_exact_percentage
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.338462
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_random
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.341349
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_empty_list
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.344723
+
+--------------------------------------------------------------------------------
+Test: test_select_endpoints_by_coverage_prioritizes_critical
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.347887
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_critical_methods
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.351668
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_get_simple
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.355255
+
+--------------------------------------------------------------------------------
+Test: test_determine_priority_heuristic_get_complex
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.358872
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_get
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.361854
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_post
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.364757
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_put
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.367429
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_delete
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.370656
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_with_required_params
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.373701
+
+--------------------------------------------------------------------------------
+Test: test_suggest_test_scenarios_with_optional_params
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.376792
+
+--------------------------------------------------------------------------------
+Test: test_create_test_plan_heuristic
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.379488
+
+--------------------------------------------------------------------------------
+Test: test_extract_json_from_response_code_block
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.382919
+
+--------------------------------------------------------------------------------
+Test: test_extract_json_from_response_direct
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.386026
+
+--------------------------------------------------------------------------------
+Test: test_parse_llm_brd_response_success
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.389559
+
+--------------------------------------------------------------------------------
+Test: test_parse_llm_brd_response_invalid_json
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.392732
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_success
+Status: FAILED
+Timestamp: 2025-11-24T18:16:56.607062
+
+Error Details:
+src\modules\brd_generator\brd_generator.py:87: in generate_brd_from_swagger
+    algorithm_metrics = self.metrics_collector.collect_algorithm_metrics(
+src\modules\engine\analytics\metrics_collector.py:215: in collect_algorithm_metrics
+    metrics["output_analysis"] = self._analyze_output_complexity(output_data)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\modules\engine\analytics\metrics_collector.py:283: in _analyze_output_complexity
+    count = len(output_data.get('endpoints', output_data.get('requirements', [])))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: object of type 'int' has no len()
+
+During handling of the above exception, another exception occurred:
+tests\brd_generator\test_brd_generator.py:302: in test_generate_brd_from_swagger_success
+    brd = generator.generate_brd_from_swagger(
+src\modules\brd_generator\brd_generator.py:103: in generate_brd_from_swagger
+    execution_time = time.time() - start_time
+                     ^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1169: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1173: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python313\Lib\unittest\mock.py:1230: in _execute_mock_call
+    result = next(effect)
+             ^^^^^^^^^^^^
+E   StopIteration
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_no_api_key
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.609983
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_llm_failure
+Status: PASSED
+Timestamp: 2025-11-24T18:16:56.613829
+
+--------------------------------------------------------------------------------
+Test: test_generate_brd_from_swagger_with_coverage_percentage
+Status: FAILED
+Timestamp: 2025-11-24T18:16:56.641185
+
+Error Details:
+tests\brd_generator\test_brd_generator.py:360: in test_generate_brd_from_swagger_with_coverage_percentage
+    brd = generator.generate_brd_from_swagger(
+src\modules\brd_generator\brd_generator.py:87: in generate_brd_from_swagger
+    algorithm_metrics = self.metrics_collector.collect_algorithm_metrics(
+src\modules\engine\analytics\metrics_collector.py:215: in collect_algorithm_metrics
+    metrics["output_analysis"] = self._analyze_output_complexity(output_data)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\modules\engine\analytics\metrics_collector.py:283: in _analyze_output_complexity
+    count = len(output_data.get('endpoints', output_data.get('requirements', [])))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: object of type 'int' has no len()
+
+================================================================================

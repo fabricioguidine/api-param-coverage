@@ -1,0 +1,63 @@
+================================================================================
+Algorithm Analysis Report: LLMPrompter
+================================================================================
+
+ALGORITHM INFORMATION
+--------------------------------------------------------------------------------
+Algorithm Name: LLMPrompter
+Algorithm Type: llm_prompter
+Timestamp: 2025-11-24T16:28:40.478230
+Execution Time: 52.70 seconds
+LLM Call: Yes
+
+INPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 7,519
+Element Count: 6
+Nested Depth: 3
+Structure Complexity: medium
+
+OUTPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 88
+Element Count: 2
+Nested Depth: 1
+Structure Complexity: low
+Output Quality: unknown
+
+ALGORITHM-SPECIFIC COMPLEXITY METRICS
+--------------------------------------------------------------------------------
+total_endpoints_analyzed: 5
+total_parameters: 41
+average_parameters_per_endpoint: 8.2
+total_iteration_count: 637
+parameter_types_distribution:
+  - array: 14
+  - string: 16
+  - object: 5
+  - integer: 6
+parameter_locations_distribution:
+  - query: 17
+  - response: 18
+  - path: 5
+  - header: 1
+constraint_analysis:
+  - enum_parameters: 3
+  - pattern_parameters: 1
+  - bounded_parameters: 5
+  - unbounded_parameters: 17
+
+LLM CALL ANALYSIS
+--------------------------------------------------------------------------------
+Prompt Metrics:
+  - Length: 3,351 characters
+  - Estimated Tokens: 837
+API Usage:
+  - Prompt Tokens: 1019
+  - Completion Tokens: 727
+  - Total Tokens: 1746
+Response Metrics:
+  - Length: 2,962 characters
+  - Estimated Tokens: 740
+
+================================================================================

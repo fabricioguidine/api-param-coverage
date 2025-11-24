@@ -33,3 +33,4 @@ You can also manually create BRD schema files here following the format specifie
 - Files are automatically ignored by git (see `.gitignore`)
 - Schema files are used to filter test scope during scenario generation
 
+

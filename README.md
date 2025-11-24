@@ -164,13 +164,13 @@ Step 6: Generating Gherkin test scenarios via LLM...
 ======================================================================
 🤖 Sending prompt to gpt-4...
 ✓ Gherkin scenarios generated
-📊 Analytics saved: docs/20241124_133045_schema/analytics/20241124_133045.txt
-📈 Algorithm report saved: docs/20241124_133045_schema/analytics/reports/llm_prompter_*.txt
+📊 Analytics saved: output/20241124_133045_schema/analytics/20241124_133045.txt
+📈 Algorithm report saved: output/20241124_133045_schema/analytics/reports/llm_prompter_*.txt
 
 ======================================================================
 Step 7: Saving to CSV...
 ======================================================================
-✓ CSV saved: docs/20241124_133045_petstore/csv/petstore_swagger_io_v2_swagger-20241124_133045.csv
+✓ CSV saved: output/20241124_133045_petstore/petstore_swagger_io_v2_swagger-20241124_133045.csv
 
 ======================================================================
 Summary
@@ -181,7 +181,7 @@ Total Endpoints: 20
 BRD: API Test Requirements Document
 BRD Coverage: 75.0%
 Tested Endpoints: 15
-Output: docs/20241124_133045_petstore/csv/petstore_swagger_io_v2_swagger-20241124_133045.csv
+Output: output/20241124_133045_petstore/petstore_swagger_io_v2_swagger-20241124_133045.csv
 
 ✓ Processing complete!
 ```
@@ -230,16 +230,18 @@ api-param-coverage/
 │       │   └── README.md              # BRD document input guide
 │       └── output/                    # Generated BRD schemas (JSON)
 │           └── README.md              # BRD schema format documentation
-├── docs/                              # Documentation and execution outputs
+├── docs/                              # Documentation
 │   ├── latex/                         # LaTeX monography files
-│   ├── <timestamp>_<schema>/          # Execution run folders (organized by timestamp)
-│   │   ├── csv/                       # Generated CSV files (Gherkin scenarios)
-│   │   └── analytics/                 # Analytics and reports for this run
-│   │       ├── *.txt                  # LLM execution metrics
-│   │       └── reports/               # Algorithm-specific reports
-│   │           └── *_algorithm_*.txt   # Detailed algorithm analysis
 │   ├── PROJECT_STATUS.md              # Project status
-│   └── NEXT_STEPS.md                  # Roadmap
+│   ├── NEXT_STEPS.md                  # Roadmap
+│   └── README.md                      # Documentation guide
+├── output/                            # Execution outputs (at project root)
+│   └── <timestamp>_<schema>/         # Execution run folders
+│       ├── analytics/                 # Analytics subfolder
+│       │   ├── *.txt                  # LLM execution metrics
+│       │   └── reports/               # Algorithm-specific reports
+│       ├── *.csv                      # Generated CSV files (Gherkin scenarios)
+│       └── brd_validation_report_*.txt # Validation reports
 ├── main.py                            # Main entry point
 ├── scripts/                           # Utility scripts
 │   └── run_weather_api.py            # Weather API test script
@@ -376,7 +378,7 @@ BRD files are stored in JSON format in `reference/brd/input/`. See `reference/br
 
 ### Analytics Files
 
-All analytics are saved in `docs/<timestamp>_<schema>/analytics/`:
+All analytics are saved in `docs/<timestamp>_<schema>/`:
 
 - **LLM Execution Metrics** (`YYYYMMDD_HHMMSS.txt`): General LLM call metrics
 - **Algorithm Reports** (`reports/YYYYMMDD_HHMMSS_<type>_<name>.txt`): Detailed algorithm analysis
@@ -426,8 +428,8 @@ Each algorithm report includes:
 | Setting | Default Value | Description |
 |---------|---------------|-------------|
 | Schema storage | `data/schemas/` | Downloaded schemas location |
-| CSV output directory | `docs/output/csv/` | Generated CSV files location |
-| Analytics directory | `docs/output/analytics/` | Analytics files location |
+| CSV output directory | `output/<timestamp>_<schema>/` | Generated CSV files location |
+| Analytics directory | `output/<timestamp>_<schema>/analytics/` | Analytics files location |
 | BRD directory | `reference/brd/output/` | BRD schema files location |
 | LLM model | `gpt-4` | OpenAI model to use |
 | Max tokens | `3000` | Maximum response tokens |
@@ -490,7 +492,7 @@ The project includes comprehensive tests for:
 
 ### CSV Files
 
-CSV files are saved in `docs/<timestamp>_<schema>/csv/` with format: `<schemaName>-<timestamp>.csv`
+CSV files are saved in `output/<timestamp>_<schema>/` with format: `<schemaName>-<timestamp>.csv`
 
 **Columns:**
 - `Feature`: Gherkin feature name
@@ -503,7 +505,7 @@ CSV files are saved in `docs/<timestamp>_<schema>/csv/` with format: `<schemaNam
 
 ### Analytics Reports
 
-**LLM Execution Metrics** (`docs/<timestamp>_<schema>/analytics/*.txt`):
+**LLM Execution Metrics** (`output/<timestamp>_<schema>/analytics/*.txt`):
 - Execution information
 - API information
 - Schema statistics
@@ -512,7 +514,7 @@ CSV files are saved in `docs/<timestamp>_<schema>/csv/` with format: `<schemaNam
 - API usage (actual tokens)
 - Response metrics
 
-**Algorithm Reports** (`docs/<timestamp>_<schema>/analytics/reports/*.txt`):
+**Algorithm Reports** (`output/<timestamp>_<schema>/analytics/reports/*_algorithm_*.txt`):
 - Algorithm information
 - Input complexity analysis
 - Output complexity analysis
