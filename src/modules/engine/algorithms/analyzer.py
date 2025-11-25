@@ -15,7 +15,7 @@ import yaml
 class SchemaAnalyzer:
     """Analyzes OpenAPI/Swagger schemas for test traceability matrix generation."""
     
-    def __init__(self, schemas_dir: str = "reference/schemas"):
+    def __init__(self, schemas_dir: str = "schemas"):
         """
         Initialize the SchemaAnalyzer.
         

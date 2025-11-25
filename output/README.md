@@ -17,7 +17,7 @@ This folder contains example output from running the tool with the weather.gov A
 Run the example script:
 
 ```bash
-python reference/scripts/run_weather_api.py
+python scripts/run_weather_api.py
 ```
 
 Or use the main tool with the weather.gov API:

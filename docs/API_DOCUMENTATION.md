@@ -21,7 +21,7 @@ Downloads and saves Swagger/OpenAPI schemas from URLs.
 
 #### Methods
 
-##### `__init__(schemas_dir: str = "reference/schemas")`
+##### `__init__(schemas_dir: str = "schemas")`
 
 Initialize the Schema Fetcher.
 
@@ -293,7 +293,7 @@ Loads and saves BRD schemas.
 
 #### Methods
 
-##### `__init__(brd_dir: str = "reference/brd/output")`
+##### `__init__(brd_dir: str = "src/modules/brd/input_schema")`
 
 Initialize BRD Loader.
 
@@ -334,7 +334,7 @@ Parses BRD documents from various formats.
 
 #### Methods
 
-##### `__init__(api_key: Optional[str] = None, model: str = "gpt-4", input_dir: str = "reference/brd/input", output_dir: str = "reference/brd/output")`
+##### `__init__(api_key: Optional[str] = None, model: str = "gpt-4", input_dir: str = "src/modules/brd/input_transformator", output_dir: str = "src/modules/brd/input_schema")`
 
 Initialize BRD Parser.
 
@@ -459,10 +459,10 @@ Configuration is managed through environment variables and default constants def
 - `DEFAULT_LLM_MODEL`: Default LLM model (default: "gpt-4")
 - `DEFAULT_LLM_TEMPERATURE`: Default temperature (default: 0.7)
 - `DEFAULT_LLM_MAX_TOKENS`: Default max tokens (default: 3000)
-- `DEFAULT_SCHEMAS_DIR`: Default schemas directory (default: "reference/schemas")
+- `DEFAULT_SCHEMAS_DIR`: Default schemas directory (default: "schemas")
 - `DEFAULT_OUTPUT_DIR`: Default output directory (default: "output")
-- `DEFAULT_BRD_INPUT_DIR`: Default BRD input directory (default: "reference/brd/input")
-- `DEFAULT_BRD_OUTPUT_DIR`: Default BRD output directory (default: "reference/brd/output")
+- `DEFAULT_BRD_INPUT_SCHEMA_DIR`: Default BRD input schema directory (default: "src/modules/brd/input_schema")
+- `DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR`: Default BRD input transformator directory (default: "src/modules/brd/input_transformator")
 
 ### Environment Variables
 

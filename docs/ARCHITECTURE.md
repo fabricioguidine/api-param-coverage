@@ -401,13 +401,16 @@ output/
 ### Reference Data Structure
 
 ```
-reference/
-├── schemas/              # Downloaded schemas
+examples/
+schemas/
+scripts/
+├── examples/            # Example schemas and BRDs
+│   └── weather_gov_api/ # Default example (weather.gov API)
+├── schemas/             # User-downloaded schemas
 ├── brd/
 │   ├── input/           # BRD documents (PDF, Word, etc.)
 │   └── output/          # BRD schemas (JSON)
-└── dummy_data/
-    └── scripts/         # Example utility scripts
+└── scripts/             # Example utility scripts
 ```
 
 ## Extension Points

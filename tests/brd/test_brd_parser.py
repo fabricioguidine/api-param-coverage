@@ -57,8 +57,8 @@ class TestBRDParser:
         # Handle both Windows and Unix path separators
         input_str = str(parser.input_dir).replace("\\", "/")
         output_str = str(parser.output_dir).replace("\\", "/")
-        assert "reference/brd/input" in input_str
-        assert "reference/brd/output" in output_str
+        assert "input_transformator" in input_str
+        assert "input_schema" in output_str
     
     def test_list_available_documents(self, parser, temp_input_dir):
         """Test listing available documents."""
@@ -184,11 +184,11 @@ class TestBRDParser:
         test_content = "Test content for absolute path"
         test_file.write_text(test_content, encoding='utf-8')
         
-        # Parse using absolute path
-        with patch.object(parser, '_parse_with_llm', return_value=None):
-            result = parser.parse_document(str(test_file))
-            # Should attempt to read the file even if LLM parsing fails
-            assert result is None  # LLM parsing mocked to return None
+        # Parse using absolute path - now uses BRDTransformer
+        # Without API key, transformer will fail, so result should be None
+        result = parser.parse_document(str(test_file))
+        # Should attempt to read the file even if transformation fails
+        assert result is None  # Transformation fails without API key
     
     def test_parse_document_file_not_found(self, parser):
         """Test parsing non-existent file."""

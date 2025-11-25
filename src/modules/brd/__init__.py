@@ -9,6 +9,7 @@ from .brd_loader import BRDLoader
 from .brd_parser import BRDParser
 from .schema_cross_reference import SchemaCrossReference
 from .brd_generator import BRDGenerator
+from .brd_transformer import BRDTransformer
 
-__all__ = ['BRDSchema', 'BRDRequirement', 'BRDTestScenario', 'BRDLoader', 'BRDParser', 'SchemaCrossReference', 'BRDGenerator']
+__all__ = ['BRDSchema', 'BRDRequirement', 'BRDTestScenario', 'BRDLoader', 'BRDParser', 'SchemaCrossReference', 'BRDGenerator', 'BRDTransformer']
 
