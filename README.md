@@ -449,10 +449,10 @@ verbose: false
 
 | Setting | Default Value | Description |
 |---------|---------------|-------------|
-| Schema storage | `reference/schemas/` | Downloaded schemas location |
+| Schema storage | `schemas/` | Downloaded schemas location |
 | CSV output directory | `output/<timestamp>-<filename>/` | Generated CSV files location |
 | Analytics directory | `output/<timestamp>-<filename>/analytics/` | Analytics files location |
-| BRD directory | `reference/brd/output/` | BRD schema files location |
+| BRD directory | `src/modules/brd/input_schema/` | BRD schema files location |
 | LLM model | `gpt-4` | OpenAI model to use |
 | Max tokens | `3000` | Maximum response tokens |
 | Temperature | `0.7` | LLM temperature setting |
