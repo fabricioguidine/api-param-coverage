@@ -11,7 +11,7 @@ from unittest.mock import Mock, patch
 import yaml
 import requests
 
-from src.modules.swagger_tool.schema_fetcher import SchemaFetcher
+from src.modules.swagger.schema_fetcher import SchemaFetcher
 
 
 class TestSchemaFetcher:
@@ -48,8 +48,8 @@ class TestSchemaFetcher:
         assert new_dir.exists()
         assert new_dir.is_dir()
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
-    @patch('src.modules.swagger_tool.schema_fetcher.SchemaValidator')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.SchemaValidator')
     @patch('builtins.print')
     def test_fetch_schema_json_success(self, mock_print, mock_validator_class, mock_get, fetcher, sample_schema):
         """Test successful fetching of JSON schema."""
@@ -79,8 +79,8 @@ class TestSchemaFetcher:
         call_args = mock_get.call_args
         assert "https://example.com/api/swagger.json" in str(call_args)
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
-    @patch('src.modules.swagger_tool.schema_fetcher.SchemaValidator')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.SchemaValidator')
     @patch('builtins.print')
     def test_fetch_schema_yaml_success(self, mock_print, mock_validator_class, mock_get, fetcher, sample_schema):
         """Test successful fetching of YAML schema."""
@@ -109,7 +109,7 @@ class TestSchemaFetcher:
         
         assert result == sample_schema
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
     @patch('builtins.print')
     def test_fetch_schema_request_exception(self, mock_print, mock_get, fetcher):
         """Test handling of request exceptions."""
@@ -119,7 +119,7 @@ class TestSchemaFetcher:
         
         assert result is None
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
     @patch('builtins.print')
     def test_fetch_schema_invalid_format(self, mock_print, mock_get, fetcher):
         """Test handling of invalid schema format."""
@@ -184,7 +184,7 @@ class TestSchemaFetcher:
         assert "example_com" in filepath
         assert "docs_api_swagger" in filepath
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
     @patch('builtins.print')
     def test_download_and_save_success(self, mock_print, mock_get, fetcher, sample_schema, temp_dir):
         """Test complete download and save workflow."""
@@ -205,7 +205,7 @@ class TestSchemaFetcher:
             loaded = json.load(f)
         assert loaded == sample_schema
     
-    @patch('src.modules.swagger_tool.schema_fetcher.requests.get')
+    @patch('src.modules.swagger.schema_fetcher.requests.get')
     @patch('builtins.print')
     def test_download_and_save_fetch_failure(self, mock_print, mock_get, fetcher):
         """Test download_and_save when fetch fails."""

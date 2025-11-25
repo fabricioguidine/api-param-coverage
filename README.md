@@ -195,7 +195,7 @@ Output: output/20241124_133045_petstore/petstore_swagger_io_v2_swagger-20241124_
 api-param-coverage/
 ├── src/
 │   └── modules/
-│       ├── swagger_tool/              # Schema downloading and validation
+│       ├── swagger/                   # Schema downloading and validation
 │       │   ├── schema_fetcher.py      # Downloads schemas from URLs
 │       │   └── schema_validator.py    # Validates and normalizes schemas
 │       ├── engine/                    # Core processing engine
@@ -272,8 +272,8 @@ api-param-coverage/
 
 | Module | File | Description |
 |--------|------|-------------|
-| Schema Fetcher | `swagger_tool/schema_fetcher.py` | Downloads schemas from URLs, supports JSON/YAML formats, automatic format detection, error handling and retry logic |
-| Schema Validator | `swagger_tool/schema_validator.py` | Detects schema type (Swagger 2.0, OpenAPI 3.0, OpenAPI 3.1), validates schema structure, normalizes schemas, handles partial schemas |
+| Schema Fetcher | `swagger/schema_fetcher.py` | Downloads schemas from URLs, supports JSON/YAML formats, automatic format detection, error handling and retry logic |
+| Schema Validator | `swagger/schema_validator.py` | Detects schema type (Swagger 2.0, OpenAPI 3.0, OpenAPI 3.1), validates schema structure, normalizes schemas, handles partial schemas |
 | Schema Processor | `engine/algorithms/processor.py` | Extracts API metadata, processes endpoints and HTTP methods, extracts components (schemas, parameters, responses) |
 | Schema Analyzer | `engine/algorithms/analyzer.py` | Deep analysis of schema structure, extracts all parameters, computes iteration domains, handles nested structures and `$ref` references, calculates complexity metrics |
 
