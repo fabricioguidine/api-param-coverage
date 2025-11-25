@@ -11,12 +11,13 @@ import tempfile
 import shutil
 
 # Add project root to path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from src.modules.swagger.schema_fetcher import SchemaFetcher
+from src.modules.swagger_tool.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
-from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator, BRDGenerator
+from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator
+from src.modules.brd_generator import BRDGenerator
 
 
 @given('the system is initialized')
@@ -108,7 +109,7 @@ def step_run_main_workflow(context):
         if hasattr(context, 'is_invalid') and context.is_invalid:
             context.schema_path = None
         elif context.schema_url:
-            with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
+            with patch('src.modules.swagger_tool.schema_fetcher.requests.get') as mock_get:
                 if context.schema_url == "":
                     context.schema_path = None
                 else:
@@ -160,7 +161,7 @@ def step_select_brd_file(context, filename):
 def step_download_schema(context):
     """Download the schema."""
     if hasattr(context, 'schema_url'):
-        with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
+        with patch('src.modules.swagger_tool.schema_fetcher.requests.get') as mock_get:
             mock_response = Mock()
             mock_response.json.return_value = {
                 'openapi': '3.0.0',

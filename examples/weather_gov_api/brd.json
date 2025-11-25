@@ -1,0 +1,232 @@
+{
+  "brd_id": "BRD-WEATHER-001",
+  "title": "Weather.gov API Test Requirements",
+  "description": "Business requirements for testing the National Weather Service API endpoints. Focus on critical weather alert and forecast endpoints.",
+  "api_name": "weather.gov API",
+  "api_version": "3.3.2",
+  "created_date": "2024-11-24T13:00:00",
+  "requirements": [
+    {
+      "requirement_id": "REQ-001",
+      "title": "Test Active Weather Alerts Retrieval",
+      "description": "Test the ability to retrieve all currently active weather alerts. This is critical for public safety applications.",
+      "endpoint_path": "/alerts/active",
+      "endpoint_method": "GET",
+      "priority": "critical",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "SCEN-001",
+          "scenario_name": "Retrieve all active alerts",
+          "description": "Test retrieving all currently active weather alerts without filters",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /alerts/active",
+            "Then I should receive a 200 OK response",
+            "And the response should contain an array of alerts"
+          ],
+          "expected_result": "List of active weather alerts is returned successfully",
+          "priority": "critical",
+          "tags": ["positive", "smoke", "critical"]
+        },
+        {
+          "scenario_id": "SCEN-002",
+          "scenario_name": "Filter active alerts by severity",
+          "description": "Test filtering active alerts by severity level",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /alerts/active with severity=extreme",
+            "Then I should receive a 200 OK response",
+            "And all returned alerts should have severity=extreme"
+          ],
+          "expected_result": "Only extreme severity alerts are returned",
+          "priority": "high",
+          "tags": ["positive", "filtering"]
+        },
+        {
+          "scenario_id": "SCEN-003",
+          "scenario_name": "Retrieve active alerts for specific zone",
+          "description": "Test retrieving active alerts for a specific NWS zone",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /alerts/active/zone/{zoneId} with a valid zone ID",
+            "Then I should receive a 200 OK response",
+            "And the response should contain alerts for that zone"
+          ],
+          "expected_result": "Zone-specific alerts are returned successfully",
+          "priority": "high",
+          "tags": ["positive", "zone-specific"]
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns active alerts in valid format",
+        "API handles invalid zone IDs gracefully",
+        "API supports filtering by severity, urgency, and certainty",
+        "Response includes proper headers (X-Correlation-Id, X-Request-Id)"
+      ],
+      "related_endpoints": ["/alerts", "/alerts/active/count"]
+    },
+    {
+      "requirement_id": "REQ-002",
+      "title": "Test Alert Count Endpoint",
+      "description": "Test the endpoint that returns counts of active alerts by category",
+      "endpoint_path": "/alerts/active/count",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "SCEN-004",
+          "scenario_name": "Get active alert counts",
+          "description": "Test retrieving counts of active alerts",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /alerts/active/count",
+            "Then I should receive a 200 OK response",
+            "And the response should contain total, land, and marine counts"
+          ],
+          "expected_result": "Alert counts are returned with breakdown by category",
+          "priority": "high",
+          "tags": ["positive", "metrics"]
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns count data in valid format",
+        "Counts include total, land, marine, regions, areas, and zones",
+        "All count values are non-negative integers"
+      ],
+      "related_endpoints": ["/alerts/active"]
+    },
+    {
+      "requirement_id": "REQ-003",
+      "title": "Test Single Alert Retrieval",
+      "description": "Test retrieving a specific alert by ID",
+      "endpoint_path": "/alerts/{id}",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "SCEN-005",
+          "scenario_name": "Retrieve specific alert",
+          "description": "Test retrieving a single alert by its ID",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "And I have a valid alert ID",
+            "When I send a GET request to /alerts/{id}",
+            "Then I should receive a 200 OK response",
+            "And the response should contain the alert details"
+          ],
+          "expected_result": "Alert details are returned successfully",
+          "priority": "high",
+          "tags": ["positive", "single-resource"]
+        },
+        {
+          "scenario_id": "SCEN-006",
+          "scenario_name": "Handle invalid alert ID",
+          "description": "Test error handling for invalid alert IDs",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /alerts/{id} with an invalid ID",
+            "Then I should receive an error response (404 or 400)",
+            "And the error message should be descriptive"
+          ],
+          "expected_result": "Appropriate error response is returned",
+          "priority": "medium",
+          "tags": ["negative", "error-handling"]
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns alert details for valid IDs",
+        "API returns appropriate error for invalid IDs",
+        "Response supports multiple content types (geo+json, ld+json, cap+xml)"
+      ],
+      "related_endpoints": ["/alerts", "/alerts/active"]
+    },
+    {
+      "requirement_id": "REQ-004",
+      "title": "Test Gridpoint Forecast",
+      "description": "Test retrieving weather forecasts for specific gridpoints",
+      "endpoint_path": "/gridpoints/{wfo}/{x},{y}/forecast",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "SCEN-007",
+          "scenario_name": "Get forecast for gridpoint",
+          "description": "Test retrieving forecast for a valid gridpoint",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "And I have valid WFO, X, and Y coordinates",
+            "When I send a GET request to /gridpoints/{wfo}/{x},{y}/forecast",
+            "Then I should receive a 200 OK response",
+            "And the response should contain forecast periods"
+          ],
+          "expected_result": "Forecast data is returned successfully",
+          "priority": "high",
+          "tags": ["positive", "forecast"]
+        },
+        {
+          "scenario_id": "SCEN-008",
+          "scenario_name": "Get forecast with units parameter",
+          "description": "Test retrieving forecast with different unit systems",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "When I send a GET request to /gridpoints/{wfo}/{x},{y}/forecast with units=si",
+            "Then I should receive a 200 OK response",
+            "And temperature values should be in metric units"
+          ],
+          "expected_result": "Forecast is returned with requested units",
+          "priority": "medium",
+          "tags": ["positive", "units"]
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns forecast for valid gridpoints",
+        "API supports US and SI unit systems",
+        "Forecast includes multiple periods with detailed information"
+      ],
+      "related_endpoints": ["/gridpoints/{wfo}/{x},{y}/forecast/hourly"]
+    },
+    {
+      "requirement_id": "REQ-005",
+      "title": "Test Observation Station Data",
+      "description": "Test retrieving weather observation data from stations",
+      "endpoint_path": "/stations/{stationId}/observations",
+      "endpoint_method": "GET",
+      "priority": "medium",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "SCEN-009",
+          "scenario_name": "Get observations from station",
+          "description": "Test retrieving observations from a weather station",
+          "test_steps": [
+            "Given the weather.gov API is available",
+            "And I have a valid station ID",
+            "When I send a GET request to /stations/{stationId}/observations",
+            "Then I should receive a 200 OK response",
+            "And the response should contain observation data"
+          ],
+          "expected_result": "Observation data is returned successfully",
+          "priority": "medium",
+          "tags": ["positive", "observations"]
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns observations for valid station IDs",
+        "Observations include temperature, humidity, wind, and other metrics",
+        "API handles invalid station IDs gracefully"
+      ],
+      "related_endpoints": ["/stations/{stationId}/observations/latest"]
+    }
+  ],
+  "metadata": {
+    "source": "reference",
+    "api_url": "https://api.weather.gov/openapi.json",
+    "created_by": "system",
+    "notes": "Example BRD schema for weather.gov API testing"
+  }
+}
+

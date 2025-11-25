@@ -1,0 +1,77 @@
+================================================================================
+Test Execution Metrics
+================================================================================
+
+Session Timestamp: 20251124_224118
+Execution Date: 2025-11-24 22:41:19
+
+--------------------------------------------------------------------------------
+Overall Metrics
+--------------------------------------------------------------------------------
+Total Tests: 93
+Passed: 90 (96.8%)
+Failed: 3 (3.2%)
+Skipped: 0 (0.0%)
+Total Duration: 0.00s
+Average Duration: 0.000s
+Test Suites: 9
+
+--------------------------------------------------------------------------------
+Per-Suite Metrics
+--------------------------------------------------------------------------------
+Suite: test_analyzer
+  Tests: 6 | Passed: 6 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_loader
+  Tests: 6 | Passed: 5 | Failed: 1 | Skipped: 0
+  Pass Rate: 83.3%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_parser
+  Tests: 18 | Passed: 16 | Failed: 2 | Skipped: 0
+  Pass Rate: 88.9%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_schema
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_validator
+  Tests: 16 | Passed: 16 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_cli_utils
+  Tests: 22 | Passed: 22 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_csv_generator
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_processor
+  Tests: 6 | Passed: 6 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_schema_cross_reference
+  Tests: 3 | Passed: 3 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+--------------------------------------------------------------------------------
+Failed Tests
+--------------------------------------------------------------------------------
+  - test_brd_loader::test_loader_default_directory
+    Error: tests\brd\test_brd_loader.py:33: in test_loader_default_directory
+  - test_brd_parser::test_parser_default_directories
+    Error: tests\brd\test_brd_parser.py:60: in test_parser_default_directories
+  - test_brd_parser::test_parse_document_absolute_path
+    Error: tests\brd\test_brd_parser.py:188: in test_parse_document_absolute_path
+
+================================================================================

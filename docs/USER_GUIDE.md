@@ -99,9 +99,9 @@ export OPENAI_API_KEY='your-api-key-here'
 
 **Steps**:
 
-1. Place your BRD JSON file in `reference/brd/output/`:
+1. Place your BRD JSON file in `src/modules/brd/input_schema/`:
    ```bash
-   cp my_brd.json reference/brd/output/
+   cp my_brd.json src/modules/brd/input_schema/
    ```
 
 2. Run the application:
@@ -119,7 +119,9 @@ export OPENAI_API_KEY='your-api-key-here'
    ```
    Select BRD schema file:
    1. my_brd.json
-   2. weather_gov_api_brd.json
+   2. weather_gov_api_brd.json (if available in src/modules/brd/input_schema/)
+   
+   Note: The default weather.gov example BRD is in examples/weather_gov_api/brd.json
    
    Enter choice: 1
    ```
@@ -136,9 +138,9 @@ export OPENAI_API_KEY='your-api-key-here'
 
 **Steps**:
 
-1. Place your BRD document in `reference/brd/input/`:
+1. Place your BRD document in `src/modules/brd/input_transformator/`:
    ```bash
-   cp requirements.pdf reference/brd/input/
+   cp requirements.pdf src/modules/brd/input_transformator/
    ```
 
 2. Run the application:
@@ -163,7 +165,7 @@ export OPENAI_API_KEY='your-api-key-here'
 5. The system will:
    - Extract text from your document
    - Use LLM to parse and convert to BRD schema
-   - Save the schema to `reference/brd/output/`
+   - Save the schema to `src/modules/brd/input_schema/`
    - Use it for filtering test scenarios
 
 ## BRD Workflows
@@ -228,7 +230,7 @@ export OPENAI_API_KEY='your-api-key-here'
 export LLM_MODEL='gpt-4'
 export LLM_TEMPERATURE='0.7'
 export LLM_MAX_TOKENS='3000'
-export SCHEMAS_DIR='reference/schemas'
+export SCHEMAS_DIR='schemas'
 export OUTPUT_DIR='output'
 ```
 

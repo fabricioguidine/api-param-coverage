@@ -1,0 +1,34 @@
+================================================================================
+Algorithm Analysis Report: LLMPrompter
+================================================================================
+
+ALGORITHM INFORMATION
+--------------------------------------------------------------------------------
+Algorithm Name: LLMPrompter
+Algorithm Type: llm_prompter
+Timestamp: 2025-11-24T22:50:06.644812
+Execution Time: 0.00 seconds
+LLM Call: Yes
+
+OUTPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 87
+Element Count: 2
+Nested Depth: 1
+Structure Complexity: low
+Output Quality: unknown
+
+LLM CALL ANALYSIS
+--------------------------------------------------------------------------------
+Prompt Metrics:
+  - Length: 39 characters
+  - Estimated Tokens: 9
+API Usage:
+  - Prompt Tokens: <Mock name='OpenAI().chat.completions.create().usage.prompt_tokens' id='1998235196048'>
+  - Completion Tokens: <Mock name='OpenAI().chat.completions.create().usage.completion_tokens' id='1998235196384'>
+  - Total Tokens: <Mock name='OpenAI().chat.completions.create().usage.total_tokens' id='1998235196720'>
+Response Metrics:
+  - Length: 131 characters
+  - Estimated Tokens: 32
+
+================================================================================

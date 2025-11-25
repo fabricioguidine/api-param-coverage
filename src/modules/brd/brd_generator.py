@@ -90,15 +90,28 @@ class BRDGenerator:
             # Step 1: Analyze Swagger to create test plan heuristic with coverage filter
             test_plan = self._create_test_plan_heuristic(processed_data, analysis_data, coverage_percentage)
             
-            # Step 2: Use LLM to generate structured BRD (with filtered endpoints)
-            # The test_plan already contains only selected endpoints, so we use it directly
-            brd_data = self._generate_brd_with_llm(test_plan, processed_data, analysis_data)
+            # Step 2: Transform Swagger to BRD Schema using two-step process
+            # 2a. Swagger → Intermediate BRD
+            # 2b. Intermediate BRD → BRD Schema
+            from .brd_transformer import BRDTransformer
+            transformer = BRDTransformer(api_key=self.api_key, model=self.model, provider=self.provider)
             
-            if not brd_data:
+            # Prepare swagger data for transformation
+            swagger_data = {
+                "test_plan": test_plan,
+                "processed_data": processed_data,
+                "analysis_data": analysis_data
+            }
+            
+            api_info = processed_data.get('info', {})
+            brd = transformer.transform_to_schema(
+                source_data=swagger_data,
+                source_type="swagger",
+                api_info=api_info
+            )
+            
+            if not brd:
                 return None
-            
-            # Step 3: Parse LLM response into BRDSchema
-            brd = self._parse_llm_brd_response(brd_data, processed_data)
             
             execution_time = time.time() - start_time
             
