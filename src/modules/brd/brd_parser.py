@@ -12,7 +12,8 @@ import json
 
 from .brd_schema import BRDSchema, BRDRequirement, BRDTestScenario, RequirementPriority, RequirementStatus
 from ..engine.llm import LLMPrompter
-from ..utils import extract_json_from_response, SUPPORTED_BRD_FORMATS
+from ..utils import extract_json_from_response
+from ..utils.constants import SUPPORTED_BRD_FORMATS
 
 
 class BRDParser:
