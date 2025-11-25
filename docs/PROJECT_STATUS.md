@@ -92,16 +92,9 @@ api-param-coverage/
 │       ├── brd_handler.py
 │       ├── scenario_generator.py
 │       └── coverage_handler.py
-├── examples/                  # Example schemas and BRDs
-├── schemas/                   # User-downloaded schemas
-└── scripts/                   # Example utility scripts
-│   ├── examples/              # Example schemas and BRDs
-│   │   └── weather_gov_api/   # Default example (weather.gov API)
-│   ├── schemas/               # User-downloaded schemas
 │   ├── brd/
 │   │   ├── input/            # BRD document input
 │   │   └── output/           # BRD schema output
-│   └── scripts/               # Example utility scripts
 ├── output/                    # Execution outputs
 │   └── <timestamp>-<filename>/ # Run-specific folders
 │       ├── analytics/         # Analytics subfolder

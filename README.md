@@ -98,7 +98,7 @@ The tool will guide you through:
 
 ### Basic Workflow
 
-1. **Schema Input**: Provide a Swagger/OpenAPI schema URL
+1. **Schema Input**: Provide a Swagger/OpenAPI schema URL (or press Enter to use the default example: `https://api.weather.gov/openapi.json`)
 2. **Schema Processing**: The tool downloads, validates, and processes the schema
 3. **BRD Handling**: Choose one of three options:
    - **Load Existing BRD**: Select from saved BRD schema files
@@ -117,12 +117,12 @@ $ python main.py
 Swagger Schema Processor & Test Scenario Generator
 ======================================================================
 
-Enter Swagger/OpenAPI schema URL: https://petstore.swagger.io/v2/swagger.json
+Enter Swagger/OpenAPI schema URL (or press Enter to use example): https://petstore.swagger.io/v2/swagger.json
 
 ======================================================================
 Step 1: Downloading schema...
 ======================================================================
-✓ Schema downloaded: data/schemas/petstore_swagger_io_v2_swagger.json
+✓ Schema downloaded: [temporary location]
 
 ======================================================================
 Step 2: Processing schema...
@@ -230,14 +230,6 @@ api-param-coverage/
 │   ├── engine/                        # Engine module tests
 │   ├── swagger/                       # Swagger module tests
 │   └── conftest.py                    # Pytest configuration
-├── examples/                          # Example schemas and BRDs
-│   └── weather_gov_api/              # Default example (weather.gov API)
-│       ├── schema.json               # Example OpenAPI schema
-│       ├── brd.json                  # Example BRD schema
-│       └── README.md                 # Example documentation
-├── schemas/                           # User-downloaded schemas
-└── scripts/                           # Example utility scripts
-    └── run_weather_api.py             # Weather API example script
 ├── docs/                              # Documentation
 │   ├── PROJECT_STATUS.md              # Project status
 │   └── README.md                      # Documentation guide
@@ -449,7 +441,7 @@ verbose: false
 
 | Setting | Default Value | Description |
 |---------|---------------|-------------|
-| Schema storage | `schemas/` | Downloaded schemas location |
+| Schema storage | Temporary | Schemas are downloaded to a temporary directory and cleaned up after processing |
 | CSV output directory | `output/<timestamp>-<filename>/` | Generated CSV files location |
 | Analytics directory | `output/<timestamp>-<filename>/analytics/` | Analytics files location |
 | BRD directory | `src/modules/brd/input_schema/` | BRD schema files location |

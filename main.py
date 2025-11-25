@@ -14,6 +14,8 @@ Orchestrates the full workflow:
 """
 
 import os
+import tempfile
+import shutil
 from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
@@ -23,7 +25,7 @@ from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
 from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDGenerator
 from src.modules.utils.constants import (
-    DEFAULT_LLM_MODEL, DEFAULT_SCHEMAS_DIR
+    DEFAULT_LLM_MODEL
 )
 from src.modules.workflow import (
     apply_coverage_filter, apply_brd_filter
@@ -63,26 +65,39 @@ def main():
     print_info(f"Using LLM provider: {provider}")
     
     # Step 1: Get URL from user input
+    DEFAULT_EXAMPLE_URL = "https://api.weather.gov/openapi.json"
+    
     while True:
-        url = input("\nEnter Swagger/OpenAPI schema URL: ").strip()
+        url = input("\nEnter Swagger/OpenAPI schema URL (or press Enter to use example): ").strip()
         
         if url:
             break
         
-        print_warning("URL cannot be empty.")
-        if not confirm_action("Do you want to try again?", default=True):
-            return
+        # Suggest default example URL
+        print_info(f"No URL provided. Using example: {DEFAULT_EXAMPLE_URL}")
+        if confirm_action("Do you want to use this example?", default=True):
+            url = DEFAULT_EXAMPLE_URL
+            break
+        else:
+            print_warning("URL cannot be empty.")
+            if not confirm_action("Do you want to try again?", default=True):
+                return
     
     # Step 2: Download schema
     print("\n" + "=" * 70)
     print("Step 1: Downloading schema...")
     print("=" * 70)
     
-    fetcher = SchemaFetcher(schemas_dir=DEFAULT_SCHEMAS_DIR)
+    # Use temporary directory for schema download (no need to persist)
+    temp_schemas_dir = tempfile.mkdtemp(prefix="api_param_coverage_")
+    fetcher = SchemaFetcher(schemas_dir=temp_schemas_dir)
     schema_path = fetcher.download_and_save(url, "json")
     
     if not schema_path:
         print("✗ Failed to download schema. Exiting.")
+        # Clean up temp directory
+        if Path(temp_schemas_dir).exists():
+            shutil.rmtree(temp_schemas_dir, ignore_errors=True)
         return
     
     print_success(f"Schema downloaded: {schema_path}")
@@ -466,6 +481,10 @@ def main():
         print(f"Tested Endpoints: {len(filtered_analysis_data.get('endpoints', []))} (all endpoints)")
     print(f"Output: {csv_path}")
     print("\n✓ Processing complete!")
+    
+    # Clean up temp directory after processing
+    if 'temp_schemas_dir' in locals() and Path(temp_schemas_dir).exists():
+        shutil.rmtree(temp_schemas_dir, ignore_errors=True)
 
 
 if __name__ == "__main__":

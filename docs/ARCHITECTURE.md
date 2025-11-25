@@ -318,7 +318,7 @@ Used in module initialization:
 
 ```python
 # Configuration uses defaults from constants module
-from src.modules.utils.constants import DEFAULT_LLM_MODEL, DEFAULT_SCHEMAS_DIR
+from src.modules.utils.constants import DEFAULT_LLM_MODEL
 processor = SchemaProcessor(config=config)
 ```
 
@@ -400,17 +400,8 @@ output/
 
 ### Reference Data Structure
 
-```
-examples/
-schemas/
-scripts/
-├── examples/            # Example schemas and BRDs
-│   └── weather_gov_api/ # Default example (weather.gov API)
-├── schemas/             # User-downloaded schemas
-├── brd/
-│   ├── input/           # BRD documents (PDF, Word, etc.)
-│   └── output/          # BRD schemas (JSON)
-└── scripts/             # Example utility scripts
+Schemas are downloaded to temporary directories and cleaned up after processing.
+No persistent schema storage is needed.
 ```
 
 ## Extension Points
