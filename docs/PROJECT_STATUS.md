@@ -46,10 +46,9 @@
 - **Summary Reports**: Generates comprehensive summary reports
 
 #### 8. Configuration Management
-- **Config Manager**: Manages configuration from YAML/JSON files
-- **Environment Support**: Environment-specific configurations (development, production, testing)
-- **Algorithm Parameters**: Customizable algorithm parameters
-- **Environment Variables**: Override configuration with environment variables
+- **Constants**: Default configuration values in `src/modules/utils/constants.py`
+- **Environment Variables**: Override defaults with environment variables
+- **LLM Provider Setup**: Automatic API key management and provider selection
 
 ### 📁 Project Structure
 
@@ -83,13 +82,12 @@ api-param-coverage/
 │   │   └── schema_cross_reference.py
 │   ├── brd_generator/        # BRD generation
 │   │   └── brd_generator.py
-│   ├── config/                # Configuration management
-│   │   └── config_manager.py
 │   ├── cli/                   # CLI utilities
 │   │   └── cli_utils.py
 │   ├── utils/                 # Shared utilities
 │   │   ├── json_utils.py
-│   │   └── constants.py
+│   │   ├── constants.py
+│   │   └── llm_provider.py
 │   └── workflow/              # Workflow orchestration
 │       ├── brd_handler.py
 │       ├── scenario_generator.py
@@ -100,15 +98,11 @@ api-param-coverage/
 │   │   ├── input/            # BRD document input
 │   │   └── output/           # BRD schema output
 │   └── dummy_data/           # Example data and scripts
-│       └── scripts/
+│       └── scripts/                   # Example utility scripts
 ├── output/                    # Execution outputs
-│   └── <timestamp>_<schema>/ # Run-specific folders
+│   └── <timestamp>-<filename>/ # Run-specific folders
 │       ├── analytics/         # Analytics subfolder
 │       ├── *.csv             # Generated CSV files
-├── config/                    # Configuration files
-│   ├── config.yaml.example
-│   ├── development.yaml.example
-│   └── production.yaml.example
 ├── docs/
 │   ├── PROJECT_STATUS.md     # This file
 │   ├── USER_GUIDE.md         # User guide
@@ -119,7 +113,7 @@ api-param-coverage/
 
 ### 🔄 Current Workflow
 
-1. **Configuration Loading**: Load settings from config files or environment variables
+1. **Configuration**: Uses environment variables and default constants
 2. **Schema Download**: User provides Swagger/OpenAPI schema URL
 3. **Schema Processing**: Process and analyze schema
 4. **BRD Handling**: 

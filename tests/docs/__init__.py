@@ -1,5 +1,0 @@
-"""
-Tests for documentation modules.
-"""
-
-

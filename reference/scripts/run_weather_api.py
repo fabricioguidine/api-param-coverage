@@ -9,15 +9,21 @@ import sys
 from pathlib import Path
 from datetime import datetime
 
-# Add parent directory to path to allow imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Fix Windows console encoding
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+# Add project root to path to allow imports
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
 
 from dotenv import load_dotenv
 from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
-from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference
-from src.modules.brd_generator import BRDGenerator
+from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDGenerator
 
 # Load environment variables
 load_dotenv()
@@ -50,7 +56,8 @@ def main():
     print("Step 1: Downloading schema...")
     print("=" * 70)
     
-    fetcher = SchemaFetcher()
+    from src.modules.utils.constants import DEFAULT_SCHEMAS_DIR
+    fetcher = SchemaFetcher(schemas_dir=DEFAULT_SCHEMAS_DIR)
     schema_path = fetcher.download_and_save(url, "json")
     
     if not schema_path:
@@ -60,12 +67,26 @@ def main():
     print(f"✓ Schema downloaded: {schema_path}")
     
     schema_filename = Path(schema_path).name
-    swagger_name = Path(schema_path).stem
+    schema_name_without_ext = Path(schema_path).stem
     
-    # Create run directory structure directly in docs/ (flat structure)
-    run_id = f"{run_timestamp}_{swagger_name}"
-    run_output_dir = Path(f"docs/{run_id}")
+    # Create run directory structure in output/ folder
+    # Format: <timestamp>-<filename>
+    run_id = f"{run_timestamp}-{schema_name_without_ext}"
+    run_output_dir = Path(f"output/{run_id}")
     run_output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create organized subfolders with timestamps
+    analytics_dir = run_output_dir / "analytics"
+    analytics_dir.mkdir(parents=True, exist_ok=True)
+    
+    validation_dir = run_output_dir / "validation"
+    validation_dir.mkdir(parents=True, exist_ok=True)
+    
+    reports_dir = run_output_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    
+    scenarios_dir = run_output_dir / "scenarios"
+    scenarios_dir.mkdir(parents=True, exist_ok=True)
     
     print(f"📁 Output directory: {run_output_dir}")
     
@@ -110,7 +131,12 @@ def main():
     
     if not brd:
         print("⚠ Dummy BRD not found. Generating one...")
-        brd_generator = BRDGenerator(api_key=api_key, model="gpt-4")
+        brd_generator = BRDGenerator(
+            api_key=api_key, 
+            model="gpt-4",
+            analytics_dir=str(analytics_dir),
+            reports_dir=str(reports_dir)
+        )
         brd = brd_generator.generate_brd_from_swagger(processed_data, analysis_data, schema_filename)
         
         if brd:
@@ -147,9 +173,25 @@ def main():
     print("Step 6: Generating Gherkin test scenarios via LLM...")
     print("=" * 70)
     
-    # Initialize components with run-specific output directories (flat structure)
-    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(run_output_dir))
-    csv_generator = CSVGenerator(output_dir=str(run_output_dir))
+    # Initialize components with run-specific output directories
+    prompter = LLMPrompter(model="gpt-4", api_key=api_key, analytics_dir=str(analytics_dir))
+    csv_generator = CSVGenerator(output_dir=str(scenarios_dir))
+    
+    # Initialize validator with validation directory
+    from src.modules.brd.brd_validator import BRDValidator
+    validator = BRDValidator(
+        analytics_dir=str(analytics_dir),
+        validation_dir=str(validation_dir)
+    )
+    
+    # Validate BRD if it exists
+    if brd:
+        print("\n" + "=" * 70)
+        print("Validating BRD against Swagger schema...")
+        print("=" * 70)
+        validation_report = validator.validate_brd_against_swagger(brd, analysis_data)
+        report_path = validator.generate_validation_report(validation_report)
+        print(f"✓ Validation report saved: {report_path}")
     
     try:
         gherkin_scenarios = prompter.generate_gherkin_scenarios(processed_data, filtered_analysis_data)
@@ -182,7 +224,7 @@ def main():
     print("=" * 70)
     
     # Use the csv_generator already initialized with run directory
-    csv_path = csv_generator.gherkin_to_csv(gherkin_scenarios, swagger_name)
+    csv_path = csv_generator.gherkin_to_csv(gherkin_scenarios, schema_name_without_ext)
     
     print(f"✓ CSV saved: {csv_path}")
     
@@ -200,9 +242,10 @@ def main():
     print(f"Output: {csv_path}")
     print("\n✓ Processing complete!")
     print(f"\n📁 All outputs saved to: {run_output_dir}")
-    print(f"📄 CSV file: {run_output_dir}/*.csv")
-    print(f"📊 Analytics: {run_output_dir}/*.txt")
-    print(f"📈 Reports: {run_output_dir}/*_algorithm_*.txt")
+    print(f"📄 CSV file: {run_output_dir}/scenarios/*_scenarios.csv")
+    print(f"📊 Analytics: {run_output_dir}/analytics/*.txt")
+    print(f"📋 Validation: {run_output_dir}/validation/*.txt")
+    print(f"📈 Reports: {run_output_dir}/reports/*.txt")
 
 if __name__ == "__main__":
     main()

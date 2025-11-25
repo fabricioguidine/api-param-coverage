@@ -6,8 +6,7 @@ Handles BRD selection, loading, parsing, and generation workflows.
 
 from pathlib import Path
 from typing import Optional, Dict, Any, Tuple
-from ..brd import BRDLoader, BRDParser, BRDSchema
-from ..brd_generator import BRDGenerator
+from ..brd import BRDLoader, BRDParser, BRDSchema, BRDGenerator
 from ..cli import InteractiveSelector, ErrorHandler, print_success, print_warning, print_info, print_error
 from ..utils.constants import DEFAULT_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, MIN_COVERAGE_PERCENTAGE
 

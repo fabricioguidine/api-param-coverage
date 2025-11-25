@@ -11,6 +11,14 @@ MIN_COVERAGE_PERCENTAGE = 1.0
 
 # LLM constants
 DEFAULT_LLM_MODEL = "gpt-4"
+DEFAULT_LLM_TEMPERATURE = 0.7
+DEFAULT_LLM_MAX_TOKENS = 3000
+
+# Path constants
+DEFAULT_SCHEMAS_DIR = "reference/schemas"
+DEFAULT_OUTPUT_DIR = "output"
+DEFAULT_BRD_INPUT_DIR = "reference/brd/input"
+DEFAULT_BRD_OUTPUT_DIR = "reference/brd/output"
 
 # File format constants
 SUPPORTED_BRD_FORMATS = {
