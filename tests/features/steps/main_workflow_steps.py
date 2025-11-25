@@ -16,8 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
-from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator
-from src.modules.brd_generator import BRDGenerator
+from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator, BRDGenerator
 
 
 @given('the system is initialized')

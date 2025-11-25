@@ -91,7 +91,7 @@ export OPENAI_API_KEY='your-api-key-here'
    - Generate Gherkin test scenarios
    - Export to CSV format
 
-6. Results will be saved in `output/<timestamp>_<schema_name>/`
+6. Results will be saved in `output/<timestamp>-<filename>/`
 
 ### Example 2: Using Existing BRD
 
@@ -214,51 +214,27 @@ The system automatically generates coverage reports:
 - **Test Coverage Report**: Compares generated scenarios with BRD requirements
 - **Analytics Reports**: Detailed metrics in `output/<run_id>/analytics/`
 
-### Configuration Management
-
-Create `config.yaml` in the project root:
-
-```yaml
-environment: development
-
-llm:
-  model: gpt-4
-  temperature: 0.7
-  max_tokens: 3000
-
-algorithm:
-  chunk_size: 12
-  chunking_threshold: 15
-  retry_attempts: 3
-
-paths:
-  schemas_dir: reference/schemas
-  output_dir: output
-  analytics_dir: output/analytics
-  brd_output_dir: reference/brd/output
-  brd_input_dir: reference/brd/input
-```
-
-Environment-specific configs can be placed in `config/development.yaml` or `config/production.yaml`.
-
 ## Configuration
 
 ### Environment Variables
+
+The tool uses environment variables and default constants for configuration:
 
 ```bash
 # Required
 export OPENAI_API_KEY='your-api-key-here'
 
 # Optional
-export APP_ENV='development'  # or 'production'
+export LLM_MODEL='gpt-4'
+export LLM_TEMPERATURE='0.7'
+export LLM_MAX_TOKENS='3000'
+export SCHEMAS_DIR='reference/schemas'
+export OUTPUT_DIR='output'
 ```
 
-### Configuration File Priority
+### Default Settings
 
-1. Default values (hardcoded)
-2. `config.yaml` or `config.json` (main config)
-3. `config/<environment>.yaml` (environment-specific)
-4. Environment variables (highest priority)
+All settings use sensible defaults defined in `src/modules/utils/constants.py`. Environment variables override defaults when set.
 
 ### Custom File Paths
 

@@ -57,9 +57,9 @@ output/20*/*.csv
 output/20*/*.txt
 output/20*/*.json
 output/analytics/**
-# Keep one example output folder
-!output/20251124_162747_api_weather_gov_openapi.json/
-!output/20251124_162747_api_weather_gov_openapi.json/**
+# Keep example output folder
+!output/example_weather_api/
+!output/example_weather_api/**
 # Keep documentation files
 !docs/README.md
 !docs/*.md
@@ -84,5 +84,5 @@ Thumbs.db
 *.log
 
 # Scripts output (if any)
-scripts/*.log
-scripts/*.tmp
+reference/scripts/*.log
+reference/scripts/*.tmp

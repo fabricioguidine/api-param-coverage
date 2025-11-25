@@ -14,18 +14,25 @@ import json
 class MetricsCollector:
     """Collects and saves complexity analysis metrics for LLM API executions."""
     
-    def __init__(self, analytics_dir: str = "output/analytics"):
+    def __init__(self, analytics_dir: str = "output/analytics", reports_dir: Optional[str] = None):
         """
         Initialize the Metrics Collector.
         
         Args:
             analytics_dir: Directory where analytics files will be saved
                           Default: "output/analytics" (follows project structure)
+            reports_dir: Directory where algorithm reports will be saved
+                        Default: <analytics_dir>/../reports/ (separate from analytics)
         """
         self.analytics_dir = Path(analytics_dir)
         self.analytics_dir.mkdir(parents=True, exist_ok=True)
-        # Save reports directly in the same directory (flat structure)
-        self.reports_dir = self.analytics_dir
+        # Reports go to a separate reports directory
+        if reports_dir:
+            self.reports_dir = Path(reports_dir)
+        else:
+            # Default: use reports folder at same level as analytics
+            self.reports_dir = self.analytics_dir.parent / "reports"
+        self.reports_dir.mkdir(parents=True, exist_ok=True)
     
     def collect_metrics(
         self,
@@ -276,7 +283,9 @@ class MetricsCollector:
             
             # Assess output quality based on completeness
             if 'endpoints' in output_data or 'requirements' in output_data:
-                count = len(output_data.get('endpoints', output_data.get('requirements', [])))
+                endpoints = output_data.get('endpoints', [])
+                requirements = output_data.get('requirements', [])
+                count = len(endpoints) if isinstance(endpoints, (list, dict)) else (len(requirements) if isinstance(requirements, (list, dict)) else 0)
                 if count > 0:
                     analysis["output_quality"] = "complete"
                 else:

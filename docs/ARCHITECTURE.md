@@ -205,12 +205,14 @@ User Input (Schema URL)
 **Components**:
 - `cli_utils`: Progress bars, status updates, interactive selection
 
-### Config Module
+### Utils Module
 
-**Purpose**: Configuration management.
+**Purpose**: Shared utilities and constants.
 
 **Components**:
-- `ConfigManager`: Loads and manages configuration
+- `constants.py`: Application constants (defaults, paths, etc.)
+- `json_utils.py`: JSON utility functions
+- `llm_provider.py`: LLM provider setup and configuration
 
 ## Data Flow
 
@@ -315,8 +317,8 @@ Dashboard Report
 Used in module initialization:
 
 ```python
-# ConfigManager creates instances based on configuration
-config = ConfigManager()
+# Configuration uses defaults from constants module
+from src.modules.utils.constants import DEFAULT_LLM_MODEL, DEFAULT_SCHEMAS_DIR
 processor = SchemaProcessor(config=config)
 ```
 
@@ -351,13 +353,12 @@ Used in analytics collection:
 metrics_collector.collect_algorithm_metrics(...)
 ```
 
-### 5. Singleton Pattern
+### 5. Builder Pattern
 
-Used for configuration management:
+Used for output directory structure:
 
 ```python
-# ConfigManager is initialized once and reused
-config_manager = ConfigManager()
+# Configuration uses constants and environment variables
 ```
 
 ## Technology Stack
@@ -390,7 +391,7 @@ config_manager = ConfigManager()
 
 ```
 output/
-├── <timestamp>_<schema_name>/
+├── <timestamp>-<filename>/
 │   ├── gherkin_scenarios_<timestamp>.csv
 │   └── analytics/
 │       ├── algorithm_report_<algorithm>_<timestamp>.txt
@@ -406,7 +407,7 @@ reference/
 │   ├── input/           # BRD documents (PDF, Word, etc.)
 │   └── output/          # BRD schemas (JSON)
 └── dummy_data/
-    └── scripts/         # Example scripts
+    └── scripts/         # Example utility scripts
 ```
 
 ## Extension Points

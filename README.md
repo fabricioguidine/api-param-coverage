@@ -220,8 +220,6 @@ api-param-coverage/
 │       │   └── schema_cross_reference.py  # BRD-Swagger cross-reference
 │       ├── brd_generator/             # BRD generation
 │       │   └── brd_generator.py      # LLM-based BRD generator
-│       └── config/                    # Configuration management
-│           └── config_manager.py     # Configuration manager
 ├── tests/                             # Test suite
 │   ├── test_schema_fetcher.py
 │   ├── test_schema_validator.py
@@ -232,8 +230,6 @@ api-param-coverage/
 │   ├── test_brd_schema.py
 │   ├── test_brd_loader.py
 │   └── test_schema_cross_reference.py
-├── data/                              # Input data
-│   └── schemas/                       # Downloaded schemas storage
 ├── reference/                         # Reference data and templates
 │   ├── schemas/                      # Downloaded schemas
 │   ├── brd/
@@ -242,25 +238,38 @@ api-param-coverage/
 │   │   └── output/                    # Generated BRD schemas (JSON)
 │   │       └── README.md              # BRD schema format documentation
 │   └── dummy_data/                   # Example data and scripts
-│       └── scripts/                   # Utility scripts
-├── config/                           # Configuration files
-│   ├── config.yaml.example           # Example main config
-│   ├── development.yaml.example      # Example dev config
-│   └── production.yaml.example       # Example prod config
+│       └── scripts/                   # Example utility scripts
 ├── docs/                              # Documentation
 │   ├── PROJECT_STATUS.md              # Project status
 │   ├── NEXT_STEPS.md                  # Roadmap
 │   └── README.md                      # Documentation guide
 ├── output/                            # Execution outputs (at project root)
-│   └── <timestamp>_<schema>/         # Execution run folders
-│       ├── analytics/                 # Analytics subfolder
-│       │   ├── *.txt                  # LLM execution metrics
-│       │   └── reports/               # Algorithm-specific reports
-│       ├── *.csv                      # Generated CSV files (Gherkin scenarios)
-│       └── brd_validation_report_*.txt # Validation reports
+│   ├── <timestamp>-<filename>/       # Execution run folders
+│   │   ├── scenarios/                 # CSV scenarios subfolder
+│   │   │   └── <timestamp>_*_scenarios.csv
+│   │   ├── analytics/                 # Analytics subfolder
+│   │   │   └── <timestamp>_*.txt      # LLM execution metrics
+│   │   ├── validation/                # Validation reports subfolder
+│   │   │   └── <timestamp>_brd_validation_report.txt
+│   │   └── reports/                   # Algorithm reports subfolder
+│   │       └── <timestamp>_*_algorithm_*.txt
+│   └── example_weather_api/           # Example output (weather.gov API)
+│       ├── scenarios/                  # Example CSV scenarios
+│       ├── analytics/                  # Example analytics
+│       ├── validation/                  # Example validation reports
+│       ├── reports/                     # Example algorithm reports
+│       └── README.md                   # Example output documentation
 ├── main.py                            # Main entry point
-├── scripts/                           # Utility scripts
-│   └── run_weather_api.py            # Weather API test script
+├── reference/                         # Reference data and templates
+│   ├── schemas/                      # Downloaded schemas
+│   ├── brd/
+│   │   ├── input/                     # BRD documents (PDF, Word, TXT, CSV)
+│   │   │   └── README.md              # BRD document input guide
+│   │   └── output/                    # Generated BRD schemas (JSON)
+│   │       └── README.md              # BRD schema format documentation
+│   └── scripts/                       # Example utility scripts
+│       ├── README.md                  # Scripts documentation
+│       └── run_weather_api.py         # Weather API example script
 ├── requirements.txt                   # Python dependencies
 ├── pytest.ini                         # Pytest configuration
 └── README.md                          # This file
@@ -318,7 +327,6 @@ api-param-coverage/
 
 | Module | File | Description |
 |--------|------|-------------|
-| Config Manager | `config/config_manager.py` | Loads configuration from YAML/JSON files, supports environment-specific configurations, customizable algorithm parameters, environment variable overrides, configuration file priority system |
 
 ### Interactive CLI
 
@@ -454,13 +462,11 @@ verbose: false
 | Setting | Default Value | Description |
 |---------|---------------|-------------|
 | Schema storage | `reference/schemas/` | Downloaded schemas location |
-| CSV output directory | `output/<timestamp>_<schema>/` | Generated CSV files location |
-| Analytics directory | `output/<timestamp>_<schema>/analytics/` | Analytics files location |
+| CSV output directory | `output/<timestamp>-<filename>/` | Generated CSV files location |
+| Analytics directory | `output/<timestamp>-<filename>/analytics/` | Analytics files location |
 | BRD directory | `reference/brd/output/` | BRD schema files location |
 | LLM model | `gpt-4` | OpenAI model to use |
 | Max tokens | `3000` | Maximum response tokens |
-| Chunk size | `12` | Endpoints per chunk |
-| Chunking threshold | `15` | Endpoints before chunking |
 | Temperature | `0.7` | LLM temperature setting |
 
 ### Supported Schema Types
@@ -517,14 +523,13 @@ The project includes comprehensive tests for:
 | `test_llm_prompter.py` | LLM integration tests |
 | `test_csv_generator.py` | CSV generation tests |
 | `test_brd_*.py` | BRD module tests |
-| `test_config_manager.py` | Configuration management tests |
 | `test_coverage_analyzer.py` | Coverage analysis tests |
 
 ## 📤 Output Format
 
 ### CSV Files
 
-CSV files are saved in `output/<timestamp>_<schema>/` with format: `<schemaName>-<timestamp>.csv`
+CSV files are saved in `output/<timestamp>-<filename>/` with format: `<filename>-<timestamp>.csv`
 
 **Columns:**
 - `Feature`: Gherkin feature name
@@ -537,7 +542,7 @@ CSV files are saved in `output/<timestamp>_<schema>/` with format: `<schemaName>
 
 ### Analytics Reports
 
-**LLM Execution Metrics** (`output/<timestamp>_<schema>/analytics/*.txt`):
+**LLM Execution Metrics** (`output/<timestamp>-<filename>/analytics/*.txt`):
 - Execution information
 - API information
 - Schema statistics
@@ -546,7 +551,7 @@ CSV files are saved in `output/<timestamp>_<schema>/` with format: `<schemaName>
 - API usage (actual tokens)
 - Response metrics
 
-**Algorithm Reports** (`output/<timestamp>_<schema>/analytics/reports/*_algorithm_*.txt`):
+**Algorithm Reports** (`output/<timestamp>-<filename>/analytics/reports/*_algorithm_*.txt`):
 - Algorithm information
 - Input complexity analysis
 - Output complexity analysis

@@ -113,13 +113,14 @@ class LLMPrompter:
                 print(f"⚠ Warning: Prompt still large (~{final_tokens} tokens). Consider using chunking.")
         else:
             # Format the prompt with processed data
+            components = processed_data.get('components', {})
             prompt = prompt_template.format(
                 api_name=processed_data.get('info', {}).get('title', 'Unknown API'),
                 api_version=processed_data.get('info', {}).get('version', 'Unknown'),
                 openapi_version=processed_data.get('version', 'Unknown'),
                 endpoints_count=processed_data.get('paths_count', 0),
                 endpoints=self._format_endpoints(processed_data.get('endpoints', [])),
-                components=processed_data.get('components', {}),
+                components=components,
                 tags=processed_data.get('tags', [])
             )
         
@@ -213,10 +214,10 @@ Endpoints: {endpoints_count}
 {endpoints}
 
 Components:
-- Schemas: {components[schemas_count]}
-- Responses: {components[responses_count]}
-- Parameters: {components[parameters_count]}
-- Security Schemes: {components[security_schemes_count]}
+- Schemas: {{components.get('schemas_count', 0)}}
+- Responses: {{components.get('responses_count', 0)}}
+- Parameters: {{components.get('parameters_count', 0)}}
+- Security Schemes: {{components.get('security_schemes_count', 0)}}
 
 Tags: {tags}
 

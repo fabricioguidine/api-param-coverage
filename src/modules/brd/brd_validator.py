@@ -14,16 +14,19 @@ import time
 class BRDValidator:
     """Validates BRD schemas against Swagger schemas."""
     
-    def __init__(self, analytics_dir: Optional[str] = None):
+    def __init__(self, analytics_dir: Optional[str] = None, validation_dir: Optional[str] = None):
         """
         Initialize the BRD Validator.
         
         Args:
             analytics_dir: Analytics directory (default: "output/analytics")
                           Typically should be: <run_output_dir>/analytics/
+            validation_dir: Validation directory for validation reports (default: "output/validation")
+                           Typically should be: <run_output_dir>/validation/
         """
         analytics_path = analytics_dir or "output/analytics"
         self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
+        self.validation_dir = Path(validation_dir) if validation_dir else Path("output/validation")
     
     def validate_brd_against_swagger(
         self,
@@ -220,11 +223,9 @@ class BRDValidator:
         if output_path is None:
             from datetime import datetime
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = Path(f"docs/brd_validation_report_{timestamp}.txt")
+            output_path = self.validation_dir / f"{timestamp}_brd_validation_report.txt"
         
         # Ensure parent directory exists
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        
         output_path.parent.mkdir(parents=True, exist_ok=True)
         
         lines = []
