@@ -194,11 +194,70 @@ def step_schema_analyzed(context):
 def step_brd_generated(context):
     """Verify BRD was generated."""
     if context.brd_choice == "generate" and hasattr(context, 'api_key') and context.api_key:
-        # Mock BRD generation
-        context.brd = Mock()
-        context.brd.title = "Generated BRD"
-        context.brd.requirements = []
-        assert context.brd is not None
+        # Mock LLM to return valid JSON (not Gherkin) and actually generate BRD
+        import json
+        valid_intermediate_brd = {
+            "requirements": [
+                {
+                    "requirement_id": "REQ-001",
+                    "title": "Test Requirement",
+                    "description": "Test",
+                    "endpoint_path": "/test",
+                    "endpoint_method": "GET",
+                    "priority": "high",
+                    "test_scenarios": []
+                }
+            ]
+        }
+        valid_brd_schema = {
+            "brd_id": "BRD-001",
+            "title": "Test API BRD",
+            "description": "Test BRD",
+            "api_name": "Test API",
+            "api_version": "1.0.0",
+            "created_date": "2024-01-01T00:00:00",
+            "requirements": [
+                {
+                    "requirement_id": "REQ-001",
+                    "title": "Test Requirement",
+                    "description": "Test",
+                    "endpoint_path": "/test",
+                    "endpoint_method": "GET",
+                    "priority": "high",
+                    "status": "pending",
+                    "test_scenarios": [],
+                    "acceptance_criteria": [],
+                    "related_endpoints": []
+                }
+            ],
+            "metadata": {}
+        }
+        
+        # Mock LLM responses to return valid JSON
+        with patch('src.modules.engine.llm.prompter.LLMPrompter.send_prompt') as mock_send:
+            # First call returns intermediate BRD, second returns schema
+            mock_send.side_effect = [
+                json.dumps(valid_intermediate_brd),
+                json.dumps(valid_brd_schema)
+            ]
+            
+            # Actually generate BRD
+            if hasattr(context, 'processed_data') and hasattr(context, 'analysis_data'):
+                generator = BRDGenerator(
+                    api_key=context.api_key,
+                    model="gpt-4",
+                    provider="openai"
+                )
+                context.brd = generator.generate_brd_from_swagger(
+                    processed_data=context.processed_data,
+                    analysis_data=context.analysis_data,
+                    coverage_percentage=100.0
+                )
+        
+        # Verify BRD was generated
+        assert context.brd is not None, "BRD should be generated"
+        assert hasattr(context.brd, 'title'), "BRD should have a title"
+        assert hasattr(context.brd, 'requirements'), "BRD should have requirements"
 
 
 @then('BRD should be validated against the schema')

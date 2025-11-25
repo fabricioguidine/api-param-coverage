@@ -1,0 +1,57 @@
+Feature: Schema Processing # tests/features/schema_processing.feature:1
+  As a developer
+  I want to process and analyze Swagger schemas
+  So that I can understand the API structure
+  Feature: Schema Processing  # tests/features/schema_processing.feature:1
+
+  Scenario: Download and validate Swagger 2.0 schema          # tests/features/schema_processing.feature:9
+    Given the system is initialized                           # tests/features/steps/main_workflow_steps.py:22
+    Given I have a Swagger 2.0 schema URL                     # tests/features/steps/schema_processing_steps.py:18
+    When I download the schema for processing                 # tests/features/steps/schema_processing_steps.py:64
+    Then the schema should be downloaded successfully         # tests/features/steps/schema_processing_steps.py:105
+    And the schema format should be detected as "Swagger 2.0" # tests/features/steps/schema_processing_steps.py:111
+    And the schema should be saved to the schemas directory   # tests/features/steps/schema_processing_steps.py:118
+
+  Scenario: Download and validate OpenAPI 3.0 schema          # tests/features/schema_processing.feature:16
+    Given the system is initialized                           # tests/features/steps/main_workflow_steps.py:22
+    Given I have an OpenAPI 3.0 schema URL                    # tests/features/steps/schema_processing_steps.py:25
+    When I download the schema for processing                 # tests/features/steps/schema_processing_steps.py:64
+    Then the schema should be downloaded successfully         # tests/features/steps/schema_processing_steps.py:105
+    And the schema format should be detected as "OpenAPI 3.0" # tests/features/steps/schema_processing_steps.py:111
+    And the schema should be saved to the schemas directory   # tests/features/steps/schema_processing_steps.py:118
+
+  Scenario: Process schema and extract endpoints     # tests/features/schema_processing.feature:23
+    Given the system is initialized                  # tests/features/steps/main_workflow_steps.py:22
+    Given I have a downloaded schema file            # tests/features/steps/schema_processing_steps.py:32
+    When I process the schema                        # tests/features/steps/schema_processing_steps.py:87
+    Then the schema should be processed successfully # None
+    And endpoints should be extracted                # None
+    And endpoint count should be greater than zero   # None
+
+  Scenario: Analyze schema for test traceability   # tests/features/schema_processing.feature:30
+    Given the system is initialized                # tests/features/steps/main_workflow_steps.py:22
+    Given I have a processed schema                # tests/features/steps/schema_processing_steps.py:52
+    When I analyze the schema                      # tests/features/steps/schema_processing_steps.py:96
+      Traceback (most recent call last):
+        File "C:\Users\fabri\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\model.py", line 1991, in run
+          match.run(runner.context)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^
+        File "C:\Users\fabri\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\matchers.py", line 105, in run
+          self.func(context, *args, **kwargs)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "tests\features\steps\schema_processing_steps.py", line 100, in step_analyze_schema
+          schema_dir = str(Path(context.schema_path).parent)
+                           ~~~~^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\fabri\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py", line 503, in __init__
+          super().__init__(*args)
+          ~~~~~~~~~~~~~~~~^^^^^^^
+        File "C:\Users\fabri\AppData\Local\Programs\Python\Python313\Lib\pathlib\_local.py", line 132, in __init__
+          raise TypeError(
+          ...<2 lines>...
+              f"not {type(path).__name__!r}")
+      TypeError: argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'
+
+    Then the analysis should complete successfully # None
+    And complexity metrics should be calculated    # None
+    And parameter information should be extracted  # None
+
