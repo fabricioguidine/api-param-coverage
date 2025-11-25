@@ -15,7 +15,8 @@ from ..brd.brd_schema import (
 )
 from ..engine.llm import LLMPrompter
 from ..engine.analytics import MetricsCollector
-from ..utils import extract_json_from_response, DEFAULT_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, MIN_COVERAGE_PERCENTAGE
+from ..utils import extract_json_from_response
+from ..utils.constants import DEFAULT_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, MIN_COVERAGE_PERCENTAGE
 import time
 
 

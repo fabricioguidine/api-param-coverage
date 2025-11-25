@@ -25,10 +25,11 @@ from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference
 from src.modules.brd_generator import BRDGenerator
 from src.modules.config import ConfigManager
 from src.modules.workflow import (
-    handle_brd_selection, handle_brd_generation, handle_brd_parsing,
     apply_coverage_filter, apply_brd_filter
 )
-from src.modules.workflow.scenario_generator import generate_gherkin_scenarios, export_scenarios
+from src.modules.utils.constants import (
+    MIN_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, DEFAULT_COVERAGE_PERCENTAGE
+)
 from src.modules.cli import (
     ProgressBar, StatusUpdater, InteractiveSelector, ErrorHandler,
     print_section, print_success, print_error, print_warning, print_info, confirm_action
