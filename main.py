@@ -131,7 +131,7 @@ def main():
     print_section("Step 2: Processing schema...")
     status.update("Processing schema...", "info")
     
-    processor = SchemaProcessor()
+    processor = SchemaProcessor(schemas_dir=temp_schemas_dir)
     
     try:
         processed_data = processor.process_schema_file(schema_filename)
@@ -153,7 +153,7 @@ def main():
     print_section("Step 3: Analyzing schema for test traceability...")
     status.update("Analyzing schema...", "info")
     
-    analyzer = SchemaAnalyzer()
+    analyzer = SchemaAnalyzer(schemas_dir=temp_schemas_dir)
     
     try:
         analysis_data = analyzer.analyze_schema_file(schema_filename)
