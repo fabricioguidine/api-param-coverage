@@ -201,7 +201,9 @@ class BRDTransformer:
                 priority = endpoint_info.get('suggested_priority', 'medium')
                 endpoint_summary.append(f"- {method} {path} (priority: {priority})")
         
-        return f"""Transform the following Swagger/OpenAPI schema analysis into a Business Requirements Document (BRD).
+        return f"""You are an expert in API testing and business requirement documentation.
+
+Transform the following Swagger/OpenAPI schema analysis into a Business Requirements Document (BRD) in JSON format.
 
 API Information:
 - Name: {api_info.get('title', 'Unknown')}
@@ -213,6 +215,7 @@ Selected Endpoints ({test_plan.get('coverage_percentage', 100)}% coverage):
 Test Plan Heuristic:
 {json.dumps(test_plan, indent=2) if test_plan else 'N/A'}
 
+INSTRUCTIONS:
 Create a BRD that captures business requirements for testing this API.
 Focus on:
 - Endpoint priorities
@@ -220,7 +223,23 @@ Focus on:
 - Business-critical operations
 - Parameter validation requirements
 
-Return the BRD as JSON with requirements and test scenarios.
+IMPORTANT: Return ONLY valid JSON. Do NOT return Gherkin syntax or any other format.
+The output must be a JSON object with this structure:
+{{
+  "requirements": [
+    {{
+      "requirement_id": "REQ-001",
+      "title": "Requirement title",
+      "description": "Description",
+      "endpoint_path": "/path",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "test_scenarios": [...]
+    }}
+  ]
+}}
+
+Return ONLY the JSON object, no additional text or markdown:
 """
     
     def _create_brd_to_schema_prompt(
@@ -258,7 +277,8 @@ Convert it to the following structured format:
   "metadata": {{}}
 }}
 
-Return ONLY valid JSON.
+IMPORTANT: Return ONLY valid JSON. Do NOT return Gherkin syntax, markdown, or any other format.
+Return ONLY the JSON object, no additional text:
 """
     
     def _create_document_to_brd_prompt(
