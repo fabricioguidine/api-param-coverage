@@ -625,14 +625,14 @@ CSV files are saved in `output/<timestamp>_<schema>/` with format: `<schemaName>
 See `requirements.txt` for complete dependency list.
 
 **Core Dependencies:**
-- `requests` - HTTP requests for schema downloading
-- `pyyaml` - YAML parsing
-- `openai` - OpenAI API client
-- `python-dotenv` - Environment variable management
+- `requests`: HTTP requests for schema downloading
+- `pyyaml`: YAML parsing
+- `openai`: OpenAI API client
+- `python-dotenv`: Environment variable management
 
 **Optional Dependencies:**
-- `PyPDF2` - PDF document parsing
-- `python-docx` - Word document parsing
+- `PyPDF2`: PDF document parsing
+- `python-docx`: Word document parsing
 
 ## 📄 License
 
