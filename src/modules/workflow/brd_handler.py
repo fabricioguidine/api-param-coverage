@@ -31,9 +31,10 @@ def handle_brd_selection(
     available_brds = brd_loader.list_available_brds()
     
     if not available_brds:
-        print_warning("No BRD schema files found in reference/brd/output/")
+        from ..utils.constants import DEFAULT_BRD_INPUT_SCHEMA_DIR, DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR
+        print_warning(f"No BRD schema files found in {DEFAULT_BRD_INPUT_SCHEMA_DIR}/")
         print_info("Options:")
-        print_info("  - Place BRD documents in reference/brd/input/ and choose option 2")
+        print_info(f"  - Place BRD documents in {DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR}/ and choose option 2")
         print_info("  - Choose option 3 to generate from Swagger schema")
         
         fallback_options = [
@@ -103,7 +104,8 @@ def handle_brd_parsing(
     ]
     
     if not documents:
-        print_warning("No BRD documents found in reference/brd/input/")
+        from ..utils.constants import DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR
+        print_warning(f"No BRD documents found in {DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR}/")
         print_info("Please place your BRD document (PDF, Word, TXT, CSV) in that folder.")
         return None
     

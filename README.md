@@ -150,7 +150,7 @@ Enter choice (1 or 2): 2
 📋 Generating BRD from Swagger schema...
 ✓ BRD generated: API Test Requirements Document
   - Requirements: 15
-  - Saved to: reference/brd/input/petstore_swagger_io_v2_swagger_brd.json
+  - Saved to: src/modules/brd/input_schema/petstore_swagger_io_v2_swagger_brd.json
 
 ======================================================================
 Step 5: Cross-referencing BRD with Swagger schema...
@@ -221,27 +221,25 @@ api-param-coverage/
 │       ├── brd_generator/             # BRD generation
 │       │   └── brd_generator.py      # LLM-based BRD generator
 ├── tests/                             # Test suite
-│   ├── test_schema_fetcher.py
-│   ├── test_schema_validator.py
-│   ├── test_processor.py
-│   ├── test_analyzer.py
-│   ├── test_llm_prompter.py
-│   ├── test_csv_generator.py
-│   ├── test_brd_schema.py
-│   ├── test_brd_loader.py
-│   └── test_schema_cross_reference.py
-├── reference/                         # Reference data and templates
-│   ├── schemas/                      # Downloaded schemas
-│   ├── brd/
-│   │   ├── input/                     # BRD documents (PDF, Word, TXT, CSV)
-│   │   │   └── README.md              # BRD document input guide
-│   │   └── output/                    # Generated BRD schemas (JSON)
-│   │       └── README.md              # BRD schema format documentation
-│   └── dummy_data/                   # Example data and scripts
-│       └── scripts/                   # Example utility scripts
+│   ├── features/                      # BDD feature files (Behave)
+│   │   ├── *.feature                  # Gherkin feature files
+│   │   ├── environment.py              # Behave environment setup
+│   │   └── steps/                      # Step definitions
+│   │       └── *.py                   # Step implementation files
+│   ├── brd/                           # BRD module tests
+│   ├── engine/                        # Engine module tests
+│   ├── swagger/                       # Swagger module tests
+│   └── conftest.py                    # Pytest configuration
+├── examples/                          # Example schemas and BRDs
+│   └── weather_gov_api/              # Default example (weather.gov API)
+│       ├── schema.json               # Example OpenAPI schema
+│       ├── brd.json                  # Example BRD schema
+│       └── README.md                 # Example documentation
+├── schemas/                           # User-downloaded schemas
+└── scripts/                           # Example utility scripts
+    └── run_weather_api.py             # Weather API example script
 ├── docs/                              # Documentation
 │   ├── PROJECT_STATUS.md              # Project status
-│   ├── NEXT_STEPS.md                  # Roadmap
 │   └── README.md                      # Documentation guide
 ├── output/                            # Execution outputs (at project root)
 │   ├── <timestamp>-<filename>/       # Execution run folders
@@ -260,16 +258,6 @@ api-param-coverage/
 │       ├── reports/                     # Example algorithm reports
 │       └── README.md                   # Example output documentation
 ├── main.py                            # Main entry point
-├── reference/                         # Reference data and templates
-│   ├── schemas/                      # Downloaded schemas
-│   ├── brd/
-│   │   ├── input/                     # BRD documents (PDF, Word, TXT, CSV)
-│   │   │   └── README.md              # BRD document input guide
-│   │   └── output/                    # Generated BRD schemas (JSON)
-│   │       └── README.md              # BRD schema format documentation
-│   └── scripts/                       # Example utility scripts
-│       ├── README.md                  # Scripts documentation
-│       └── run_weather_api.py         # Weather API example script
 ├── requirements.txt                   # Python dependencies
 ├── pytest.ini                         # Pytest configuration
 └── README.md                          # This file
@@ -342,7 +330,7 @@ A Business Requirement Document (BRD) defines which API endpoints and scenarios 
 
 ### BRD Schema Format
 
-BRD files are stored in JSON format in `reference/brd/input/`. See `reference/brd/input/README.md` for the complete schema format.
+BRD schema files are stored in `src/modules/brd/input_schema/`. See `src/modules/brd/input_schema/README.md` for the complete schema format.
 
 **Key Components:**
 - **Requirements**: List of business requirements
@@ -423,7 +411,7 @@ algorithm:
   retry_attempts: 3
 
 paths:
-  schemas_dir: reference/schemas
+  schemas_dir: schemas
   output_dir: output
   analytics_dir: output/analytics
 
@@ -560,70 +548,20 @@ CSV files are saved in `output/<timestamp>-<filename>/` with format: `<filename>
 
 ## 🔍 Troubleshooting
 
-### Common Issues
-
-#### Empty CSV Files
-
-**Symptoms**: CSV files contain only placeholders or are empty
-
-**Solutions**:
-1. Verify `OPENAI_API_KEY` is set correctly in `.env`
-2. Check network connectivity to OpenAI API
-3. Verify schema has analyzable endpoints
-4. Review console output for error messages
-
-#### Schema Validation Errors
-
-**Symptoms**: Warnings about missing fields or invalid structure
-
-**Solutions**:
-- Missing optional fields are normalized automatically
-- Partial schemas may generate warnings but still work
-- Check error messages for specific issues
-- Verify schema matches OpenAPI/Swagger specification
-
-#### LLM Generation Failures
-
-**Common Causes**:
-- **Rate Limits**: Wait and retry (automatic retry included)
-- **Invalid API Key**: Check `.env` file
-- **Insufficient Quota**: Check OpenAI account billing
-- **Empty Endpoints**: Ensure schema has endpoints
-- **Token Limits**: Large schemas are automatically chunked
-
-**Solutions**:
-- Check API key validity
-- Verify OpenAI account has credits
-- Review token usage in analytics reports
-- Consider using smaller schema subsets
-
-#### BRD Parsing Issues
-
-**Symptoms**: BRD parsing fails or produces incomplete results
-
-**Solutions**:
-- Ensure document format is supported
-- Install required dependencies (PyPDF2, python-docx)
-- Check document structure and formatting
-- Review LLM parsing logs in analytics
-
-#### Token Limit Errors
-
-**Symptoms**: "context_length_exceeded" errors
-
-**Solutions**:
-- Tool automatically chunks large schemas
-- If errors persist, schema may be extremely large
-- Consider using `gpt-4-turbo` with larger context window
-- Review chunk size settings
+| Issue | Symptoms | Solutions |
+|-------|----------|-----------|
+| **Empty CSV Files** | CSV files contain only placeholders or are empty | 1. Verify `OPENAI_API_KEY` is set correctly in `.env`<br>2. Check network connectivity to OpenAI API<br>3. Verify schema has analyzable endpoints<br>4. Review console output for error messages |
+| **Schema Validation Errors** | Warnings about missing fields or invalid structure | • Missing optional fields are normalized automatically<br>• Partial schemas may generate warnings but still work<br>• Check error messages for specific issues<br>• Verify schema matches OpenAPI/Swagger specification |
+| **LLM Generation Failures** | Rate limits, invalid API key, insufficient quota, empty endpoints, token limits | • Check API key validity in `.env` file<br>• Verify OpenAI account has credits<br>• Review token usage in analytics reports<br>• Consider using smaller schema subsets<br>• Wait and retry (automatic retry included) |
+| **BRD Parsing Issues** | BRD parsing fails or produces incomplete results | • Ensure document format is supported<br>• Install required dependencies (PyPDF2, python-docx)<br>• Check document structure and formatting<br>• Review LLM parsing logs in analytics |
+| **Token Limit Errors** | "context_length_exceeded" errors | • Tool automatically chunks large schemas<br>• If errors persist, schema may be extremely large<br>• Consider using `gpt-4-turbo` with larger context window<br>• Review chunk size settings |
 
 ## 📚 Additional Resources
 
 ### Documentation
 
-- **BRD Schema Format**: `reference/brd/input/README.md`
+- **BRD Schema Format**: `src/modules/brd/input_schema/README.md`
 - **Project Status**: `docs/PROJECT_STATUS.md`
-- **Next Steps**: `docs/NEXT_STEPS.md`
 
 ### Dependencies
 

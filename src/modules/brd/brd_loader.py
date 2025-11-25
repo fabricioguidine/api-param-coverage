@@ -13,13 +13,16 @@ from .brd_schema import BRDSchema, BRDRequirement, BRDTestScenario, RequirementP
 class BRDLoader:
     """Loads BRD schemas from files."""
     
-    def __init__(self, brd_dir: str = "reference/brd/output"):
+    def __init__(self, brd_dir: Optional[str] = None):
         """
         Initialize the BRD Loader.
         
         Args:
-            brd_dir: Directory where BRD files are stored
+            brd_dir: Directory where BRD schema files are stored (default: src/modules/brd/input_schema)
         """
+        if brd_dir is None:
+            from ..utils.constants import DEFAULT_BRD_INPUT_SCHEMA_DIR
+            brd_dir = DEFAULT_BRD_INPUT_SCHEMA_DIR
         self.brd_dir = Path(brd_dir)
         self.brd_dir.mkdir(parents=True, exist_ok=True)
     

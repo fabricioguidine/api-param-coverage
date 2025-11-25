@@ -65,11 +65,22 @@ output/analytics/**
 !docs/*.md
 !docs/latex/**
 # BRD input files (documents to be parsed)
-reference/brd/input/*
-!reference/brd/input/README.md
+src/modules/brd/input_transformator/*
+!src/modules/brd/input_transformator/README.md
 
-# BRD output files (generated schemas)
-reference/brd/output/*.json
+# BRD schema files (generated schemas)
+src/modules/brd/input_schema/*.json
+!src/modules/brd/input_schema/README.md
+!src/modules/brd/input_schema/weather_gov_api_brd.json
+
+# Keep example files
+!examples/
+!examples/**
+
+# User-downloaded schemas
+schemas/*.json
+schemas/*.yaml
+schemas/*.yml
 
 # Environment variables
 .env
@@ -84,5 +95,5 @@ Thumbs.db
 *.log
 
 # Scripts output (if any)
-reference/scripts/*.log
-reference/scripts/*.tmp
+scripts/*.log
+scripts/*.tmp

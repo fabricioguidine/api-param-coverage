@@ -186,9 +186,10 @@ def main():
         available_brds = brd_loader.list_available_brds()
         
         if not available_brds:
-            print_warning("No BRD schema files found in reference/brd/output/")
+            from src.modules.utils.constants import DEFAULT_BRD_INPUT_SCHEMA_DIR, DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR
+            print_warning(f"No BRD schema files found in {DEFAULT_BRD_INPUT_SCHEMA_DIR}/")
             print_info("Options:")
-            print_info("  - Place BRD documents in reference/brd/input/ and choose option 2")
+            print_info(f"  - Place BRD documents in {DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR}/ and choose option 2")
             print_info("  - Choose option 3 to generate from Swagger schema")
             
             fallback_options = [
@@ -237,15 +238,16 @@ def main():
         
         parser = BRDParser(api_key=api_key, model=DEFAULT_LLM_MODEL, provider=provider)
         
-        # List available documents in input folder
-        input_dir = Path("reference/brd/input")
+        # List available documents in input_transformator folder
+        from src.modules.utils.constants import DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR
+        input_dir = Path(DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR)
         if not input_dir.exists():
             input_dir.mkdir(parents=True, exist_ok=True)
         
         documents = [f for f in input_dir.iterdir() if f.is_file() and f.suffix.lower() in ['.pdf', '.doc', '.docx', '.txt', '.csv', '.md']]
         
         if not documents:
-            print("⚠ No BRD documents found in reference/brd/input/")
+            print(f"⚠ No BRD documents found in {DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR}/")
             print("   Please place your BRD document (PDF, Word, TXT, CSV) in that folder.")
             return
         

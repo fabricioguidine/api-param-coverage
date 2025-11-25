@@ -15,10 +15,11 @@ DEFAULT_LLM_TEMPERATURE = 0.7
 DEFAULT_LLM_MAX_TOKENS = 3000
 
 # Path constants
-DEFAULT_SCHEMAS_DIR = "reference/schemas"
+DEFAULT_SCHEMAS_DIR = "schemas"
 DEFAULT_OUTPUT_DIR = "output"
-DEFAULT_BRD_INPUT_DIR = "reference/brd/input"
-DEFAULT_BRD_OUTPUT_DIR = "reference/brd/output"
+DEFAULT_BRD_INPUT_SCHEMA_DIR = "src/modules/brd/input_schema"
+DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR = "src/modules/brd/input_transformator"
+DEFAULT_EXAMPLE_DIR = "examples/weather_gov_api"
 
 # File format constants
 SUPPORTED_BRD_FORMATS = {

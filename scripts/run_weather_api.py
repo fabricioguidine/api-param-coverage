@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
-Script to run the tool with weather.gov API and dummy BRD schema.
+Script to run the tool with weather.gov API example.
 Non-interactive version for automated testing.
+
+Uses the default example from examples/weather_gov_api/
 """
 
 import os
@@ -45,29 +47,39 @@ def main():
         print("   Please set it in your .env file.")
         return
     
-    # Weather.gov API URL
-    url = "https://api.weather.gov/openapi.json"
+    # Use example schema from examples/weather_gov_api/
+    example_dir = Path(__file__).parent.parent / "examples" / "weather_gov_api"
+    schema_path = example_dir / "schema.json"
     
-    print(f"Using schema URL: {url}")
-    print()
-    
-    # Step 1: Download schema
-    print("=" * 70)
-    print("Step 1: Downloading schema...")
-    print("=" * 70)
-    
-    from src.modules.utils.constants import DEFAULT_SCHEMAS_DIR
-    fetcher = SchemaFetcher(schemas_dir=DEFAULT_SCHEMAS_DIR)
-    schema_path = fetcher.download_and_save(url, "json")
-    
-    if not schema_path:
-        print("✗ Failed to download schema. Exiting.")
+    if not schema_path.exists():
+        print(f"✗ Example schema not found: {schema_path}")
+        print("   Please ensure the example files are in place.")
         return
     
-    print(f"✓ Schema downloaded: {schema_path}")
+    print(f"Using example schema: {schema_path}")
+    print()
     
-    schema_filename = Path(schema_path).name
-    schema_name_without_ext = Path(schema_path).stem
+    # Step 1: Load example schema
+    print("=" * 70)
+    print("Step 1: Loading example schema...")
+    print("=" * 70)
+    
+    # Copy schema to schemas dir for processing (temporary)
+    from src.modules.utils.constants import DEFAULT_SCHEMAS_DIR
+    schemas_dir = Path(DEFAULT_SCHEMAS_DIR)
+    schemas_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Use a temporary filename for processing
+    schema_filename = "api_weather_gov_openapi.json"
+    temp_schema_path = schemas_dir / schema_filename
+    
+    # Copy the example schema to schemas dir for processing
+    import shutil
+    shutil.copy2(schema_path, temp_schema_path)
+    
+    print(f"✓ Schema loaded: {schema_path}")
+    
+    schema_name_without_ext = "api_weather_gov_openapi"
     
     # Create run directory structure in output/ folder
     # Format: <timestamp>-<filename>
@@ -121,16 +133,17 @@ def main():
     print(f"✓ Schema analyzed:")
     print(f"  - Endpoints analyzed: {len(analysis_data.get('endpoints', []))}")
     
-    # Step 4: Load dummy BRD
+    # Step 4: Load example BRD
     print("\n" + "=" * 70)
-    print("Step 4: Loading dummy BRD schema...")
+    print("Step 4: Loading example BRD schema...")
     print("=" * 70)
     
-    brd_loader = BRDLoader()
-    brd = brd_loader.load_brd_from_file("weather_gov_api_brd")
+    # Load BRD from examples folder
+    brd_path = example_dir / "brd.json"
     
-    if not brd:
-        print("⚠ Dummy BRD not found. Generating one...")
+    if not brd_path.exists():
+        print("⚠ Example BRD not found. Generating one...")
+        brd_loader = BRDLoader()
         brd_generator = BRDGenerator(
             api_key=api_key, 
             model="gpt-4",
@@ -140,14 +153,29 @@ def main():
         brd = brd_generator.generate_brd_from_swagger(processed_data, analysis_data, schema_filename)
         
         if brd:
-            brd_path = brd_loader.save_brd_to_file(brd, "weather_gov_api_brd")
+            # Save to examples folder
+            import json
+            with open(brd_path, 'w', encoding='utf-8') as f:
+                json.dump(brd.to_dict(), f, indent=2, ensure_ascii=False)
             print(f"✓ BRD generated and saved: {brd_path}")
         else:
             print("✗ Failed to generate BRD. Continuing without BRD filtering...")
             brd = None
     else:
-        print(f"✓ BRD loaded: {brd.title}")
-        print(f"  - Requirements: {len(brd.requirements)}")
+        # Load BRD from examples folder
+        brd_loader = BRDLoader()
+        # Temporarily change brd_dir to examples folder
+        original_brd_dir = brd_loader.brd_dir
+        brd_loader.brd_dir = example_dir
+        brd = brd_loader.load_brd_from_file("brd")
+        brd_loader.brd_dir = original_brd_dir
+        
+        if brd:
+            print(f"✓ BRD loaded: {brd.title}")
+            print(f"  - Requirements: {len(brd.requirements)}")
+        else:
+            print("✗ Failed to load BRD. Continuing without BRD filtering...")
+            brd = None
     
     # Step 5: Cross-reference BRD with Swagger
     filtered_analysis_data = analysis_data
