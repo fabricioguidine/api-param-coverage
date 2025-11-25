@@ -450,32 +450,28 @@ Generate BRD from Swagger schema.
 **Returns**:
 - `Optional[BRDSchema]`: Generated BRD schema or None
 
-## Config Module
+## Configuration
 
-### ConfigManager
+Configuration is managed through environment variables and default constants defined in `src/modules/utils/constants.py`.
 
-Manages application configuration.
+### Available Constants
 
-#### Methods
+- `DEFAULT_LLM_MODEL`: Default LLM model (default: "gpt-4")
+- `DEFAULT_LLM_TEMPERATURE`: Default temperature (default: 0.7)
+- `DEFAULT_LLM_MAX_TOKENS`: Default max tokens (default: 3000)
+- `DEFAULT_SCHEMAS_DIR`: Default schemas directory (default: "reference/schemas")
+- `DEFAULT_OUTPUT_DIR`: Default output directory (default: "output")
+- `DEFAULT_BRD_INPUT_DIR`: Default BRD input directory (default: "reference/brd/input")
+- `DEFAULT_BRD_OUTPUT_DIR`: Default BRD output directory (default: "reference/brd/output")
 
-##### `__init__(config_dir: str = "config", default_config_filename: str = "config.yaml.example")`
+### Environment Variables
 
-Initialize Config Manager.
-
-**Parameters**:
-- `config_dir` (str): Configuration directory
-- `default_config_filename` (str): Default config filename
-
-##### `get(key: str, default: Any = None) -> Any`
-
-Get configuration value using dot notation.
-
-**Parameters**:
-- `key` (str): Configuration key (e.g., "llm.model")
-- `default` (Any): Default value if key not found
-
-**Returns**:
-- `Any`: Configuration value
+All constants can be overridden via environment variables:
+- `LLM_MODEL`: Override default LLM model
+- `LLM_TEMPERATURE`: Override default temperature
+- `LLM_MAX_TOKENS`: Override default max tokens
+- `SCHEMAS_DIR`: Override default schemas directory
+- `OUTPUT_DIR`: Override default output directory
 
 ##### `save_config(filepath: Path, format: str = "yaml")`
 

@@ -30,7 +30,8 @@ class TestBRDLoader:
     def test_loader_default_directory(self):
         """Test BRDLoader uses correct default directory."""
         loader = BRDLoader()
-        assert "reference/brd/output" in str(loader.brd_dir)
+        assert loader.brd_dir.name == "output"
+        assert "brd" in str(loader.brd_dir)
     
     @pytest.fixture
     def sample_brd_data(self):

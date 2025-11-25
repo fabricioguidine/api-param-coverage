@@ -21,9 +21,10 @@ from dotenv import load_dotenv
 from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
-from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference
-from src.modules.brd_generator import BRDGenerator
-from src.modules.config import ConfigManager
+from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDGenerator
+from src.modules.utils.constants import (
+    DEFAULT_LLM_MODEL, DEFAULT_SCHEMAS_DIR
+)
 from src.modules.workflow import (
     apply_coverage_filter, apply_brd_filter
 )
@@ -37,9 +38,6 @@ from src.modules.cli import (
 
 # Load environment variables from .env file
 load_dotenv()
-
-# Load configuration
-config_manager = ConfigManager()
 
 # Import LLM provider setup
 from src.modules.utils.llm_provider import get_api_key_and_provider
@@ -80,7 +78,7 @@ def main():
     print("Step 1: Downloading schema...")
     print("=" * 70)
     
-    fetcher = SchemaFetcher(schemas_dir=config_manager.paths.schemas_dir)
+    fetcher = SchemaFetcher(schemas_dir=DEFAULT_SCHEMAS_DIR)
     schema_path = fetcher.download_and_save(url, "json")
     
     if not schema_path:
@@ -91,12 +89,26 @@ def main():
     
     # Extract schema name for output
     schema_filename = Path(schema_path).name
-    swagger_name = Path(schema_path).stem
+    schema_name_without_ext = Path(schema_path).stem
     
     # Create run directory structure in output/ folder
-    run_id = f"{run_timestamp}_{swagger_name}"
+    # Format: <timestamp>-<filename>
+    run_id = f"{run_timestamp}-{schema_name_without_ext}"
     run_output_dir = Path(f"output/{run_id}")
     run_output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create organized subfolders with timestamps
+    analytics_dir = run_output_dir / "analytics"
+    analytics_dir.mkdir(parents=True, exist_ok=True)
+    
+    validation_dir = run_output_dir / "validation"
+    validation_dir.mkdir(parents=True, exist_ok=True)
+    
+    reports_dir = run_output_dir / "reports"
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    
+    scenarios_dir = run_output_dir / "scenarios"
+    scenarios_dir.mkdir(parents=True, exist_ok=True)
     
     print_info(f"Output directory: {run_output_dir}")
     
@@ -223,7 +235,7 @@ def main():
         # Parse BRD from document
         from src.modules.brd import BRDParser
         
-        parser = BRDParser(api_key=api_key, model=config_manager.llm.model, provider=provider)
+        parser = BRDParser(api_key=api_key, model=DEFAULT_LLM_MODEL, provider=provider)
         
         # List available documents in input folder
         input_dir = Path("reference/brd/input")
@@ -288,9 +300,10 @@ def main():
         
         brd_generator = BRDGenerator(
             api_key=api_key,
-            model=config_manager.llm.model,
+            model=DEFAULT_LLM_MODEL,
             provider=provider,
-            analytics_dir=str(run_output_dir / "analytics")
+            analytics_dir=str(analytics_dir),
+            reports_dir=str(reports_dir)
         )
         brd = brd_generator.generate_brd_from_swagger(
             processed_data, 
@@ -304,7 +317,7 @@ def main():
             print(f"  - Requirements: {len(brd.requirements)}")
             
             # Save generated BRD
-            brd_filename = f"{swagger_name}_brd"
+            brd_filename = f"{schema_name_without_ext}_brd"
             brd_path = brd_loader.save_brd_to_file(brd, brd_filename)
             print(f"  - Saved to: {brd_path}")
         else:
@@ -357,12 +370,19 @@ def main():
     
     # Initialize components with run-specific output directories
     prompter = LLMPrompter(
-        model=config_manager.llm.model,
+        model=DEFAULT_LLM_MODEL,
         api_key=api_key,
         provider=provider,
-        analytics_dir=str(run_output_dir / "analytics")
+        analytics_dir=str(analytics_dir)
     )
-    csv_generator = CSVGenerator(output_dir=str(run_output_dir))
+    csv_generator = CSVGenerator(output_dir=str(scenarios_dir))
+    
+    # Initialize validator with validation directory
+    from src.modules.brd import BRDValidator
+    validator = BRDValidator(
+        analytics_dir=str(analytics_dir),
+        validation_dir=str(validation_dir)
+    )
     
     try:
         # Use filtered analysis data (only BRD-covered endpoints if BRD exists)
@@ -422,7 +442,7 @@ def main():
     print("Step 7: Saving to CSV...")
     print("=" * 70)
     
-    csv_path = csv_generator.gherkin_to_csv(gherkin_scenarios, swagger_name)
+    csv_path = csv_generator.gherkin_to_csv(gherkin_scenarios, schema_name_without_ext)
     print(f"✓ CSV saved: {csv_path}")
     
     # Summary

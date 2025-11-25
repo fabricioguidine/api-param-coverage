@@ -4,7 +4,8 @@ This folder contains example output from running the tool with the weather.gov A
 
 ## Contents
 
-- **`<timestamp>_*_scenarios.csv`**: Generated Gherkin test scenarios in CSV format (timestamped)
+- **scenarios/**: Generated Gherkin test scenarios in CSV format
+  - **`<timestamp>_*_scenarios.csv`**: CSV files with test scenarios (timestamped)
 - **analytics/**: Analytics and metrics from the execution
   - **`<timestamp>_*.txt`**: LLM execution metrics (timestamped)
 - **validation/**: BRD validation reports
@@ -33,7 +34,8 @@ This example demonstrates the new organized output structure with timestamped su
 
 ```
 example_weather_api/
-├── <timestamp>_*_scenarios.csv    # CSV file with Gherkin scenarios (timestamped)
+├── scenarios/                       # CSV scenarios folder
+│   └── <timestamp>_*_scenarios.csv # CSV file with Gherkin scenarios (timestamped)
 ├── analytics/                       # Analytics folder
 │   └── <timestamp>_*.txt          # LLM execution metrics (timestamped)
 ├── validation/                      # Validation reports folder

@@ -11,7 +11,7 @@ Runs the tool with the weather.gov API schema and a pre-configured BRD schema.
 **Usage:**
 ```bash
 # From project root
-python scripts/run_weather_api.py
+python reference/scripts/run_weather_api.py
 ```
 
 **What it does:**

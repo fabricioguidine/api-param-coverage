@@ -1,0 +1,113 @@
+================================================================================
+Test Execution Metrics
+================================================================================
+
+Session Timestamp: 20251124_213358
+Execution Date: 2025-11-24 21:34:00
+
+--------------------------------------------------------------------------------
+Overall Metrics
+--------------------------------------------------------------------------------
+Total Tests: 156
+Passed: 145 (92.9%)
+Failed: 11 (7.1%)
+Skipped: 0 (0.0%)
+Total Duration: 0.00s
+Average Duration: 0.000s
+Test Suites: 13
+
+--------------------------------------------------------------------------------
+Per-Suite Metrics
+--------------------------------------------------------------------------------
+Suite: test_analyzer
+  Tests: 6 | Passed: 6 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_generator
+  Tests: 24 | Passed: 16 | Failed: 8 | Skipped: 0
+  Pass Rate: 66.7%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_loader
+  Tests: 6 | Passed: 5 | Failed: 1 | Skipped: 0
+  Pass Rate: 83.3%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_parser
+  Tests: 18 | Passed: 18 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_schema
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_brd_validator
+  Tests: 16 | Passed: 16 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_cli_utils
+  Tests: 22 | Passed: 22 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_csv_generator
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_llm_prompter
+  Tests: 18 | Passed: 17 | Failed: 1 | Skipped: 0
+  Pass Rate: 94.4%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_processor
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_schema_cross_reference
+  Tests: 3 | Passed: 3 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_schema_fetcher
+  Tests: 11 | Passed: 10 | Failed: 1 | Skipped: 0
+  Pass Rate: 90.9%
+  Duration: 0.00s (avg: 0.000s)
+
+Suite: test_schema_validator
+  Tests: 8 | Passed: 8 | Failed: 0 | Skipped: 0
+  Pass Rate: 100.0%
+  Duration: 0.00s (avg: 0.000s)
+
+--------------------------------------------------------------------------------
+Failed Tests
+--------------------------------------------------------------------------------
+  - test_brd_loader::test_loader_default_directory
+    Error: tests\brd\test_brd_loader.py:33: in test_loader_default_directory
+  - test_brd_generator::test_select_endpoints_by_coverage_exact_percentage
+    Error: tests\brd_generator\test_brd_generator.py:135: in test_select_endpoints_by_coverage_exact_percentage
+  - test_brd_generator::test_select_endpoints_by_coverage_random
+    Error: tests\brd_generator\test_brd_generator.py:149: in test_select_endpoints_by_coverage_random
+  - test_brd_generator::test_select_endpoints_by_coverage_empty_list
+    Error: tests\brd_generator\test_brd_generator.py:157: in test_select_endpoints_by_coverage_empty_list
+  - test_brd_generator::test_select_endpoints_by_coverage_prioritizes_critical
+    Error: tests\brd_generator\test_brd_generator.py:170: in test_select_endpoints_by_coverage_prioritizes_critical
+  - test_brd_generator::test_create_test_plan_heuristic
+    Error: tests\brd_generator\test_brd_generator.py:233: in test_create_test_plan_heuristic
+  - test_brd_generator::test_generate_brd_from_swagger_success
+    Error: tests\brd_generator\test_brd_generator.py:312: in test_generate_brd_from_swagger_success
+  - test_brd_generator::test_generate_brd_from_swagger_llm_failure
+    Error: tests\brd_generator\test_brd_generator.py:342: in test_generate_brd_from_swagger_llm_failure
+  - test_brd_generator::test_generate_brd_from_swagger_with_coverage_percentage
+    Error: tests\brd_generator\test_brd_generator.py:382: in test_generate_brd_from_swagger_with_coverage_percentage
+  - test_llm_prompter::test_create_prompt_success
+    Error: tests\engine\llm\test_llm_prompter.py:87: in test_create_prompt_success
+  - test_schema_fetcher::test_download_and_save_success
+    Error: tests\swagger_tool\test_schema_fetcher.py:206: in test_download_and_save_success
+
+================================================================================
