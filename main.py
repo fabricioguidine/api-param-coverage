@@ -18,7 +18,7 @@ from pathlib import Path
 from datetime import datetime
 from dotenv import load_dotenv
 
-from src.modules.swagger_tool.schema_fetcher import SchemaFetcher
+from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
 from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference
