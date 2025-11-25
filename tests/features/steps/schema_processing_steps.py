@@ -9,7 +9,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from src.modules.swagger_tool.schema_fetcher import SchemaFetcher
+from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer
 
 
@@ -55,7 +55,7 @@ def step_processed_schema(context):
 @when('I download the schema')
 def step_download_schema(context):
     """Download the schema."""
-    with patch('src.modules.swagger_tool.schema_fetcher.requests.get') as mock_get:
+    with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
         mock_response = Mock()
         if context.expected_format == "Swagger 2.0":
             mock_response.json.return_value = {

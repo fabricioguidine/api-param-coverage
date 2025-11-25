@@ -9,7 +9,7 @@ import json
 import tempfile
 import shutil
 
-from src.modules.brd_generator.brd_generator import BRDGenerator
+from src.modules.brd.brd_generator import BRDGenerator
 from src.modules.brd.brd_schema import BRDSchema, BRDRequirement, BRDTestScenario, RequirementPriority, RequirementStatus
 
 
@@ -26,7 +26,7 @@ class TestBRDGenerator:
     @pytest.fixture
     def generator(self, temp_dir):
         """Create a BRDGenerator instance with mocked LLM."""
-        with patch('src.modules.brd_generator.brd_generator.LLMPrompter'):
+        with patch('src.modules.brd.brd_generator.LLMPrompter'):
             gen = BRDGenerator(api_key="test-key", model="gpt-4", analytics_dir=temp_dir)
             gen.llm_prompter = MagicMock()
             return gen
@@ -110,7 +110,7 @@ class TestBRDGenerator:
     
     def test_generator_initialization(self, temp_dir):
         """Test BRDGenerator initialization."""
-        with patch('src.modules.brd_generator.brd_generator.LLMPrompter'):
+        with patch('src.modules.brd.brd_generator.LLMPrompter'):
             gen = BRDGenerator(api_key="test-key", model="gpt-4", analytics_dir=temp_dir)
             assert gen.api_key == "test-key"
             assert gen.model == "gpt-4"
@@ -306,7 +306,7 @@ class TestBRDGenerator:
             time_index[0] = min(time_index[0] + 1, len(time_values) - 1)
             return result
         
-        with patch('src.modules.brd_generator.brd_generator.time.time', side_effect=mock_time):
+        with patch('src.modules.brd.brd_generator.time.time', side_effect=mock_time):
             generator.llm_prompter.send_prompt.return_value = sample_llm_response
             
             brd = generator.generate_brd_from_swagger(
@@ -366,7 +366,7 @@ class TestBRDGenerator:
             time_index[0] = min(time_index[0] + 1, len(time_values) - 1)
             return result
         
-        with patch('src.modules.brd_generator.brd_generator.time.time', side_effect=mock_time):
+        with patch('src.modules.brd.brd_generator.time.time', side_effect=mock_time):
             generator.llm_prompter.send_prompt.return_value = sample_llm_response
             
             with patch.object(generator, '_create_test_plan_heuristic') as mock_heuristic:

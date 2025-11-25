@@ -56,7 +56,7 @@
 ```
 api-param-coverage/
 ├── src/modules/
-│   ├── swagger_tool/          # Schema downloading and validation
+│   ├── swagger/               # Schema downloading and validation
 │   ├── engine/                # Processing and LLM generation
 │   │   ├── algorithms/        # Schema processing algorithms
 │   │   │   ├── processor.py

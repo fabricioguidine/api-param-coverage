@@ -3,7 +3,7 @@ Tests for the SchemaValidator module.
 """
 
 import pytest
-from src.modules.swagger_tool.schema_validator import SchemaValidator
+from src.modules.swagger.schema_validator import SchemaValidator
 
 
 class TestSchemaValidator:
