@@ -98,17 +98,38 @@ class BRDTransformer:
         response = self.llm_prompter.send_prompt(prompt)
         
         if not response:
+            print("✗ Error: No response from LLM for BRD generation")
+            return None
+        
+        # Check if response contains Gherkin keywords (common mistake)
+        if any(keyword in response.lower() for keyword in ['feature:', 'scenario:', 'given', 'when', 'then']):
+            print("⚠ Warning: LLM returned Gherkin instead of JSON. This indicates a prompt issue.")
+            print(f"   Response preview: {response[:200]}...")
             return None
         
         # Extract JSON from response
         brd_json = extract_json_from_response(response)
         if not brd_json:
+            print("⚠ Warning: Could not extract JSON from LLM response")
+            print(f"   Response preview: {response[:200]}...")
+            return None
+        
+        # Validate JSON structure
+        if not brd_json.strip().startswith('{') or not brd_json.strip().endswith('}'):
+            print("⚠ Warning: Extracted text does not appear to be valid JSON")
+            print(f"   Preview: {brd_json[:200]}...")
             return None
         
         try:
-            return json.loads(brd_json)
-        except json.JSONDecodeError:
-            print("⚠ Warning: Failed to parse intermediate BRD JSON")
+            parsed = json.loads(brd_json)
+            # Validate it has the expected structure
+            if not isinstance(parsed, dict) or 'requirements' not in parsed:
+                print("⚠ Warning: JSON does not have expected BRD structure (missing 'requirements' key)")
+                return None
+            return parsed
+        except json.JSONDecodeError as e:
+            print(f"⚠ Warning: Failed to parse intermediate BRD JSON: {str(e)}")
+            print(f"   JSON preview: {brd_json[:200]}...")
             return None
     
     def _transform_intermediate_brd_to_schema(
@@ -125,10 +146,19 @@ class BRDTransformer:
         response = self.llm_prompter.send_prompt(prompt)
         
         if not response:
+            print("✗ Error: No response from LLM for BRD schema conversion")
+            return None
+        
+        # Check if response contains Gherkin keywords
+        if any(keyword in response.lower() for keyword in ['feature:', 'scenario:', 'given', 'when', 'then']):
+            print("⚠ Warning: LLM returned Gherkin instead of JSON for schema conversion")
+            print(f"   Response preview: {response[:200]}...")
             return None
         
         brd_json = extract_json_from_response(response)
         if not brd_json:
+            print("⚠ Warning: Could not extract JSON from LLM response for schema conversion")
+            print(f"   Response preview: {response[:200]}...")
             return None
         
         return self._parse_brd_json_to_schema(brd_json)
@@ -201,9 +231,9 @@ class BRDTransformer:
                 priority = endpoint_info.get('suggested_priority', 'medium')
                 endpoint_summary.append(f"- {method} {path} (priority: {priority})")
         
-        return f"""You are an expert in API testing and business requirement documentation.
+        return f"""You are a business analyst creating a Business Requirements Document (BRD) in JSON format.
 
-Transform the following Swagger/OpenAPI schema analysis into a Business Requirements Document (BRD) in JSON format.
+TASK: Transform the Swagger/OpenAPI schema analysis below into a BRD JSON document.
 
 API Information:
 - Name: {api_info.get('title', 'Unknown')}
@@ -215,7 +245,7 @@ Selected Endpoints ({test_plan.get('coverage_percentage', 100)}% coverage):
 Test Plan Heuristic:
 {json.dumps(test_plan, indent=2) if test_plan else 'N/A'}
 
-INSTRUCTIONS:
+REQUIREMENTS:
 Create a BRD that captures business requirements for testing this API.
 Focus on:
 - Endpoint priorities
@@ -223,8 +253,15 @@ Focus on:
 - Business-critical operations
 - Parameter validation requirements
 
-IMPORTANT: Return ONLY valid JSON. Do NOT return Gherkin syntax or any other format.
-The output must be a JSON object with this structure:
+CRITICAL: You MUST return ONLY valid JSON. Do NOT return:
+- Gherkin syntax (Feature:, Scenario:, Given, When, Then)
+- Markdown formatting
+- Explanatory text
+- Code blocks with backticks
+
+The output MUST be a valid JSON object starting with {{ and ending with }}.
+
+Required JSON structure:
 {{
   "requirements": [
     {{
@@ -234,12 +271,12 @@ The output must be a JSON object with this structure:
       "endpoint_path": "/path",
       "endpoint_method": "GET",
       "priority": "high",
-      "test_scenarios": [...]
+      "test_scenarios": []
     }}
   ]
 }}
 
-Return ONLY the JSON object, no additional text or markdown:
+Start your response with {{ and end with }}. No other text before or after.
 """
     
     def _create_brd_to_schema_prompt(
