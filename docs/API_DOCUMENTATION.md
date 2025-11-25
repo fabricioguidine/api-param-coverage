@@ -459,7 +459,6 @@ Configuration is managed through environment variables and default constants def
 - `DEFAULT_LLM_MODEL`: Default LLM model (default: "gpt-4")
 - `DEFAULT_LLM_TEMPERATURE`: Default temperature (default: 0.7)
 - `DEFAULT_LLM_MAX_TOKENS`: Default max tokens (default: 3000)
-- `DEFAULT_SCHEMAS_DIR`: Default schemas directory (default: "schemas")
 - `DEFAULT_OUTPUT_DIR`: Default output directory (default: "output")
 - `DEFAULT_BRD_INPUT_SCHEMA_DIR`: Default BRD input schema directory (default: "src/modules/brd/input_schema")
 - `DEFAULT_BRD_INPUT_TRANSFORMATOR_DIR`: Default BRD input transformator directory (default: "src/modules/brd/input_transformator")

@@ -121,7 +121,7 @@ export OPENAI_API_KEY='your-api-key-here'
    1. my_brd.json
    2. weather_gov_api_brd.json (if available in src/modules/brd/input_schema/)
    
-   Note: The default weather.gov example BRD is in examples/weather_gov_api/brd.json
+   Note: If you don't have a Swagger schema URL, the tool will suggest using https://api.weather.gov/openapi.json as an example.
    
    Enter choice: 1
    ```

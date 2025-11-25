@@ -21,11 +21,11 @@ class SchemaFetcher:
         Initialize the SchemaFetcher.
         
         Args:
-            schemas_dir: Directory where schemas will be saved (default: from constants)
+            schemas_dir: Directory where schemas will be saved (required, typically a temp directory)
         """
         if schemas_dir is None:
-            from ..utils.constants import DEFAULT_SCHEMAS_DIR
-            schemas_dir = DEFAULT_SCHEMAS_DIR
+            import tempfile
+            schemas_dir = tempfile.mkdtemp(prefix="api_param_coverage_")
         self.schemas_dir = Path(schemas_dir)
         self.schemas_dir.mkdir(parents=True, exist_ok=True)
     

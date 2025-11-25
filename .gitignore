@@ -49,9 +49,7 @@ ENV/
 .cursor/
 
 # Project specific
-data/schemas/*.json
-data/schemas/*.yaml
-data/schemas/*.yml
+# Schemas are now downloaded to temporary directories
 # Output files (organized by timestamp runs)
 output/20*/*.csv
 output/20*/*.txt
@@ -73,14 +71,7 @@ src/modules/brd/input_schema/*.json
 !src/modules/brd/input_schema/README.md
 !src/modules/brd/input_schema/weather_gov_api_brd.json
 
-# Keep example files
-!examples/
-!examples/**
-
-# User-downloaded schemas
-schemas/*.json
-schemas/*.yaml
-schemas/*.yml
+# Schemas are now downloaded to temporary directories and cleaned up automatically
 
 # Environment variables
 .env
@@ -95,5 +86,4 @@ Thumbs.db
 *.log
 
 # Scripts output (if any)
-scripts/*.log
-scripts/*.tmp
+# Scripts folder removed

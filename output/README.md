@@ -14,13 +14,7 @@ This folder contains example output from running the tool with the weather.gov A
 
 ## How to Generate This Output
 
-Run the example script:
-
-```bash
-python scripts/run_weather_api.py
-```
-
-Or use the main tool with the weather.gov API:
+Use the main tool with the weather.gov API (or any Swagger/OpenAPI URL):
 
 ```bash
 python main.py
