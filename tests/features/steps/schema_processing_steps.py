@@ -6,6 +6,8 @@ from behave import given, when, then
 from unittest.mock import Mock, patch
 from pathlib import Path
 import sys
+import tempfile
+import json
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
@@ -30,7 +32,11 @@ def step_openapi_3_url(context):
 @given('I have a downloaded schema file')
 def step_downloaded_schema(context):
     """Set up downloaded schema."""
-    context.schema_path = "test_schema.json"
+    import tempfile
+    import json
+    # Create a real temp file for testing
+    temp_dir = tempfile.mkdtemp()
+    schema_path = Path(temp_dir) / "test_schema.json"
     context.schema_data = {
         'swagger': '2.0',
         'info': {'title': 'Test API'},
@@ -38,6 +44,9 @@ def step_downloaded_schema(context):
             '/test': {'get': {}}
         }
     }
+    with open(schema_path, 'w') as f:
+        json.dump(context.schema_data, f)
+    context.schema_path = str(schema_path)
 
 
 @given('I have a processed schema')
@@ -78,14 +87,18 @@ def step_download_schema(context):
 @when('I process the schema')
 def step_process_schema(context):
     """Process the schema."""
-    processor = SchemaProcessor()
+    # Extract the directory from the schema path (could be temp dir or test dir)
+    schema_dir = str(Path(context.schema_path).parent)
+    processor = SchemaProcessor(schemas_dir=schema_dir)
     context.processed_data = processor.process_schema_file(Path(context.schema_path).name)
 
 
 @when('I analyze the schema')
 def step_analyze_schema(context):
     """Analyze the schema."""
-    analyzer = SchemaAnalyzer()
+    # Extract the directory from the schema path (could be temp dir or test dir)
+    schema_dir = str(Path(context.schema_path).parent)
+    analyzer = SchemaAnalyzer(schemas_dir=schema_dir)
     context.analysis_data = analyzer.analyze_schema_file(Path(context.schema_path).name)
 
 
