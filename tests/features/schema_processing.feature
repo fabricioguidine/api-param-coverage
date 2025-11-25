@@ -8,14 +8,14 @@ Feature: Schema Processing
 
   Scenario: Download and validate Swagger 2.0 schema
     Given I have a Swagger 2.0 schema URL
-    When I download the schema
+    When I download the schema for processing
     Then the schema should be downloaded successfully
     And the schema format should be detected as "Swagger 2.0"
     And the schema should be saved to the schemas directory
 
   Scenario: Download and validate OpenAPI 3.0 schema
     Given I have an OpenAPI 3.0 schema URL
-    When I download the schema
+    When I download the schema for processing
     Then the schema should be downloaded successfully
     And the schema format should be detected as "OpenAPI 3.0"
     And the schema should be saved to the schemas directory

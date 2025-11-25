@@ -16,15 +16,18 @@ from .schema_validator import SchemaValidator
 class SchemaFetcher:
     """Handles fetching and saving Swagger/OpenAPI schemas."""
     
-    def __init__(self, schemas_dir: str = "data/schemas"):
+    def __init__(self, schemas_dir: Optional[str] = None):
         """
         Initialize the SchemaFetcher.
         
         Args:
-            schemas_dir: Directory where schemas will be saved
+            schemas_dir: Directory where schemas will be saved (default: from constants)
         """
+        if schemas_dir is None:
+            from ..utils.constants import DEFAULT_SCHEMAS_DIR
+            schemas_dir = DEFAULT_SCHEMAS_DIR
         self.schemas_dir = Path(schemas_dir)
-        self.schemas_dir.mkdir(exist_ok=True)
+        self.schemas_dir.mkdir(parents=True, exist_ok=True)
     
     def fetch_schema(self, url: str) -> Optional[dict]:
         """

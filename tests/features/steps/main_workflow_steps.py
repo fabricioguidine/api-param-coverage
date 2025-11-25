@@ -13,11 +13,10 @@ import shutil
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
-from src.modules.swagger_tool.schema_fetcher import SchemaFetcher
+from src.modules.swagger.schema_fetcher import SchemaFetcher
 from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
-from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator
-from src.modules.brd_generator import BRDGenerator
+from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDValidator, BRDGenerator
 
 
 @given('the system is initialized')
@@ -109,7 +108,7 @@ def step_run_main_workflow(context):
         if hasattr(context, 'is_invalid') and context.is_invalid:
             context.schema_path = None
         elif context.schema_url:
-            with patch('src.modules.swagger_tool.schema_fetcher.requests.get') as mock_get:
+            with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
                 if context.schema_url == "":
                     context.schema_path = None
                 else:
@@ -161,7 +160,7 @@ def step_select_brd_file(context, filename):
 def step_download_schema(context):
     """Download the schema."""
     if hasattr(context, 'schema_url'):
-        with patch('src.modules.swagger_tool.schema_fetcher.requests.get') as mock_get:
+        with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
             mock_response = Mock()
             mock_response.json.return_value = {
                 'openapi': '3.0.0',
@@ -174,26 +173,7 @@ def step_download_schema(context):
             context.schema_path = fetcher.download_and_save(context.schema_url, "json")
 
 
-@when('I process the schema')
-def step_process_schema(context):
-    """Process the schema."""
-    if context.schema_path:
-        processor = SchemaProcessor()
-        context.processed_data = processor.process_schema_file(Path(context.schema_path).name)
-
-
-@when('I analyze the schema')
-def step_analyze_schema(context):
-    """Analyze the schema."""
-    if context.processed_data:
-        analyzer = SchemaAnalyzer()
-        context.analysis_data = analyzer.analyze_schema_file(Path(context.schema_path).name)
-
-
-@then('the schema should be downloaded successfully')
-def step_schema_downloaded(context):
-    """Verify schema was downloaded."""
-    assert context.schema_path is not None, "Schema should be downloaded"
+# Schema processing steps are defined in schema_processing_steps.py to avoid duplication
 
 
 @then('the schema should be processed')
@@ -279,12 +259,7 @@ def step_workflow_exits(context):
     assert True
 
 
-@then('the BRD should cover approximately "{percentage}" percent of endpoints')
-def step_brd_coverage(context, percentage):
-    """Verify BRD coverage percentage."""
-    expected_coverage = float(percentage)
-    # This would be verified in actual implementation
-    assert True  # Placeholder
+# BRD coverage step is defined in brd_workflow_steps.py to avoid duplication
 
 
 @then('only covered endpoints should be tested')
