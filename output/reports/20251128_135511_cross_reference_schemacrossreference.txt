@@ -1,0 +1,35 @@
+================================================================================
+Algorithm Analysis Report: SchemaCrossReference
+================================================================================
+
+ALGORITHM INFORMATION
+--------------------------------------------------------------------------------
+Algorithm Name: SchemaCrossReference
+Algorithm Type: cross_reference
+Timestamp: 2025-11-28T13:55:11.990706
+Execution Time: 0.00 seconds
+LLM Call: No
+
+INPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 86
+Element Count: 2
+Nested Depth: 1
+Structure Complexity: low
+
+OUTPUT COMPLEXITY ANALYSIS
+--------------------------------------------------------------------------------
+Data Size (bytes): 66
+Element Count: 1
+Nested Depth: 1
+Structure Complexity: low
+Output Quality: unknown
+
+ALGORITHM-SPECIFIC COMPLEXITY METRICS
+--------------------------------------------------------------------------------
+total_endpoints: 3
+filtered_endpoints: 2
+coverage_percentage: 66.67
+brd_requirements_count: 2
+
+================================================================================

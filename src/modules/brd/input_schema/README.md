@@ -53,3 +53,5 @@ brd = loader.load_brd_from_file("my_brd")
 - If you have a document (PDF, Word, TXT, etc.) that needs transformation, place it in `input_transformator/` instead
 - Generated BRD schemas from Swagger or documents will be saved here
 
+
+
