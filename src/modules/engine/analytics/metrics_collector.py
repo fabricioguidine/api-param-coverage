@@ -14,25 +14,24 @@ import json
 class MetricsCollector:
     """Collects and saves complexity analysis metrics for LLM API executions."""
     
-    def __init__(self, analytics_dir: str = "output/analytics", reports_dir: Optional[str] = None):
+    def __init__(self, analytics_dir: str = "output/analytics", reports_dir: Optional[str] = None, run_timestamp: Optional[str] = None):
         """
         Initialize the Metrics Collector.
         
         Args:
-            analytics_dir: Directory where analytics files will be saved
-                          Default: "output/analytics" (follows project structure)
-            reports_dir: Directory where algorithm reports will be saved
-                        Default: <analytics_dir>/../reports/ (separate from analytics)
+            analytics_dir: Directory where analytics files will be saved (run directory)
+            reports_dir: Directory where algorithm reports will be saved (same as analytics_dir)
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
         self.analytics_dir = Path(analytics_dir)
         self.analytics_dir.mkdir(parents=True, exist_ok=True)
-        # Reports go to a separate reports directory
+        # Reports go to the same directory as analytics
         if reports_dir:
             self.reports_dir = Path(reports_dir)
         else:
-            # Default: use reports folder at same level as analytics
-            self.reports_dir = self.analytics_dir.parent / "reports"
+            self.reports_dir = self.analytics_dir
         self.reports_dir.mkdir(parents=True, exist_ok=True)
+        self.run_timestamp = run_timestamp
     
     def collect_metrics(
         self,
@@ -321,7 +320,13 @@ class MetricsCollector:
         algorithm_name = algorithm_metrics.get('algorithm_name', 'unknown').replace(' ', '_').lower()
         algorithm_type = algorithm_metrics.get('algorithm_type', 'unknown')
         
-        filename = f"{timestamp_str}_{algorithm_type}_{algorithm_name}.txt"
+        # Use run timestamp if provided, otherwise use current timestamp
+        if self.run_timestamp:
+            file_timestamp = self.run_timestamp
+        else:
+            file_timestamp = timestamp_str
+        # Format: timestamp-<algorithm_type>_<algorithm_name>.txt
+        filename = f"{file_timestamp}-{algorithm_type}_{algorithm_name}.txt"
         filepath = self.reports_dir / filename
         
         # Format report
@@ -433,7 +438,13 @@ class MetricsCollector:
         # Generate timestamp string for filename
         timestamp = datetime.fromisoformat(metrics['timestamp'])
         timestamp_str = timestamp.strftime("%Y%m%d_%H%M%S")
-        filename = f"{timestamp_str}.txt"
+        # Use run timestamp if provided, otherwise use current timestamp
+        if self.run_timestamp:
+            file_timestamp = self.run_timestamp
+        else:
+            file_timestamp = timestamp_str
+        # Format: timestamp-analytics.txt
+        filename = f"{file_timestamp}-analytics.txt"
         filepath = self.analytics_dir / filename
         
         # Format metrics as readable text

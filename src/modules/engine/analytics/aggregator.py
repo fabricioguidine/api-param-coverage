@@ -96,8 +96,8 @@ class AnalyticsAggregator:
         if not self.output_dir.exists():
             return run_folders
         
-        # Look for folders matching timestamp pattern: YYYYMMDD_HHMMSS_*
-        pattern = re.compile(r'^\d{8}_\d{6}_')
+        # Look for folders matching timestamp pattern: YYYYMMDD_HHMMSS-* or YYYYMMDD_HHMMSS_*
+        pattern = re.compile(r'^\d{8}_\d{6}[-_]')
         
         for item in self.output_dir.iterdir():
             if item.is_dir() and pattern.match(item.name):
@@ -112,17 +112,16 @@ class AnalyticsAggregator:
         """
         Process a single run folder and extract analytics.
         
+        Files are now directly in the run folder with timestamp prefixes.
+        
         Args:
             run_folder: Path to the run folder
             
         Returns:
             Run data dictionary or None
         """
-        analytics_dir = run_folder / "analytics"
-        
-        if not analytics_dir.exists():
-            return None
-        
+        # Files are now directly in run_folder, not in analytics subdirectory
+        # Look for files with timestamp prefixes: <timestamp>-analytics.txt, <timestamp>-*.txt
         run_data = {
             'run_id': run_folder.name,
             'timestamp': self._extract_timestamp(run_folder.name),
@@ -135,8 +134,8 @@ class AnalyticsAggregator:
             'algorithm_reports': []
         }
         
-        # Process LLM execution metrics
-        for metrics_file in analytics_dir.glob("llm_execution_metrics_*.txt"):
+        # Process analytics files (format: <timestamp>-analytics.txt)
+        for metrics_file in run_folder.glob("*-analytics.txt"):
             metrics_data = self._parse_metrics_file(metrics_file)
             if metrics_data:
                 run_data['llm_calls'] += 1
@@ -145,8 +144,13 @@ class AnalyticsAggregator:
                 run_data['cost_estimate'] += metrics_data.get('cost_estimate', 0.0)
                 run_data['metrics_files'].append(str(metrics_file))
         
-        # Process algorithm reports
-        for report_file in analytics_dir.glob("algorithm_report_*.txt"):
+        # Process algorithm reports (format: <timestamp>-<algorithm>_<name>.txt)
+        # Look for files matching algorithm report patterns
+        for report_file in run_folder.glob("*-*.txt"):
+            # Skip analytics files we already processed
+            if report_file.name.endswith("-analytics.txt"):
+                continue
+            # Check if it looks like an algorithm report
             algorithm_data = self._parse_algorithm_report(report_file)
             if algorithm_data:
                 run_data['algorithm_executions'] += 1
@@ -156,7 +160,11 @@ class AnalyticsAggregator:
                     'execution_time': algorithm_data.get('execution_time', 0.0)
                 })
         
-        return run_data
+        # Only return data if we found something
+        if run_data['llm_calls'] > 0 or run_data['algorithm_executions'] > 0:
+            return run_data
+        
+        return None
     
     def _extract_timestamp(self, run_id: str) -> Optional[str]:
         """Extract timestamp from run ID."""
@@ -292,5 +300,6 @@ class AnalyticsAggregator:
         output_path.write_text("\n".join(lines), encoding='utf-8')
         
         return output_path
+
 
 

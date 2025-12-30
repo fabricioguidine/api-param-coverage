@@ -5,6 +5,7 @@ Cross-references BRD requirements with Swagger schema to filter test scope.
 """
 
 import time
+from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
 from ..brd import BRDSchema, BRDRequirement
 from ..engine.algorithms import SchemaAnalyzer
@@ -14,9 +15,21 @@ from ..engine.analytics import MetricsCollector
 class SchemaCrossReference:
     """Cross-references BRD with Swagger schema to determine test scope."""
     
-    def __init__(self):
-        """Initialize the Schema Cross-Reference."""
-        self.metrics_collector = MetricsCollector()
+    def __init__(self, run_output_dir: Optional[Path] = None, run_timestamp: Optional[str] = None):
+        """
+        Initialize the Schema Cross-Reference.
+        
+        Args:
+            run_output_dir: Run output directory where all files should be saved
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
+        """
+        # Use run_output_dir if provided, otherwise use temp directory for testing
+        if run_output_dir:
+            analytics_path = str(run_output_dir)
+        else:
+            import tempfile
+            analytics_path = tempfile.mkdtemp(prefix="test_output_")
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=analytics_path, run_timestamp=run_timestamp)
     
     def filter_endpoints_by_brd(
         self,

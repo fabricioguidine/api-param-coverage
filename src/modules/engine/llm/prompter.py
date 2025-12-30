@@ -6,6 +6,7 @@ This module handles prompting LLMs with processed schema data.
 
 import os
 import time
+from pathlib import Path
 from typing import Dict, Any, Optional, List
 
 from ..analytics import MetricsCollector
@@ -14,7 +15,7 @@ from ..analytics import MetricsCollector
 class LLMPrompter:
     """Handles LLM prompting with processed schema information."""
     
-    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None, provider: str = "openai", analytics_dir: Optional[str] = None):
+    def __init__(self, model: Optional[str] = None, api_key: Optional[str] = None, provider: str = "openai", run_output_dir: Optional[Path] = None, run_timestamp: Optional[str] = None):
         """
         Initialize the LLM Prompter.
         
@@ -22,14 +23,19 @@ class LLMPrompter:
             model: LLM model to use (e.g., 'gpt-4', 'claude-3', etc.)
             api_key: API key for the LLM service (if required)
             provider: LLM provider ('openai', 'anthropic', 'google', 'azure')
-            analytics_dir: Optional directory for analytics output (uses default if None)
-                          Typically should be: <run_output_dir>/analytics/
+            run_output_dir: Run output directory where all files should be saved (required)
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
         self.model = model
         self.api_key = api_key
         self.provider = provider.lower() if provider else "openai"
-        analytics_path = analytics_dir or "output/analytics"
-        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
+        # Use run_output_dir directly - all files go in the run directory
+        # For testing, allow None and use a temp directory
+        if run_output_dir is None:
+            import tempfile
+            run_output_dir = Path(tempfile.mkdtemp(prefix="test_output_"))
+        analytics_path = str(run_output_dir)
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=analytics_path, run_timestamp=run_timestamp)
         # Store context for metrics collection
         self._current_processed_data = None
         self._current_analysis_data = None
