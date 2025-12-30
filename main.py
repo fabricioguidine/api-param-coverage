@@ -106,24 +106,14 @@ def main():
     schema_filename = Path(schema_path).name
     schema_name_without_ext = Path(schema_path).stem
     
-    # Create run directory structure in output/ folder
-    # Format: <timestamp>-<filename>
-    run_id = f"{run_timestamp}-{schema_name_without_ext}"
-    run_output_dir = Path(f"output/{run_id}")
-    run_output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Create organized subfolders with timestamps
-    analytics_dir = run_output_dir / "analytics"
-    analytics_dir.mkdir(parents=True, exist_ok=True)
-    
-    validation_dir = run_output_dir / "validation"
-    validation_dir.mkdir(parents=True, exist_ok=True)
-    
-    reports_dir = run_output_dir / "reports"
-    reports_dir.mkdir(parents=True, exist_ok=True)
-    
-    scenarios_dir = run_output_dir / "scenarios"
-    scenarios_dir.mkdir(parents=True, exist_ok=True)
+    # Create single run directory: <timestamp>-<schema_name>
+    from src.modules.utils.output_manager import OutputManager
+    output_manager = OutputManager()
+    run_output_dir = output_manager.create_run_directory(
+        schema_name=schema_name_without_ext,
+        schema_url=url,
+        run_timestamp=run_timestamp
+    )
     
     print_info(f"Output directory: {run_output_dir}")
     
@@ -319,8 +309,8 @@ def main():
             api_key=api_key,
             model=DEFAULT_LLM_MODEL,
             provider=provider,
-            analytics_dir=str(analytics_dir),
-            reports_dir=str(reports_dir)
+            run_output_dir=run_output_dir,
+            run_timestamp=run_timestamp
         )
         brd = brd_generator.generate_brd_from_swagger(
             processed_data, 
@@ -350,7 +340,7 @@ def main():
         print("Step 5: Cross-referencing BRD with Swagger schema...")
         print("=" * 70)
         
-        filtered_analysis_data, coverage_report = apply_brd_filter(analysis_data, brd)
+        filtered_analysis_data, coverage_report = apply_brd_filter(analysis_data, brd, run_output_dir=run_output_dir, run_timestamp=run_timestamp)
         
         print(f"✓ Cross-reference complete:")
         print(f"  - Total endpoints: {coverage_report['total_endpoints']}")
@@ -385,20 +375,21 @@ def main():
     print("Step 6: Generating Gherkin test scenarios via LLM...")
     print("=" * 70)
     
-    # Initialize components with run-specific output directories
+    # Initialize components with run directory (all files go directly here)
     prompter = LLMPrompter(
         model=DEFAULT_LLM_MODEL,
         api_key=api_key,
         provider=provider,
-        analytics_dir=str(analytics_dir)
+        run_output_dir=run_output_dir,
+        run_timestamp=run_timestamp
     )
-    csv_generator = CSVGenerator(output_dir=str(scenarios_dir))
+    csv_generator = CSVGenerator(output_dir=str(run_output_dir), run_timestamp=run_timestamp)
     
-    # Initialize validator with validation directory
+    # Initialize validator with run directory
     from src.modules.brd import BRDValidator
     validator = BRDValidator(
-        analytics_dir=str(analytics_dir),
-        validation_dir=str(validation_dir)
+        run_output_dir=run_output_dir,
+        run_timestamp=run_timestamp
     )
     
     try:
