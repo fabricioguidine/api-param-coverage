@@ -1,0 +1,78 @@
+================================================================================
+BRD Validation Report
+================================================================================
+
+VALIDATION SUMMARY
+--------------------------------------------------------------------------------
+Status: ✓ VALID
+BRD Endpoints: 3
+Swagger Endpoints: 59
+Matched Endpoints: 3
+Match Percentage: 5.08%
+Execution Time: 0.00 seconds
+
+MISSING ENDPOINTS (in Swagger but not in BRD)
+--------------------------------------------------------------------------------
+  - GET /radar/stations/{stationId}
+  - GET /products/locations
+  - GET /alerts/active
+  - GET /alerts/types
+  - GET /products/types/{typeId}/locations/{locationId}
+  - GET /aviation/sigmets
+  - GET /products
+  - GET /radar/profilers/{stationId}
+  - GET /points/{latitude},{longitude}
+  - GET /radar/servers
+  - GET /gridpoints/{wfo}/{x},{y}
+  - GET /stations/{stationId}/tafs
+  - GET /zones/forecast/{zoneId}/stations
+  - GET /aviation/cwsus/{cwsuId}/cwas/{date}/{sequence}
+  - GET /aviation/sigmets/{atsu}
+  - GET /offices/{officeId}/headlines
+  - GET /zones/{type}/{zoneId}/forecast
+  - GET /radar/stations/{stationId}/alarms
+  - GET /offices/{officeId}
+  - GET /products/types/{typeId}/locations
+  - GET /aviation/cwsus/{cwsuId}/cwas
+  - GET /products/{productId}
+  - GET /zones
+  - GET /radar/stations
+  - GET /alerts/active/area/{area}
+  - GET /points/{latitude},{longitude}/stations
+  - GET /alerts/{id}
+  - GET /icons/{set}/{timeOfDay}/{first}/{second}
+  - GET /stations
+  - GET /gridpoints/{wfo}/{x},{y}/stations
+  - GET /products/types
+  - GET /glossary
+  - GET /stations/{stationId}/observations/{time}
+  - GET /products/locations/{locationId}/types
+  - GET /products/types/{typeId}/locations/{locationId}/latest
+  - GET /gridpoints/{wfo}/{x},{y}/forecast/hourly
+  - GET /alerts
+  - GET /aviation/sigmets/{atsu}/{date}/{time}
+  - GET /aviation/cwsus/{cwsuId}
+  - GET /stations/{stationId}/tafs/{date}/{time}
+  - GET /icons/{set}/{timeOfDay}/{first}
+  - GET /offices/{officeId}/headlines/{headlineId}
+  - GET /points/{latitude},{longitude}/radio
+  - GET /icons
+  - GET /thumbnails/satellite/{area}
+  - GET /zones/{type}
+  - GET /radar/servers/{id}
+  - GET /zones/{type}/{zoneId}
+  - GET /alerts/active/region/{region}
+  - GET /products/types/{typeId}
+  - GET /stations/{stationId}/observations
+  - GET /radar/queues/{host}
+  - GET /aviation/sigmets/{atsu}/{date}
+  - GET /zones/forecast/{zoneId}/observations
+  - GET /alerts/active/count
+  - GET /stations/{stationId}
+
+RECOMMENDATIONS
+--------------------------------------------------------------------------------
+• Consider adding 56 missing endpoints to BRD
+• Improve BRD coverage (currently 5.08%)
+
+================================================================================

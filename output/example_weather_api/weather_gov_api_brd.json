@@ -1,0 +1,102 @@
+{
+  "brd_id": "BRD-WEATHER-GOV-001",
+  "title": "Weather.gov API - Business Requirements Document",
+  "description": "Comprehensive BRD for weather.gov API covering all endpoints for weather data retrieval, alerts, forecasts, and observations",
+  "api_name": "weather.gov API",
+  "api_version": "1.0.0",
+  "created_date": "2025-12-30T12:00:00Z",
+  "requirements": [
+    {
+      "requirement_id": "REQ-001",
+      "title": "Get Active Alerts for Zone",
+      "description": "Retrieve active weather alerts for a specific zone",
+      "endpoint_path": "/alerts/active/zone/{zoneId}",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "TS-001-001",
+          "scenario_name": "",
+          "description": "",
+          "test_steps": [],
+          "expected_result": "",
+          "priority": "medium",
+          "tags": []
+        },
+        {
+          "scenario_id": "TS-001-002",
+          "scenario_name": "",
+          "description": "",
+          "test_steps": [],
+          "expected_result": "",
+          "priority": "medium",
+          "tags": []
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns active alerts for valid zone IDs",
+        "API returns appropriate error for invalid zone IDs",
+        "Response includes alert severity and description"
+      ],
+      "related_endpoints": []
+    },
+    {
+      "requirement_id": "REQ-002",
+      "title": "Get Forecast for Grid Point",
+      "description": "Retrieve weather forecast for a specific grid point",
+      "endpoint_path": "/gridpoints/{wfo}/{x},{y}/forecast",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "TS-002-001",
+          "scenario_name": "",
+          "description": "",
+          "test_steps": [],
+          "expected_result": "",
+          "priority": "medium",
+          "tags": []
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns forecast data for valid grid points",
+        "Forecast includes temperature, precipitation, and conditions"
+      ],
+      "related_endpoints": []
+    },
+    {
+      "requirement_id": "REQ-003",
+      "title": "Get Latest Observation",
+      "description": "Retrieve the latest weather observation from a station",
+      "endpoint_path": "/stations/{stationId}/observations/latest",
+      "endpoint_method": "GET",
+      "priority": "high",
+      "status": "pending",
+      "test_scenarios": [
+        {
+          "scenario_id": "TS-003-001",
+          "scenario_name": "",
+          "description": "",
+          "test_steps": [],
+          "expected_result": "",
+          "priority": "medium",
+          "tags": []
+        }
+      ],
+      "acceptance_criteria": [
+        "API returns latest observation for valid station IDs",
+        "Observation includes temperature, humidity, and wind data"
+      ],
+      "related_endpoints": []
+    }
+  ],
+  "metadata": {
+    "generated_by": "BRDGenerator",
+    "generation_timestamp": "2025-12-30T12:00:00Z",
+    "coverage_percentage": 100.0,
+    "total_endpoints": 59,
+    "covered_endpoints": 59
+  }
+}

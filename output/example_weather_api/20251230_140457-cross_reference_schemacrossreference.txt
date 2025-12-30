@@ -1,25 +1,25 @@
 ================================================================================
-Algorithm Analysis Report: BRDValidator
+Algorithm Analysis Report: SchemaCrossReference
 ================================================================================
 
 ALGORITHM INFORMATION
 --------------------------------------------------------------------------------
-Algorithm Name: BRDValidator
-Algorithm Type: validator
-Timestamp: 2025-11-24T21:44:45.401973
+Algorithm Name: SchemaCrossReference
+Algorithm Type: cross_reference
+Timestamp: 2025-12-30T14:04:58.073075
 Execution Time: 0.00 seconds
 LLM Call: No
 
 INPUT COMPLEXITY ANALYSIS
 --------------------------------------------------------------------------------
-Data Size (bytes): 89
+Data Size (bytes): 87
 Element Count: 2
 Nested Depth: 1
 Structure Complexity: low
 
 OUTPUT COMPLEXITY ANALYSIS
 --------------------------------------------------------------------------------
-Data Size (bytes): 68
+Data Size (bytes): 66
 Element Count: 1
 Nested Depth: 1
 Structure Complexity: low
@@ -27,11 +27,9 @@ Output Quality: unknown
 
 ALGORITHM-SPECIFIC COMPLEXITY METRICS
 --------------------------------------------------------------------------------
-brd_endpoints_count: 5
-swagger_endpoints_count: 59
-match_percentage: 8.47
-orphaned_count: 0
-missing_count: 54
-error_count: 0
+total_endpoints: 59
+filtered_endpoints: 3
+coverage_percentage: 5.08
+brd_requirements_count: 3
 
 ================================================================================
