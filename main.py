@@ -25,13 +25,11 @@ from src.modules.engine import SchemaProcessor, SchemaAnalyzer, LLMPrompter
 from src.modules.engine.algorithms import CSVGenerator
 from src.modules.brd import BRDLoader, BRDParser, SchemaCrossReference, BRDGenerator
 from src.modules.utils.constants import (
-    DEFAULT_LLM_MODEL
+    DEFAULT_LLM_MODEL,
+    MIN_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, DEFAULT_COVERAGE_PERCENTAGE
 )
 from src.modules.workflow import (
     apply_coverage_filter, apply_brd_filter
-)
-from src.modules.utils.constants import (
-    MIN_COVERAGE_PERCENTAGE, MAX_COVERAGE_PERCENTAGE, DEFAULT_COVERAGE_PERCENTAGE
 )
 from src.modules.cli import (
     ProgressBar, StatusUpdater, InteractiveSelector, ErrorHandler,

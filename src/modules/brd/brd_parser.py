@@ -41,7 +41,8 @@ class BRDParser:
         self.output_dir = Path(output_dir or DEFAULT_BRD_INPUT_SCHEMA_DIR)
         self.input_dir.mkdir(parents=True, exist_ok=True)
         self.output_dir.mkdir(parents=True, exist_ok=True)
-        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider) if api_key else None
+        # For testing, allow None run_output_dir (LLMPrompter will use temp dir)
+        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider, run_output_dir=None) if api_key else None
     
     def parse_document(self, filename: str) -> Optional[BRDSchema]:
         """
