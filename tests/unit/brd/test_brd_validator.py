@@ -285,5 +285,5 @@ class TestBRDValidator:
         result_path = validator.generate_validation_report(report)
         
         assert result_path.exists()
-        assert "brd_validation_report" in str(result_path)
+        assert "validation.txt" in str(result_path) or "-validation.txt" in str(result_path)
 

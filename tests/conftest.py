@@ -186,3 +186,19 @@ def save_test_metrics(request):
     
     request.addfinalizer(finalize)
 
+
+@pytest.fixture
+def temp_output_dir(tmp_path):
+    """Create a temporary output directory for tests."""
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    return output_dir
+
+
+@pytest.fixture
+def test_data_dir(tmp_path):
+    """Create a temporary test data directory."""
+    data_dir = tmp_path / "test_data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    return data_dir
+
