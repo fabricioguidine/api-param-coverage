@@ -536,9 +536,6 @@ pytest tests/unit/cli/test_cli_utils.py::TestErrorHandlingRecovery -v
 behave tests/features/ui_ux_*.feature
 
 # Run automated UI flow tests
-python tests/scripts/test_ui_flows.py                    # Run all UI flow tests
-python tests/scripts/test_ui_flows.py --test happy       # Run specific test
-python tests/scripts/test_ui_flows.py --timeout 600      # Custom timeout
 ```
 
 ### Test Coverage

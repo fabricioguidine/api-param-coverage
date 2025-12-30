@@ -107,7 +107,7 @@ class BRDLoader:
                 endpoint_path=req_data.get('endpoint_path', ''),
                 endpoint_method=req_data.get('endpoint_method', ''),
                 priority=RequirementPriority(req_data.get('priority', 'medium')),
-                status=RequirementStatus(req_data.get('status', 'pending')),
+                status=RequirementStatus(req_data.get('status', 'pending')) if req_data.get('status', 'pending') in [s.value for s in RequirementStatus] else RequirementStatus.PENDING,
                 test_scenarios=test_scenarios,
                 acceptance_criteria=req_data.get('acceptance_criteria', []),
                 related_endpoints=req_data.get('related_endpoints', [])
