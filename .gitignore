@@ -54,10 +54,15 @@ ENV/
 output/20*/*.csv
 output/20*/*.txt
 output/20*/*.json
-output/analytics/**
-# Keep example output folder
+# Ignore old structure directories
+output/analytics/
+output/reports/
+output/validation/
+output/runs/
+# Keep example output folder and README
+!output/README.md
 !output/example_weather_api/
-!output/example_weather_api/**
+!output/example_weather_api/README.md
 # Keep documentation files
 !docs/README.md
 !docs/*.md
@@ -84,6 +89,15 @@ Thumbs.db
 
 # Logs
 *.log
+app.log
+htmlcov/
+*.html
+!docs/**/*.html
+
+# Test output
+tests/output/
+tests/config/output/
+tests/config/pretty.output
 
 # Scripts output (if any)
 # Scripts folder removed
