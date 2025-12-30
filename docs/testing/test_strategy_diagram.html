@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Parameter Coverage - Test Strategy Diagram</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* Test Pyramid */
+        .pyramid {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 30px 0;
+        }
+
+        .pyramid-layer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+
+        .pyramid-layer:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        .layer-e2e {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            width: 300px;
+        }
+
+        .layer-integration {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            width: 500px;
+        }
+
+        .layer-unit {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            width: 700px;
+        }
+
+        .layer-content {
+            z-index: 10;
+        }
+
+        .layer-title {
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .layer-subtitle {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Coverage Goals */
+        .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .coverage-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .coverage-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .coverage-module {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .coverage-target {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .coverage-priority {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .priority-critical {
+            background: #f56565;
+        }
+
+        .priority-high {
+            background: #ed8936;
+        }
+
+        .priority-medium {
+            background: #48bb78;
+        }
+
+        /* Test Flow */
+        .flow-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 15px;
+            padding: 20px;
+            width: 180px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .flow-step:last-child::after {
+            content: '';
+        }
+
+        .flow-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .flow-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .flow-desc {
+            font-size: 0.85em;
+            color: #718096;
+        }
+
+        /* Metrics Dashboard */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .metric-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Test Organization */
+        .test-tree {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .tree-folder {
+            color: #667eea;
+            font-weight: bold;
+            margin-left: 0;
+        }
+
+        .tree-file {
+            color: #2d3748;
+            margin-left: 20px;
+        }
+
+        .tree-count {
+            color: #48bb78;
+            font-weight: bold;
+            float: right;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .pyramid-layer {
+                width: 100% !important;
+                clip-path: none;
+            }
+
+            .flow-container {
+                flex-direction: column;
+            }
+
+            .flow-step::after {
+                content: '↓';
+                right: 50%;
+                top: auto;
+                bottom: -30px;
+                transform: translateX(50%);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 API Parameter Coverage Test Strategy</h1>
+        <p class="subtitle">Comprehensive Testing Framework for 95%+ Code Coverage</p>
+
+        <!-- Test Pyramid -->
+        <div class="section">
+            <h2 class="section-title">📊 Test Pyramid</h2>
+            <div class="pyramid">
+                <div class="pyramid-layer layer-e2e" onclick="showDetails('e2e')">
+                    <div class="layer-content">
+                        <div class="layer-title">E2E Tests</div>
+                        <div class="layer-subtitle">5-10% • ~30 scenarios</div>
+                    </div>
+                </div>
+                <div class="pyramid-layer layer-integration" onclick="showDetails('integration')">
+                    <div class="layer-content">
+                        <div class="layer-title">Integration Tests</div>
+                        <div class="layer-subtitle">20-30% • ~100 tests</div>
+                    </div>
+                </div>
+                <div class="pyramid-layer layer-unit" onclick="showDetails('unit')">
+                    <div class="layer-content">
+                        <div class="layer-title">Unit Tests</div>
+                        <div class="layer-subtitle">60-70% • ~350 tests</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
+                    <span>End-to-End Tests (Complete Workflows)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                    <span>Integration Tests (Module Interactions)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);"></div>
+                    <span>Unit Tests (Individual Functions)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coverage Goals -->
+        <div class="section">
+            <h2 class="section-title">🎯 Module Coverage Targets</h2>
+            <div class="coverage-grid">
+                <div class="coverage-card">
+                    <div class="coverage-module">swagger/</div>
+                    <div class="coverage-target">95%</div>
+                    <div class="coverage-priority priority-critical">CRITICAL</div>
+                </div>
+                <div class="coverage-card">
+                    <div class="coverage-module">engine/algorithms/</div>
+                    <div class="coverage-target">95%</div>
+                    <div class="coverage-priority priority-critical">CRITICAL</div>
+                </div>
+                <div class="coverage-card">
+                    <div class="coverage-module">brd/</div>
+                    <div class="coverage-target">95%</div>
+                    <div class="coverage-priority priority-critical">CRITICAL</div>
+                </div>
+                <div class="coverage-card">
+                    <div class="coverage-module">engine/llm/</div>
+                    <div class="coverage-target">90%</div>
+                    <div class="coverage-priority priority-high">HIGH</div>
+                </div>
+                <div class="coverage-card">
+                    <div class="coverage-module">brd_generator/</div>
+                    <div class="coverage-target">90%</div>
+                    <div class="coverage-priority priority-high">HIGH</div>
+                </div>
+                <div class="coverage-card">
+                    <div class="coverage-module">engine/analytics/</div>
+                    <div class="coverage-target">85%</div>
+                    <div class="coverage-priority priority-medium">MEDIUM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Flow -->
+        <div class="section">
+            <h2 class="section-title">🔄 Testing Workflow</h2>
+            <div class="flow-container">
+                <div class="flow-step">
+                    <div class="flow-icon">📝</div>
+                    <div class="flow-title">Unit Tests</div>
+                    <div class="flow-desc">Individual functions</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">🔗</div>
+                    <div class="flow-title">Integration</div>
+                    <div class="flow-desc">Module interactions</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">🎬</div>
+                    <div class="flow-title">E2E Tests</div>
+                    <div class="flow-desc">Complete workflows</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">⚡</div>
+                    <div class="flow-title">Performance</div>
+                    <div class="flow-desc">Speed & load tests</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">🔒</div>
+                    <div class="flow-title">Security</div>
+                    <div class="flow-desc">Vulnerability tests</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="section">
+            <h2 class="section-title">📈 Target Metrics</h2>
+            <div class="metrics-grid">
+                <div class="metric-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <div class="metric-label">Target Coverage</div>
+                    <div class="metric-value">95%+</div>
+                </div>
+                <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <div class="metric-label">Total Tests</div>
+                    <div class="metric-value">500+</div>
+                </div>
+                <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="metric-label">Test Pass Rate</div>
+                    <div class="metric-value">100%</div>
+                </div>
+                <div class="metric-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <div class="metric-label">Max Test Time</div>
+                    <div class="metric-value">&lt;5min</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Organization -->
+        <div class="section">
+            <h2 class="section-title">📁 Test Suite Organization</h2>
+            <div class="test-tree">
+                <div class="tree-folder">tests/</div>
+                <div class="tree-folder" style="margin-left: 20px;">├── unit/</div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_swagger/ <span class="tree-count">55 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_schema_fetcher.py <span class="tree-count">25 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   └── test_schema_validator.py <span class="tree-count">30 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_engine/ <span class="tree-count">170 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_processor.py <span class="tree-count">40 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_analyzer.py <span class="tree-count">50 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_csv_generator.py <span class="tree-count">35 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   └── test_llm_prompter.py <span class="tree-count">45 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_brd/ <span class="tree-count">150 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_brd_schema.py <span class="tree-count">20 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_brd_loader.py <span class="tree-count">25 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_brd_parser.py <span class="tree-count">40 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   ├── test_brd_validator.py <span class="tree-count">30 tests</span></div>
+                <div class="tree-file" style="margin-left: 60px;">│   │   └── test_schema_cross_reference.py <span class="tree-count">35 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   └── test_analytics/ <span class="tree-count">45 tests</span></div>
+                <div class="tree-folder" style="margin-left: 20px;">├── integration/ <span class="tree-count">100 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_pipeline_integration.py <span class="tree-count">30 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_brd_workflow.py <span class="tree-count">25 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   ├── test_llm_integration.py <span class="tree-count">25 tests</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   └── test_analytics_flow.py <span class="tree-count">20 tests</span></div>
+                <div class="tree-folder" style="margin-left: 20px;">├── e2e/ <span class="tree-count">30 scenarios</span></div>
+                <div class="tree-file" style="margin-left: 40px;">│   └── features/</div>
+                <div class="tree-file" style="margin-left: 60px;">│       ├── default_workflow.feature</div>
+                <div class="tree-file" style="margin-left: 60px;">│       ├── brd_generation.feature</div>
+                <div class="tree-file" style="margin-left: 60px;">│       ├── brd_loading.feature</div>
+                <div class="tree-file" style="margin-left: 60px;">│       └── error_handling.feature</div>
+                <div class="tree-folder" style="margin-left: 20px;">├── performance/ <span class="tree-count">20 benchmarks</span></div>
+                <div class="tree-folder" style="margin-left: 20px;">└── security/ <span class="tree-count">10 tests</span></div>
+            </div>
+        </div>
+
+        <!-- Testing Phases -->
+        <div class="section">
+            <h2 class="section-title">🚀 Implementation Phases</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div style="background: #f0fff4; border-left: 5px solid #48bb78; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #2d3748; margin-bottom: 10px;">📍 Phase 1: Foundation</h3>
+                    <p style="color: #4a5568; font-size: 0.95em; line-height: 1.6;">Week 1-2 • 70% Coverage<br>
+                    • Test infrastructure<br>
+                    • Core module unit tests<br>
+                    • Test fixtures & mocks</p>
+                </div>
+                <div style="background: #ebf8ff; border-left: 5px solid #4299e1; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #2d3748; margin-bottom: 10px;">🔗 Phase 2: Integration</h3>
+                    <p style="color: #4a5568; font-size: 0.95em; line-height: 1.6;">Week 3-4 • 85% Coverage<br>
+                    • Module interaction tests<br>
+                    • BDD scenarios<br>
+                    • LLM integration mocks</p>
+                </div>
+                <div style="background: #fef5e7; border-left: 5px solid #f6ad55; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #2d3748; margin-bottom: 10px;">⚡ Phase 3: Advanced</h3>
+                    <p style="color: #4a5568; font-size: 0.95em; line-height: 1.6;">Week 5-6 • 95% Coverage<br>
+                    • E2E workflows<br>
+                    • Performance tests<br>
+                    • Security validation</p>
+                </div>
+                <div style="background: #fce4ec; border-left: 5px solid #f687b3; padding: 20px; border-radius: 10px;">
+                    <h3 style="color: #2d3748; margin-bottom: 10px;">✨ Phase 4: Refinement</h3>
+                    <p style="color: #4a5568; font-size: 0.95em; line-height: 1.6;">Week 7-8 • 95%+ Coverage<br>
+                    • Edge cases<br>
+                    • Regression suite<br>
+                    • Performance optimization</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tools & Technologies -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Testing Tools & Frameworks</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">✅</div>
+                    <div style="font-weight: bold;">pytest</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">Unit & Integration</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">🎭</div>
+                    <div style="font-weight: bold;">behave</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">BDD/E2E Tests</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">📊</div>
+                    <div style="font-weight: bold;">pytest-cov</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">Coverage Reports</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">🎭</div>
+                    <div style="font-weight: bold;">pytest-mock</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">Mocking</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">⚡</div>
+                    <div style="font-weight: bold;">pytest-benchmark</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">Performance</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                    <div style="font-size: 2em; margin-bottom: 5px;">🔒</div>
+                    <div style="font-weight: bold;">responses</div>
+                    <div style="font-size: 0.85em; opacity: 0.9;">HTTP Mocking</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 2px solid #e2e8f0; color: #718096;">
+            <p style="font-size: 1.1em; margin-bottom: 10px;">📚 Comprehensive Test Strategy for Production-Ready Code</p>
+            <p style="font-size: 0.95em;">Target: <strong style="color: #48bb78;">95%+ Code Coverage</strong> • <strong style="color: #4299e1;">500+ Tests</strong> • <strong style="color: #f6ad55;">8-Week Implementation</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function showDetails(layer) {
+            const details = {
+                'e2e': 'End-to-End Tests: Complete user workflows including BRD generation, schema processing, and CSV export. ~30 scenarios using Behave.',
+                'integration': 'Integration Tests: Module interactions, pipeline testing, and data flow validation. ~100 tests covering all critical paths.',
+                'unit': 'Unit Tests: Individual function and class testing with mocks. ~350 tests ensuring each component works correctly in isolation.'
+            };
+            
+            alert(details[layer]);
+        }
+
+        // Add animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const pyramidLayers = document.querySelectorAll('.pyramid-layer');
+            pyramidLayers.forEach((layer, index) => {
+                setTimeout(() => {
+                    layer.style.opacity = '0';
+                    layer.style.transform = 'translateY(20px)';
+                    layer.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        layer.style.opacity = '1';
+                        layer.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>

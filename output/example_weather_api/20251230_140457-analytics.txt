@@ -1,0 +1,75 @@
+================================================================================
+LLM API Execution - Complexity Analysis Metrics
+================================================================================
+
+Timestamp: 2025-12-30T12:00:00
+Model: gpt-4
+Task: gherkin
+Execution Time: 45.23 seconds
+
+API INFORMATION
+--------------------------------------------------------------------------------
+Title: weather.gov API
+Version: 1.0.0
+OpenAPI Version: 3.0.0
+
+SCHEMA STATISTICS
+--------------------------------------------------------------------------------
+Total Endpoints: 59
+Components Count: 245
+
+COMPLEXITY METRICS
+--------------------------------------------------------------------------------
+Total Parameters: 342
+Total Iteration Domains: 89
+Parameter Types:
+  - string: 156
+  - integer: 98
+  - number: 45
+  - boolean: 23
+  - array: 12
+  - object: 8
+
+Parameter Locations:
+  - path: 89
+  - query: 187
+  - header: 34
+  - body: 32
+
+Constraint Types:
+  - enum: 45
+  - pattern: 23
+  - minimum: 34
+  - maximum: 34
+  - minLength: 12
+  - maxLength: 12
+
+Bounded Parameters: 156
+Unbounded Parameters: 186
+Enum Parameters: 45
+Pattern Parameters: 23
+
+LLM CALL METRICS
+--------------------------------------------------------------------------------
+Prompt Length: 8,234 characters
+Estimated Tokens: 2,058
+Response Length: 12,456 characters
+Estimated Response Tokens: 3,114
+Total Tokens: 5,172
+
+API USAGE
+--------------------------------------------------------------------------------
+Prompt Tokens: 2,058
+Completion Tokens: 3,114
+Total Tokens: 5,172
+
+EXECUTION SUMMARY
+--------------------------------------------------------------------------------
+Status: Success
+Chunks Processed: 5
+Scenarios Generated: 127
+Average Time per Chunk: 9.05 seconds
+
+================================================================================
+
+

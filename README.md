@@ -1,5 +1,13 @@
 # API Parameter Coverage & Test Scenario Generator
 
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Tests](https://img.shields.io/badge/tests-224%20tests-blue.svg)
+![Coverage](https://img.shields.io/badge/coverage-80%25+-green.svg)
+![Swagger](https://img.shields.io/badge/Swagger-2.0-green.svg)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
+![Type Checking](https://img.shields.io/badge/type%20checking-mypy-blue.svg)
+![Linting](https://img.shields.io/badge/linting-flake8-yellow.svg)
+
 A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger schemas using LLM-powered analysis and Business Requirement Document (BRD) integration. The tool automatically analyzes API schemas, cross-references them with business requirements, and generates comprehensive Gherkin test scenarios with detailed analytics.
 
 ## 🚀 Features
@@ -9,7 +17,7 @@ A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger s
 - 📥 **Automatic Schema Download**: Fetches schemas from URLs with validation
 - 🔍 **Deep Schema Analysis**: Extracts parameters, constraints, and complexity metrics
 - 📋 **BRD Integration**: Business Requirement Document support for scope-based testing
-- 🤖 **LLM-Powered Generation**: Uses OpenAI GPT-4 for intelligent test scenario generation
+- 🤖 **LLM-Powered Generation**: Uses multiple LLM providers (OpenAI, Groq, Anthropic, Google, Azure) for intelligent test scenario generation
 - 🎯 **Smart Scope Filtering**: Cross-references BRD with Swagger to test only required endpoints
 - 📊 **CSV Export**: Export test scenarios to CSV format
 - 📈 **Comprehensive Analytics**: Detailed metrics and reports for every algorithm execution
@@ -43,7 +51,7 @@ A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger s
 ### Prerequisites
 
 - Python 3.8 or higher
-- OpenAI API key (for LLM features)
+- LLM API key (supports OpenAI, Groq, Anthropic, Google, Azure - auto-detected from key format)
 - Internet connection (for schema downloading)
 
 ### Step-by-Step Setup
@@ -69,8 +77,15 @@ A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger s
    
    Create a `.env` file in the project root:
    ```bash
-   OPENAI_API_KEY=your-api-key-here
+   LLM_API_KEY=your-llm-api-key-here
    ```
+   
+   The provider is automatically detected from your API key format:
+   - **Groq**: `gsk_...` → Uses `llama-3.1-70b-versatile`
+   - **OpenAI**: `sk-...` → Uses `gpt-4`
+   - **Anthropic**: `sk-ant-...` → Uses `claude-3-sonnet`
+   - **Google**: `AIza...` → Uses `gemini-pro`
+   - **Azure**: `api-...` → Uses `gpt-4`
    
    **⚠️ Important**: Never commit your API key. The `.env` file is already in `.gitignore`.
 
@@ -122,7 +137,9 @@ Enter Swagger/OpenAPI schema URL (or press Enter to use example): https://petsto
 ======================================================================
 Step 1: Downloading schema...
 ======================================================================
-✓ Schema downloaded: [temporary location]
+Fetching schema from: https://petstore.swagger.io/v2/swagger.json
+✓ Detected: SWAGGER 2.0 - Swagger Petstore
+✓ Schema downloaded successfully
 
 ======================================================================
 Step 2: Processing schema...
@@ -189,70 +206,75 @@ Output: output/20241124_133045_petstore/petstore_swagger_io_v2_swagger-20241124_
 ✓ Processing complete!
 ```
 
+## 📋 Example Output
+
+A complete example output is available in `output/example_weather_api/` demonstrating all generated artifacts:
+- ✅ Test scenarios in CSV format
+- ✅ Generated BRD (Business Requirement Document) JSON
+- ✅ Analytics and metrics reports
+- ✅ BRD validation reports
+- ✅ Algorithm execution reports
+
+See `output/example_weather_api/README.md` for detailed documentation.
+
 ## 📁 Project Structure
 
 ```
 api-param-coverage/
 ├── src/
 │   └── modules/
-│       ├── swagger/                   # Schema downloading and validation
-│       │   ├── schema_fetcher.py      # Downloads schemas from URLs
-│       │   └── schema_validator.py    # Validates and normalizes schemas
-│       ├── engine/                    # Core processing engine
-│       │   ├── algorithms/            # Schema processing algorithms
-│       │   │   ├── processor.py       # Schema processing
-│       │   │   ├── analyzer.py        # Schema analysis and complexity
-│       │   │   ├── csv_generator.py   # CSV export
-│       │   ├── analytics/             # Analytics and reporting
-│       │   │   ├── metrics_collector.py      # Metrics collection
-│       │   │   ├── algorithm_tracker.py      # Algorithm tracking
-│       │   │   ├── aggregator.py     # Analytics aggregation
-│       │   │   └── dashboard.py      # Analytics dashboard
-│       │   ├── coverage/              # Test coverage analysis
-│       │   │   └── coverage_analyzer.py  # Coverage analysis
-│       │   └── llm/                   # LLM integration
-│       │       └── prompter.py        # LLM prompting and generation
-│       ├── brd/                       # Business Requirement Document
-│       │   ├── brd_schema.py          # BRD schema definitions
-│       │   ├── brd_loader.py          # BRD file I/O
-│       │   ├── brd_parser.py          # Document parsing (PDF, Word, etc.)
-│       │   ├── brd_validator.py       # BRD validation
-│       │   └── schema_cross_reference.py  # BRD-Swagger cross-reference
-│       ├── brd_generator/             # BRD generation
-│       │   └── brd_generator.py      # LLM-based BRD generator
-├── tests/                             # Test suite
-│   ├── features/                      # BDD feature files (Behave)
-│   │   ├── *.feature                  # Gherkin feature files
-│   │   ├── environment.py              # Behave environment setup
-│   │   └── steps/                      # Step definitions
-│   │       └── *.py                   # Step implementation files
-│   ├── brd/                           # BRD module tests
-│   ├── engine/                        # Engine module tests
-│   ├── swagger/                       # Swagger module tests
-│   └── conftest.py                    # Pytest configuration
-├── docs/                              # Documentation
-│   ├── PROJECT_STATUS.md              # Project status
-│   └── README.md                      # Documentation guide
-├── output/                            # Execution outputs (at project root)
-│   ├── <timestamp>-<filename>/       # Execution run folders
-│   │   ├── scenarios/                 # CSV scenarios subfolder
-│   │   │   └── <timestamp>_*_scenarios.csv
-│   │   ├── analytics/                 # Analytics subfolder
-│   │   │   └── <timestamp>_*.txt      # LLM execution metrics
-│   │   ├── validation/                # Validation reports subfolder
-│   │   │   └── <timestamp>_brd_validation_report.txt
-│   │   └── reports/                   # Algorithm reports subfolder
-│   │       └── <timestamp>_*_algorithm_*.txt
-│   └── example_weather_api/           # Example output (weather.gov API)
-│       ├── scenarios/                  # Example CSV scenarios
-│       ├── analytics/                  # Example analytics
-│       ├── validation/                  # Example validation reports
-│       ├── reports/                     # Example algorithm reports
-│       └── README.md                   # Example output documentation
-├── main.py                            # Main entry point
-├── requirements.txt                   # Python dependencies
-├── pytest.ini                         # Pytest configuration
-└── README.md                          # This file
+│       ├── swagger/                                    # Schema downloading and validation
+│       │   ├── schema_fetcher.py                       # Downloads schemas from URLs
+│       │   └── schema_validator.py                     # Validates and normalizes schemas
+│       ├── engine/                                     # Core processing engine
+│       │   ├── algorithms/                             # Schema processing algorithms
+│       │   │   ├── processor.py                        # Schema processing
+│       │   │   ├── analyzer.py                         # Schema analysis and complexity
+│       │   │   └── csv_generator.py                    # CSV export
+│       │   ├── analytics/                              # Analytics and reporting
+│       │   │   ├── metrics_collector.py                # Metrics collection
+│       │   │   ├── algorithm_tracker.py                # Algorithm tracking
+│       │   │   ├── aggregator.py                       # Analytics aggregation
+│       │   │   └── dashboard.py                        # Analytics dashboard
+│       │   ├── coverage/                               # Test coverage analysis
+│       │   │   └── coverage_analyzer.py                # Coverage analysis
+│       │   └── llm/                                    # LLM integration
+│       │       └── prompter.py                         # LLM prompting and generation
+│       ├── brd/                                        # Business Requirement Document
+│       │   ├── brd_schema.py                           # BRD schema definitions
+│       │   ├── brd_loader.py                           # BRD file I/O
+│       │   ├── brd_parser.py                           # Document parsing (PDF, Word, etc.)
+│       │   ├── brd_validator.py                        # BRD validation
+│       │   ├── brd_generator.py                        # LLM-based BRD generator
+│       │   └── schema_cross_reference.py               # BRD-Swagger cross-reference
+├── tests/                                              # Test suite
+│   ├── features/                                       # BDD feature files (Behave)
+│   │   ├── *.feature                                   # Gherkin feature files
+│   │   ├── environment.py                              # Behave environment setup
+│   │   └── steps/                                      # Step definitions
+│   │       └── *.py                                    # Step implementation files
+│   ├── brd/                                            # BRD module tests
+│   ├── engine/                                         # Engine module tests
+│   ├── swagger/                                        # Swagger module tests
+│   └── conftest.py                                     # Pytest configuration
+├── docs/                                               # Documentation
+│   └── README.md                                       # Documentation guide
+├── output/                                             # Execution outputs (at project root)
+│   ├── <timestamp>-<schema_name>/                      # Single directory per execution
+│   │   ├── <timestamp>-scenarios.csv                    # Test scenarios (CSV)
+│   │   ├── <timestamp>-analytics.txt                    # Analytics and metrics
+│   │   ├── <timestamp>-validation.txt                   # BRD validation reports
+│   │   └── <timestamp>-<algorithm>_<name>.txt          # Algorithm execution reports
+│   └── example_weather_api/                            # Example output (weather.gov API)
+│       ├── <timestamp>-scenarios.csv                   # Example CSV scenarios
+│       ├── <timestamp>-analytics.txt                   # Example analytics
+│       ├── <timestamp>-validation.txt                  # Example validation reports
+│       ├── <timestamp>-<algorithm>_<name>.txt          # Example algorithm reports
+│       └── README.md                                   # Example output documentation
+├── main.py                                             # Main entry point
+├── requirements.txt                                    # Python dependencies
+├── pytest.ini                                          # Pytest configuration
+└── README.md                                           # This file
 ```
 
 ## 🔧 Modules Overview
@@ -279,7 +301,7 @@ api-param-coverage/
 | BRD Schema | `brd/brd_schema.py` | Defines structured BRD schema format, requirement and test scenario models, priority and status enums, type-safe data structures |
 | BRD Loader | `brd/brd_loader.py` | Loads BRD schemas from JSON files, saves BRD schemas, lists available BRD files, validates BRD structure |
 | BRD Parser | `brd/brd_parser.py` | Parses BRD documents from multiple formats (PDF, Word, TXT, CSV, Markdown), uses LLM to extract structured data, converts to BRD schema format |
-| BRD Generator | `brd_generator/brd_generator.py` | Generates BRD from Swagger schemas, uses heuristic analysis, LLM-powered requirement generation, priority determination, test scenario suggestions |
+| BRD Generator | `brd/brd_generator.py` | Generates BRD from Swagger schemas, uses heuristic analysis, LLM-powered requirement generation, priority determination, test scenario suggestions |
 | Schema Cross-Reference | `brd/schema_cross_reference.py` | Cross-references BRD requirements with Swagger endpoints, filters endpoints by BRD coverage, generates coverage reports, calculates coverage percentages |
 
 ### Analytics & Reporting
@@ -307,6 +329,7 @@ api-param-coverage/
 
 | Module | File | Description |
 |--------|------|-------------|
+| Config | `config.py` | Manages application configuration from environment variables, provides default values, validates configuration settings, handles environment-specific settings |
 
 ### Interactive CLI
 
@@ -343,42 +366,66 @@ BRD schema files are stored in `src/modules/brd/input_schema/`. See `src/modules
 
 ### Analytics Files
 
-All analytics are saved in `docs/<timestamp>_<schema>/`:
+All analytics are saved in `output/<timestamp>_<schema>/analytics/`:
 
-- **LLM Execution Metrics** (`YYYYMMDD_HHMMSS.txt`): General LLM call metrics
-- **Algorithm Reports** (`reports/YYYYMMDD_HHMMSS_<type>_<name>.txt`): Detailed algorithm analysis
+| File Type | File Pattern | Description |
+|-----------|--------------|-------------|
+| **LLM Execution Metrics** | `YYYYMMDD_HHMMSS.txt` | General LLM call metrics |
+| **Algorithm Reports** | `reports/YYYYMMDD_HHMMSS_<type>_<name>.txt` | Detailed algorithm analysis |
 
 ### Metrics Tracked
 
 #### LLM Metrics
-- Execution time
-- Token usage (prompt, completion, total)
-- Prompt and response sizes
-- Model information
-- Task type
+
+| Metric | Description |
+|--------|-------------|
+| Execution time | Time taken for LLM API call |
+| Token usage (prompt) | Number of tokens in the prompt |
+| Token usage (completion) | Number of tokens in the response |
+| Token usage (total) | Total tokens used (prompt + completion) |
+| Prompt size | Size of the prompt in characters |
+| Response size | Size of the response in characters |
+| Model information | LLM model used (e.g., gpt-4, llama-3.1-70b-versatile) |
+| Task type | Type of task (analyze, document, validate, gherkin) |
 
 #### Algorithm Metrics
-- Algorithm name and type
-- Input complexity (size, structure, depth)
-- Output complexity (quality, element count)
-- Execution time
-- Algorithm-specific complexity metrics
+
+| Metric | Description |
+|--------|-------------|
+| Algorithm name | Name of the algorithm (e.g., SchemaProcessor, SchemaAnalyzer) |
+| Algorithm type | Type/category of the algorithm |
+| Input complexity (size) | Size of input data |
+| Input complexity (structure) | Structural complexity of input |
+| Input complexity (depth) | Depth/nesting level of input data |
+| Output complexity (quality) | Quality metrics of output |
+| Output complexity (element count) | Number of elements in output |
+| Execution time | Time taken for algorithm execution |
+| Algorithm-specific complexity metrics | Custom metrics per algorithm type |
 
 #### Complexity Analysis
-- Total endpoints analyzed
-- Parameter counts and distributions
-- Constraint analysis (enum, pattern, bounded/unbounded)
-- Iteration domain counts
-- Coverage percentages
+
+| Metric | Description |
+|--------|-------------|
+| Total endpoints analyzed | Total number of API endpoints processed |
+| Parameter counts | Count of parameters per endpoint |
+| Parameter distributions | Distribution of parameters across endpoints |
+| Constraint analysis (enum) | Number of enum constraints |
+| Constraint analysis (pattern) | Number of pattern constraints |
+| Constraint analysis (bounded/unbounded) | Analysis of bounded vs unbounded parameters |
+| Iteration domain counts | Count of iteration domains for test generation |
+| Coverage percentages | Percentage of endpoints covered by tests |
 
 ### Report Structure
 
-Each algorithm report includes:
-1. **Algorithm Information**: Name, type, execution time
-2. **Input Analysis**: Complexity metrics for input data
-3. **Output Analysis**: Quality and complexity of output
-4. **Algorithm-Specific Metrics**: Custom metrics per algorithm
-5. **LLM Analysis** (if applicable): Token usage and prompt metrics
+Each algorithm report includes the following sections:
+
+| Section | Description |
+|---------|-------------|
+| **Algorithm Information** | Name, type, execution time |
+| **Input Analysis** | Complexity metrics for input data (size, structure, depth) |
+| **Output Analysis** | Quality and complexity of output (quality metrics, element count) |
+| **Algorithm-Specific Metrics** | Custom metrics per algorithm (e.g., endpoints processed, parameters extracted) |
+| **LLM Analysis** (if applicable) | Token usage, prompt metrics, response metrics, model information |
 
 ## ⚙️ Configuration
 
@@ -425,7 +472,7 @@ verbose: false
 
 | Variable | Description | Required | Overrides Config |
 |----------|-------------|----------|------------------|
-| `OPENAI_API_KEY` | OpenAI API key for LLM features | Yes | Yes |
+| `LLM_API_KEY` | LLM API key (supports multiple providers - auto-detected) | Yes | Yes |
 | `APP_ENV` | Environment name (development, production, testing) | No | Yes |
 | `LLM_MODEL` | LLM model to use | No | Yes |
 | `LLM_MAX_TOKENS` | Maximum response tokens | No | Yes |
@@ -445,7 +492,7 @@ verbose: false
 | CSV output directory | `output/<timestamp>-<filename>/` | Generated CSV files location |
 | Analytics directory | `output/<timestamp>-<filename>/analytics/` | Analytics files location |
 | BRD directory | `src/modules/brd/input_schema/` | BRD schema files location |
-| LLM model | `gpt-4` | OpenAI model to use |
+| LLM model | Auto-detected | LLM model (auto-detected from API key: Groq uses llama-3.1-70b-versatile, OpenAI uses gpt-4, Anthropic uses claude-3-sonnet, etc.) |
 | Max tokens | `3000` | Maximum response tokens |
 | Temperature | `0.7` | LLM temperature setting |
 
@@ -476,6 +523,22 @@ pytest tests/test_analyzer.py
 
 # Run specific test class
 pytest tests/test_llm_prompter.py::TestLLMPrompter
+
+# Run UI/UX tests
+pytest tests/unit/cli/test_cli_utils.py -v
+pytest tests/unit/cli/test_cli_utils.py::TestUserInputValidation -v
+pytest tests/unit/cli/test_cli_utils.py::TestInteractiveSelectionMenus -v
+pytest tests/unit/cli/test_cli_utils.py::TestProgressIndicators -v
+pytest tests/unit/cli/test_cli_utils.py::TestStatusMessages -v
+pytest tests/unit/cli/test_cli_utils.py::TestErrorHandlingRecovery -v
+
+# Run UI/UX BDD tests
+behave tests/features/ui_ux_*.feature
+
+# Run automated UI flow tests
+python tests/scripts/test_ui_flows.py                    # Run all UI flow tests
+python tests/scripts/test_ui_flows.py --test happy       # Run specific test
+python tests/scripts/test_ui_flows.py --timeout 600      # Custom timeout
 ```
 
 ### Test Coverage
@@ -491,6 +554,27 @@ The project includes comprehensive tests for:
 - ✅ BRD parsing and generation
 - ✅ Schema cross-referencing
 - ✅ Analytics and metrics collection
+- ✅ **UI/UX terminal interactions** (61 unit tests, 30+ BDD scenarios)
+
+### UI/UX Testing
+
+Comprehensive terminal interaction testing covering all user-facing components:
+
+| Category | Unit Tests | BDD Scenarios | Features Tested |
+|----------|------------|---------------|-----------------|
+| **User Input Validation** | 15 | 6 | • URL validation (valid/invalid formats, schemes)<br>• Coverage percentage validation (range, non-numeric)<br>• API key validation (format, length, characters)<br>• Empty input handling with defaults |
+| **Interactive Selection Menus** | 9 | 7 | • Menu display with numbered options<br>• Option selection and validation<br>• Invalid input handling (letters, out-of-range)<br>• Cancel functionality<br>• Empty list handling |
+| **Progress Indicators** | 7 | 5 | • Progress bar display with percentage and ETA<br>• Status messages in progress bars<br>• Chunk progress for LLM operations<br>• Completion handling |
+| **Status Messages** | 11 | 6 | • Info, success, warning, error messages<br>• Symbol visibility (ℹ, ✓, ⚠, ✗)<br>• Multi-line output formatting<br>• Status history tracking |
+| **Error Handling & Recovery** | 7 | 6 | • Network timeout handling<br>• Custom recovery options<br>• Keyboard interrupt (Ctrl+C)<br>• Missing dependency errors<br>• Default recovery options |
+
+**Test Statistics:**
+- **Total Unit Tests**: 61 tests
+- **Total BDD Scenarios**: 30+ scenarios
+- **CLI Utilities Coverage**: 89%
+- **Validators Coverage**: 81%
+
+See [UI/UX Testing Documentation](tests/docs/UI_UX_TESTING.md) for complete details.
 
 ### Test Files
 
@@ -504,6 +588,7 @@ The project includes comprehensive tests for:
 | `test_csv_generator.py` | CSV generation tests |
 | `test_brd_*.py` | BRD module tests |
 | `test_coverage_analyzer.py` | Coverage analysis tests |
+| `test_cli_utils.py` | **UI/UX terminal interaction tests (61 tests)** |
 
 ## 📤 Output Format
 
@@ -542,9 +627,9 @@ CSV files are saved in `output/<timestamp>-<filename>/` with format: `<filename>
 
 | Issue | Symptoms | Solutions |
 |-------|----------|-----------|
-| **Empty CSV Files** | CSV files contain only placeholders or are empty | 1. Verify `OPENAI_API_KEY` is set correctly in `.env`<br>2. Check network connectivity to OpenAI API<br>3. Verify schema has analyzable endpoints<br>4. Review console output for error messages |
+| **Empty CSV Files** | CSV files contain only placeholders or are empty | 1. Verify `LLM_API_KEY` is set correctly in `.env`<br>2. Check network connectivity to LLM API<br>3. Verify schema has analyzable endpoints<br>4. Review console output for error messages |
 | **Schema Validation Errors** | Warnings about missing fields or invalid structure | • Missing optional fields are normalized automatically<br>• Partial schemas may generate warnings but still work<br>• Check error messages for specific issues<br>• Verify schema matches OpenAPI/Swagger specification |
-| **LLM Generation Failures** | Rate limits, invalid API key, insufficient quota, empty endpoints, token limits | • Check API key validity in `.env` file<br>• Verify OpenAI account has credits<br>• Review token usage in analytics reports<br>• Consider using smaller schema subsets<br>• Wait and retry (automatic retry included) |
+| **LLM Generation Failures** | Rate limits, invalid API key, insufficient quota, empty endpoints, token limits | • Check API key validity in `.env` file (verify `LLM_API_KEY` is set)<br>• Verify your LLM provider account has credits<br>• Review token usage in analytics reports<br>• Consider using smaller schema subsets<br>• Wait and retry (automatic retry included) |
 | **BRD Parsing Issues** | BRD parsing fails or produces incomplete results | • Ensure document format is supported<br>• Install required dependencies (PyPDF2, python-docx)<br>• Check document structure and formatting<br>• Review LLM parsing logs in analytics |
 | **Token Limit Errors** | "context_length_exceeded" errors | • Tool automatically chunks large schemas<br>• If errors persist, schema may be extremely large<br>• Consider using `gpt-4-turbo` with larger context window<br>• Review chunk size settings |
 
@@ -553,7 +638,6 @@ CSV files are saved in `output/<timestamp>-<filename>/` with format: `<filename>
 ### Documentation
 
 - **BRD Schema Format**: `src/modules/brd/input_schema/README.md`
-- **Project Status**: `docs/PROJECT_STATUS.md`
 
 ### Dependencies
 
