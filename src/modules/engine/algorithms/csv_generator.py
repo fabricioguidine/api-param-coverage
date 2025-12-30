@@ -14,15 +14,17 @@ from datetime import datetime
 class CSVGenerator:
     """Generates CSV files from Gherkin test scenarios."""
     
-    def __init__(self, output_dir: str = "docs/output/csv"):
+    def __init__(self, output_dir: str = "docs/output/csv", run_timestamp: Optional[str] = None):
         """
         Initialize the CSV Generator.
         
         Args:
             output_dir: Directory where CSV files will be saved
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True)
+        self.run_timestamp = run_timestamp
     
     def parse_gherkin_to_csv_data(self, gherkin_content: str) -> List[Dict[str, Any]]:
         """
@@ -238,11 +240,13 @@ class CSVGenerator:
         if not data:
             raise ValueError("No data to write to CSV")
         
-        # Generate filename with timestamp prefix
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        # Clean filename to remove extension if present
-        clean_filename = filename.replace('.json', '').replace('.yaml', '').replace('.yml', '')
-        csv_filename = f"{timestamp}_{clean_filename}_scenarios.csv"
+        # Use run timestamp if provided, otherwise generate new one
+        if self.run_timestamp:
+            timestamp = self.run_timestamp
+        else:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Format: timestamp-scenarios.csv
+        csv_filename = f"{timestamp}-scenarios.csv"
         csv_path = self.output_dir / csv_filename
         
         # Determine fieldnames

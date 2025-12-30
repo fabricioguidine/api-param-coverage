@@ -14,19 +14,22 @@ import time
 class BRDValidator:
     """Validates BRD schemas against Swagger schemas."""
     
-    def __init__(self, analytics_dir: Optional[str] = None, validation_dir: Optional[str] = None):
+    def __init__(self, run_output_dir: Optional[Path] = None, run_timestamp: Optional[str] = None):
         """
         Initialize the BRD Validator.
         
         Args:
-            analytics_dir: Analytics directory (default: "output/analytics")
-                          Typically should be: <run_output_dir>/analytics/
-            validation_dir: Validation directory for validation reports (default: "output/validation")
-                           Typically should be: <run_output_dir>/validation/
+            run_output_dir: Run output directory where all files should be saved (required)
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
-        analytics_path = analytics_dir or "output/analytics"
-        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
-        self.validation_dir = Path(validation_dir) if validation_dir else Path("output/validation")
+        # For testing, allow None and use a temp directory
+        if run_output_dir is None:
+            import tempfile
+            run_output_dir = Path(tempfile.mkdtemp(prefix="test_output_"))
+        analytics_path = str(run_output_dir)
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=analytics_path, run_timestamp=run_timestamp)
+        self.run_output_dir = run_output_dir
+        self.run_timestamp = run_timestamp
     
     def validate_brd_against_swagger(
         self,
@@ -221,12 +224,17 @@ class BRDValidator:
             Path to the generated report file
         """
         if output_path is None:
-            from datetime import datetime
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_path = self.validation_dir / f"{timestamp}_brd_validation_report.txt"
-        
-        # Ensure parent directory exists
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+            from src.modules.utils.output_manager import OutputManager
+            output_manager = OutputManager()
+            # Use run timestamp if provided, otherwise generate new one
+            if self.run_timestamp:
+                timestamp = self.run_timestamp
+            else:
+                from datetime import datetime
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            # Format: timestamp-validation.txt using OutputManager
+            filename = output_manager.get_timestamped_filename(timestamp, "validation", "txt")
+            output_path = self.run_output_dir / filename
         
         lines = []
         lines.append("=" * 80)

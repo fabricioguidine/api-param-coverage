@@ -17,15 +17,24 @@ from ..analytics import MetricsCollector
 class CoverageAnalyzer:
     """Analyzes test coverage by comparing Gherkin scenarios with BRD requirements."""
     
-    def __init__(self, analytics_dir: Optional[str] = None):
+    def __init__(self, analytics_dir: Optional[str] = None, run_output_dir: Optional[Path] = None, run_timestamp: Optional[str] = None):
         """
         Initialize the Coverage Analyzer.
         
         Args:
-            analytics_dir: Analytics directory (default: "output/analytics")
+            analytics_dir: Analytics directory (deprecated, use run_output_dir)
+            run_output_dir: Run output directory where all files should be saved
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
-        analytics_path = analytics_dir or "output/analytics"
-        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path)
+        # Use run_output_dir if provided, otherwise fall back to analytics_dir or temp
+        if run_output_dir:
+            analytics_path = str(run_output_dir)
+        elif analytics_dir:
+            analytics_path = analytics_dir
+        else:
+            import tempfile
+            analytics_path = tempfile.mkdtemp(prefix="test_output_")
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=analytics_path, run_timestamp=run_timestamp)
     
     def analyze_coverage(
         self,
@@ -447,5 +456,6 @@ class CoverageAnalyzer:
         output_path.write_text("\n".join(lines), encoding='utf-8')
         
         return output_path
+
 
 

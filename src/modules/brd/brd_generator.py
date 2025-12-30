@@ -27,7 +27,7 @@ import time
 class BRDGenerator:
     """Generates BRD schemas from Swagger schemas using LLM."""
     
-    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", provider: str = "openai", analytics_dir: Optional[str] = None, reports_dir: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", provider: str = "openai", run_output_dir: Optional[Path] = None, run_timestamp: Optional[str] = None):
         """
         Initialize the BRD Generator.
         
@@ -35,17 +35,19 @@ class BRDGenerator:
             api_key: LLM API key
             model: LLM model to use
             provider: LLM provider ('openai', 'anthropic', 'google', 'azure')
-            analytics_dir: Analytics directory (default: "output/analytics")
-                          Typically should be: <run_output_dir>/analytics/
-            reports_dir: Reports directory (default: None, uses default from MetricsCollector)
-                        Typically should be: <run_output_dir>/reports/
+            run_output_dir: Run output directory where all files should be saved (required)
+            run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         """
         self.api_key = api_key
         self.model = model
         self.provider = provider
-        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider) if api_key else None
-        analytics_path = analytics_dir or "output/analytics"
-        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=reports_dir)
+        # For testing, allow None and use a temp directory
+        if run_output_dir is None:
+            import tempfile
+            run_output_dir = Path(tempfile.mkdtemp(prefix="test_output_"))
+        self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider, run_output_dir=run_output_dir, run_timestamp=run_timestamp) if api_key else None
+        analytics_path = str(run_output_dir)
+        self.metrics_collector = MetricsCollector(analytics_dir=analytics_path, reports_dir=analytics_path, run_timestamp=run_timestamp)
     
     def generate_brd_from_swagger(
         self,

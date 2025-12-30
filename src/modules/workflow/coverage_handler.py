@@ -4,6 +4,7 @@ Coverage Handler
 Handles coverage filtering logic for endpoints.
 """
 
+from pathlib import Path
 from typing import Dict, Any, Optional, List, Tuple
 from ..brd import BRDSchema
 from ..brd import SchemaCrossReference
@@ -77,7 +78,9 @@ def apply_coverage_filter(
 
 def apply_brd_filter(
     analysis_data: Dict[str, Any],
-    brd: BRDSchema
+    brd: BRDSchema,
+    run_output_dir: Optional[Path] = None,
+    run_timestamp: Optional[str] = None
 ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
     """
     Apply BRD-based filtering to endpoints.
@@ -85,11 +88,13 @@ def apply_brd_filter(
     Args:
         analysis_data: Schema analysis data
         brd: BRD schema to filter against
+        run_output_dir: Run output directory where all files should be saved
+        run_timestamp: Timestamp for file naming (format: YYYYMMDD_HHMMSS)
         
     Returns:
         Tuple of (filtered_analysis_data, coverage_report)
     """
-    cross_ref = SchemaCrossReference()
+    cross_ref = SchemaCrossReference(run_output_dir=run_output_dir, run_timestamp=run_timestamp)
     filtered_analysis_data = cross_ref.filter_endpoints_by_brd(analysis_data, brd)
     coverage_report = cross_ref.get_brd_coverage_report(analysis_data, brd)
     
