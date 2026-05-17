@@ -121,8 +121,9 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["B011", "S101"]
+"tests/**/*.py" = ["B011", "S101", "RUF001"]
 "__init__.py" = ["F401"]
+"src/modules/cli/cli_utils.py" = ["RUF001"]
 
 [tool.ruff.format]
 quote-style = "double"

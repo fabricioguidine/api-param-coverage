@@ -6,26 +6,21 @@ Reusable across BRDGenerator, BRDParser, and other components.
 """
 
 import json
-from pathlib import Path
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
 
-from .brd_schema import (
-    BRDSchema, BRDRequirement, BRDTestScenario,
-    RequirementPriority, RequirementStatus
-)
 from ..engine.llm import LLMPrompter
 from ..utils import extract_json_from_response
-from ..utils.constants import SUPPORTED_BRD_FORMATS
+from .brd_schema import BRDRequirement, BRDSchema, BRDTestScenario, RequirementPriority, RequirementStatus
 
 
 class BRDTransformer:
     """Shared transformer for converting various formats to BRD schema."""
-    
+
     def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4", provider: str = "openai"):
         """
         Initialize the BRD Transformer.
-        
+
         Args:
             api_key: LLM API key
             model: LLM model to use
@@ -35,21 +30,18 @@ class BRDTransformer:
         self.model = model
         self.provider = provider
         self.llm_prompter = LLMPrompter(model=model, api_key=api_key, provider=provider) if api_key else None
-    
+
     def transform_to_schema(
-        self,
-        source_data: Dict[str, Any],
-        source_type: str = "swagger",
-        api_info: Optional[Dict[str, Any]] = None
+        self, source_data: Dict[str, Any], source_type: str = "swagger", api_info: Optional[Dict[str, Any]] = None
     ) -> Optional[BRDSchema]:
         """
         Transform source data to BRD schema.
-        
+
         Args:
             source_data: Source data (Swagger analysis, document content, etc.)
             source_type: Type of source ('swagger', 'document', 'intermediate_brd')
             api_info: Optional API information for context
-            
+
         Returns:
             BRDSchema object, or None if transformation fails
         """
@@ -62,11 +54,9 @@ class BRDTransformer:
         else:
             print(f"✗ Error: Unknown source type: {source_type}")
             return None
-    
+
     def _transform_swagger_to_schema(
-        self,
-        swagger_data: Dict[str, Any],
-        api_info: Optional[Dict[str, Any]] = None
+        self, swagger_data: Dict[str, Any], api_info: Optional[Dict[str, Any]] = None
     ) -> Optional[BRDSchema]:
         """
         Transform Swagger analysis data to BRD schema.
@@ -77,173 +67,158 @@ class BRDTransformer:
         if not self.llm_prompter:
             print("✗ Error: LLM API key required for Swagger transformation")
             return None
-        
+
         # Step 1: Transform Swagger to intermediate BRD
         intermediate_brd = self._swagger_to_intermediate_brd(swagger_data, api_info)
         if not intermediate_brd:
             return None
-        
+
         # Step 2: Transform intermediate BRD to schema
         return self._transform_intermediate_brd_to_schema(intermediate_brd)
-    
+
     def _swagger_to_intermediate_brd(
-        self,
-        swagger_data: Dict[str, Any],
-        api_info: Optional[Dict[str, Any]] = None
+        self, swagger_data: Dict[str, Any], api_info: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict[str, Any]]:
         """Transform Swagger data to intermediate BRD format."""
         # This creates a business requirements document from Swagger
         # It's less structured than the final schema
         prompt = self._create_swagger_to_brd_prompt(swagger_data, api_info)
         response = self.llm_prompter.send_prompt(prompt)
-        
+
         if not response:
             print("✗ Error: No response from LLM for BRD generation")
             return None
-        
+
         # Check if response contains Gherkin keywords (common mistake)
-        if any(keyword in response.lower() for keyword in ['feature:', 'scenario:', 'given', 'when', 'then']):
+        if any(keyword in response.lower() for keyword in ["feature:", "scenario:", "given", "when", "then"]):
             print("⚠ Warning: LLM returned Gherkin instead of JSON. This indicates a prompt issue.")
             print(f"   Response preview: {response[:200]}...")
             return None
-        
+
         # Extract JSON from response
         brd_json = extract_json_from_response(response)
         if not brd_json:
             print("⚠ Warning: Could not extract JSON from LLM response")
             print(f"   Response preview: {response[:200]}...")
             return None
-        
+
         # Validate JSON structure
-        if not brd_json.strip().startswith('{') or not brd_json.strip().endswith('}'):
+        if not brd_json.strip().startswith("{") or not brd_json.strip().endswith("}"):
             print("⚠ Warning: Extracted text does not appear to be valid JSON")
             print(f"   Preview: {brd_json[:200]}...")
             return None
-        
+
         try:
             parsed = json.loads(brd_json)
             # Validate it has the expected structure
-            if not isinstance(parsed, dict) or 'requirements' not in parsed:
+            if not isinstance(parsed, dict) or "requirements" not in parsed:
                 print("⚠ Warning: JSON does not have expected BRD structure (missing 'requirements' key)")
                 return None
             return parsed
         except json.JSONDecodeError as e:
-            print(f"⚠ Warning: Failed to parse intermediate BRD JSON: {str(e)}")
+            print(f"⚠ Warning: Failed to parse intermediate BRD JSON: {e!s}")
             print(f"   JSON preview: {brd_json[:200]}...")
             return None
-    
-    def _transform_intermediate_brd_to_schema(
-        self,
-        intermediate_brd: Dict[str, Any]
-    ) -> Optional[BRDSchema]:
+
+    def _transform_intermediate_brd_to_schema(self, intermediate_brd: Dict[str, Any]) -> Optional[BRDSchema]:
         """Transform intermediate BRD to structured BRD schema."""
         if not self.llm_prompter:
             print("✗ Error: LLM API key required for BRD transformation")
             return None
-        
+
         # Use LLM to convert intermediate BRD to structured schema
         prompt = self._create_brd_to_schema_prompt(intermediate_brd)
         response = self.llm_prompter.send_prompt(prompt)
-        
+
         if not response:
             print("✗ Error: No response from LLM for BRD schema conversion")
             return None
-        
+
         # Check if response contains Gherkin keywords
-        if any(keyword in response.lower() for keyword in ['feature:', 'scenario:', 'given', 'when', 'then']):
+        if any(keyword in response.lower() for keyword in ["feature:", "scenario:", "given", "when", "then"]):
             print("⚠ Warning: LLM returned Gherkin instead of JSON for schema conversion")
             print(f"   Response preview: {response[:200]}...")
             return None
-        
+
         brd_json = extract_json_from_response(response)
         if not brd_json:
             print("⚠ Warning: Could not extract JSON from LLM response for schema conversion")
             print(f"   Response preview: {response[:200]}...")
             return None
-        
+
         return self._parse_brd_json_to_schema(brd_json)
-    
-    def _transform_document_to_schema(
-        self,
-        document_data: Dict[str, Any]
-    ) -> Optional[BRDSchema]:
+
+    def _transform_document_to_schema(self, document_data: Dict[str, Any]) -> Optional[BRDSchema]:
         """Transform document content to BRD schema."""
         if not self.llm_prompter:
             print("✗ Error: LLM API key required for document transformation")
             return None
-        
+
         # Extract content from document_data
-        content = document_data.get('content', '')
+        content = document_data.get("content", "")
         if not content:
             print("✗ Error: No content found in document data")
             return None
-        
+
         # First transform document to intermediate BRD
         intermediate_brd = self._document_to_intermediate_brd(content)
         if not intermediate_brd:
             return None
-        
+
         # Then transform to schema
         return self._transform_intermediate_brd_to_schema(intermediate_brd)
-    
-    def _document_to_intermediate_brd(
-        self,
-        document_content: str
-    ) -> Optional[Dict[str, Any]]:
+
+    def _document_to_intermediate_brd(self, document_content: str) -> Optional[Dict[str, Any]]:
         """Transform document content to intermediate BRD."""
         prompt = self._create_document_to_brd_prompt(document_content)
         response = self.llm_prompter.send_prompt(prompt)
-        
+
         if not response:
             return None
-        
+
         brd_json = extract_json_from_response(response)
         if not brd_json:
             return None
-        
+
         try:
             return json.loads(brd_json)
         except json.JSONDecodeError:
             print("⚠ Warning: Failed to parse document BRD JSON")
             return None
-    
-    def _create_swagger_to_brd_prompt(
-        self,
-        swagger_data: Dict[str, Any],
-        api_info: Optional[Dict[str, Any]] = None
-    ) -> str:
+
+    def _create_swagger_to_brd_prompt(self, swagger_data: Dict[str, Any], api_info: Optional[Dict[str, Any]] = None) -> str:
         """Create prompt for Swagger → Intermediate BRD transformation."""
         # Extract test_plan if present (from BRDGenerator)
-        test_plan = swagger_data.get('test_plan', {})
-        processed_data = swagger_data.get('processed_data', {})
-        analysis_data = swagger_data.get('analysis_data', {})
-        
+        test_plan = swagger_data.get("test_plan", {})
+        processed_data = swagger_data.get("processed_data", {})
+        swagger_data.get("analysis_data", {})
+
         # Use api_info from processed_data if not provided
         if not api_info:
-            api_info = processed_data.get('info', {})
-        
+            api_info = processed_data.get("info", {})
+
         # Build endpoint summary from test_plan if available
         endpoint_summary = []
-        if test_plan and 'endpoint_analysis' in test_plan:
-            for endpoint_info in test_plan['endpoint_analysis']:
-                path = endpoint_info.get('path', '')
-                method = endpoint_info.get('method', '')
-                priority = endpoint_info.get('suggested_priority', 'medium')
+        if test_plan and "endpoint_analysis" in test_plan:
+            for endpoint_info in test_plan["endpoint_analysis"]:
+                path = endpoint_info.get("path", "")
+                method = endpoint_info.get("method", "")
+                priority = endpoint_info.get("suggested_priority", "medium")
                 endpoint_summary.append(f"- {method} {path} (priority: {priority})")
-        
+
         return f"""You are a business analyst creating a Business Requirements Document (BRD) in JSON format.
 
 TASK: Transform the Swagger/OpenAPI schema analysis below into a BRD JSON document.
 
 API Information:
-- Name: {api_info.get('title', 'Unknown')}
-- Version: {api_info.get('version', 'Unknown')}
+- Name: {api_info.get("title", "Unknown")}
+- Version: {api_info.get("version", "Unknown")}
 
-Selected Endpoints ({test_plan.get('coverage_percentage', 100)}% coverage):
-{chr(10).join(endpoint_summary) if endpoint_summary else 'All endpoints'}
+Selected Endpoints ({test_plan.get("coverage_percentage", 100)}% coverage):
+{chr(10).join(endpoint_summary) if endpoint_summary else "All endpoints"}
 
 Test Plan Heuristic:
-{json.dumps(test_plan, indent=2) if test_plan else 'N/A'}
+{json.dumps(test_plan, indent=2) if test_plan else "N/A"}
 
 REQUIREMENTS:
 Create a BRD that captures business requirements for testing this API.
@@ -278,11 +253,8 @@ Required JSON structure:
 
 Start your response with {{ and end with }}. No other text before or after.
 """
-    
-    def _create_brd_to_schema_prompt(
-        self,
-        intermediate_brd: Dict[str, Any]
-    ) -> str:
+
+    def _create_brd_to_schema_prompt(self, intermediate_brd: Dict[str, Any]) -> str:
         """Create prompt for Intermediate BRD → Schema transformation."""
         return f"""Convert the following Business Requirements Document into a structured BRD schema.
 
@@ -317,17 +289,14 @@ Convert it to the following structured format:
 IMPORTANT: Return ONLY valid JSON. Do NOT return Gherkin syntax, markdown, or any other format.
 Return ONLY the JSON object, no additional text:
 """
-    
-    def _create_document_to_brd_prompt(
-        self,
-        document_content: str
-    ) -> str:
+
+    def _create_document_to_brd_prompt(self, document_content: str) -> str:
         """Create prompt for Document → Intermediate BRD transformation."""
         # Truncate if too long
         max_chars = 15000
         if len(document_content) > max_chars:
             document_content = document_content[:max_chars] + "\n\n[... truncated ...]"
-        
+
         return f"""Extract business requirements from the following document and create a Business Requirements Document (BRD).
 
 Document Content:
@@ -342,7 +311,7 @@ Extract:
 
 Return as JSON with requirements and test scenarios.
 """
-    
+
     def _parse_brd_json_to_schema(self, brd_json: str) -> Optional[BRDSchema]:
         """Parse BRD JSON string into BRDSchema object."""
         try:
@@ -350,62 +319,61 @@ Return as JSON with requirements and test scenarios.
         except json.JSONDecodeError as e:
             print(f"✗ Error parsing BRD JSON: {e}")
             return None
-        
+
         # Parse requirements
         requirements = []
-        for req_data in data.get('requirements', []):
+        for req_data in data.get("requirements", []):
             test_scenarios = []
-            for scenario_data in req_data.get('test_scenarios', []):
+            for scenario_data in req_data.get("test_scenarios", []):
                 try:
-                    priority = RequirementPriority(scenario_data.get('priority', 'medium').lower())
+                    priority = RequirementPriority(scenario_data.get("priority", "medium").lower())
                 except ValueError:
                     priority = RequirementPriority.MEDIUM
-                
+
                 scenario = BRDTestScenario(
-                    scenario_id=scenario_data.get('scenario_id', ''),
-                    scenario_name=scenario_data.get('scenario_name', ''),
-                    description=scenario_data.get('description', ''),
-                    test_steps=scenario_data.get('test_steps', []),
-                    expected_result=scenario_data.get('expected_result', ''),
+                    scenario_id=scenario_data.get("scenario_id", ""),
+                    scenario_name=scenario_data.get("scenario_name", ""),
+                    description=scenario_data.get("description", ""),
+                    test_steps=scenario_data.get("test_steps", []),
+                    expected_result=scenario_data.get("expected_result", ""),
                     priority=priority,
-                    tags=scenario_data.get('tags', [])
+                    tags=scenario_data.get("tags", []),
                 )
                 test_scenarios.append(scenario)
-            
+
             try:
-                req_priority = RequirementPriority(req_data.get('priority', 'medium').lower())
+                req_priority = RequirementPriority(req_data.get("priority", "medium").lower())
             except ValueError:
                 req_priority = RequirementPriority.MEDIUM
-            
+
             try:
-                req_status = RequirementStatus(req_data.get('status', 'pending').lower())
+                req_status = RequirementStatus(req_data.get("status", "pending").lower())
             except ValueError:
                 req_status = RequirementStatus.PENDING
-            
+
             requirement = BRDRequirement(
-                requirement_id=req_data.get('requirement_id', ''),
-                title=req_data.get('title', ''),
-                description=req_data.get('description', ''),
-                endpoint_path=req_data.get('endpoint_path', ''),
-                endpoint_method=req_data.get('endpoint_method', ''),
+                requirement_id=req_data.get("requirement_id", ""),
+                title=req_data.get("title", ""),
+                description=req_data.get("description", ""),
+                endpoint_path=req_data.get("endpoint_path", ""),
+                endpoint_method=req_data.get("endpoint_method", ""),
                 priority=req_priority,
                 status=req_status,
                 test_scenarios=test_scenarios,
-                acceptance_criteria=req_data.get('acceptance_criteria', []),
-                related_endpoints=req_data.get('related_endpoints', [])
+                acceptance_criteria=req_data.get("acceptance_criteria", []),
+                related_endpoints=req_data.get("related_endpoints", []),
             )
             requirements.append(requirement)
-        
-        brd = BRDSchema(
-            brd_id=data.get('brd_id', 'BRD-001'),
-            title=data.get('title', 'BRD Document'),
-            description=data.get('description', ''),
-            api_name=data.get('api_name', 'Unknown'),
-            api_version=data.get('api_version', ''),
-            created_date=data.get('created_date', datetime.now().isoformat()),
-            requirements=requirements,
-            metadata=data.get('metadata', {})
-        )
-        
-        return brd
 
+        brd = BRDSchema(
+            brd_id=data.get("brd_id", "BRD-001"),
+            title=data.get("title", "BRD Document"),
+            description=data.get("description", ""),
+            api_name=data.get("api_name", "Unknown"),
+            api_version=data.get("api_version", ""),
+            created_date=data.get("created_date", datetime.now().isoformat()),
+            requirements=requirements,
+            metadata=data.get("metadata", {}),
+        )
+
+        return brd

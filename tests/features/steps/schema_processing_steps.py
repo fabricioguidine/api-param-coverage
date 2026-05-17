@@ -2,89 +2,68 @@
 Step definitions for schema processing feature.
 """
 
-from behave import given, when, then
-from unittest.mock import Mock, patch
-from pathlib import Path
+import json
 import sys
 import tempfile
-import json
+from pathlib import Path
+from unittest.mock import Mock, patch
+
+from behave import given, then, when
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
 
+from src.modules.engine import SchemaAnalyzer, SchemaProcessor
 from src.modules.swagger.schema_fetcher import SchemaFetcher
-from src.modules.engine import SchemaProcessor, SchemaAnalyzer
 
 
-@given('I have a Swagger 2.0 schema URL')
+@given("I have a Swagger 2.0 schema URL")
 def step_swagger_2_url(context):
     """Set up Swagger 2.0 URL."""
     context.schema_url = "https://example.com/swagger.json"
     context.expected_format = "Swagger 2.0"
 
 
-@given('I have an OpenAPI 3.0 schema URL')
+@given("I have an OpenAPI 3.0 schema URL")
 def step_openapi_3_url(context):
     """Set up OpenAPI 3.0 URL."""
     context.schema_url = "https://example.com/openapi.json"
     context.expected_format = "OpenAPI 3.0"
 
 
-@given('I have a downloaded schema file')
+@given("I have a downloaded schema file")
 def step_downloaded_schema(context):
     """Set up downloaded schema."""
-    import tempfile
-    import json
     # Create a real temp file for testing
     temp_dir = tempfile.mkdtemp()
     schema_path = Path(temp_dir) / "test_schema.json"
-    context.schema_data = {
-        'swagger': '2.0',
-        'info': {'title': 'Test API'},
-        'paths': {
-            '/test': {'get': {}}
-        }
-    }
-    with open(schema_path, 'w') as f:
+    context.schema_data = {"swagger": "2.0", "info": {"title": "Test API"}, "paths": {"/test": {"get": {}}}}
+    with open(schema_path, "w") as f:
         json.dump(context.schema_data, f)
     context.schema_path = str(schema_path)
 
 
-@given('I have a processed schema')
+@given("I have a processed schema")
 def step_processed_schema(context):
     """Set up processed schema."""
-    context.processed_data = {
-        'info': {'title': 'Test API'},
-        'paths_count': 1,
-        'paths': {
-            '/test': {'get': {}}
-        }
-    }
+    context.processed_data = {"info": {"title": "Test API"}, "paths_count": 1, "paths": {"/test": {"get": {}}}}
 
 
-@when('I download the schema for processing')
+@when("I download the schema for processing")
 def step_download_schema(context):
     """Download the schema."""
-    with patch('src.modules.swagger.schema_fetcher.requests.get') as mock_get:
+    with patch("src.modules.swagger.schema_fetcher.requests.get") as mock_get:
         mock_response = Mock()
         if context.expected_format == "Swagger 2.0":
-            mock_response.json.return_value = {
-                'swagger': '2.0',
-                'info': {'title': 'Test API'},
-                'paths': {}
-            }
+            mock_response.json.return_value = {"swagger": "2.0", "info": {"title": "Test API"}, "paths": {}}
         else:
-            mock_response.json.return_value = {
-                'openapi': '3.0.0',
-                'info': {'title': 'Test API'},
-                'paths': {}
-            }
+            mock_response.json.return_value = {"openapi": "3.0.0", "info": {"title": "Test API"}, "paths": {}}
         mock_response.status_code = 200
         mock_get.return_value = mock_response
         fetcher = SchemaFetcher()
         context.schema_path = fetcher.download_and_save(context.schema_url, "json")
 
 
-@when('I process the schema')
+@when("I process the schema")
 def step_process_schema(context):
     """Process the schema."""
     # Extract the directory from the schema path (could be temp dir or test dir)
@@ -93,34 +72,29 @@ def step_process_schema(context):
     context.processed_data = processor.process_schema_file(Path(context.schema_path).name)
 
 
-@when('I analyze the schema')
+@when("I analyze the schema")
 def step_analyze_schema(context):
     """Analyze the schema."""
     # Ensure schema_path exists
-    if not hasattr(context, 'schema_path') or context.schema_path is None:
+    if not hasattr(context, "schema_path") or context.schema_path is None:
         # Create a temporary schema file if it doesn't exist
-        import tempfile
         import json
+        import tempfile
+
         temp_dir = tempfile.mkdtemp()
         schema_path = Path(temp_dir) / "test_schema.json"
-        schema_data = {
-            'swagger': '2.0',
-            'info': {'title': 'Test API'},
-            'paths': {
-                '/test': {'get': {}}
-            }
-        }
-        with open(schema_path, 'w') as f:
+        schema_data = {"swagger": "2.0", "info": {"title": "Test API"}, "paths": {"/test": {"get": {}}}}
+        with open(schema_path, "w") as f:
             json.dump(schema_data, f)
         context.schema_path = str(schema_path)
-    
+
     # Extract the directory from the schema path (could be temp dir or test dir)
     schema_dir = str(Path(context.schema_path).parent)
     analyzer = SchemaAnalyzer(schemas_dir=schema_dir)
     context.analysis_data = analyzer.analyze_schema_file(Path(context.schema_path).name)
 
 
-@then('the schema should be downloaded successfully')
+@then("the schema should be downloaded successfully")
 def step_schema_downloaded(context):
     """Verify schema downloaded."""
     assert context.schema_path is not None
@@ -133,52 +107,51 @@ def step_format_detected(context, format):
     assert context.expected_format == format
 
 
-@then('the schema should be saved to the schemas directory')
+@then("the schema should be saved to the schemas directory")
 def step_schema_saved(context):
     """Verify schema saved."""
     assert context.schema_path is not None
     assert Path(context.schema_path).exists() or "schemas" in str(context.schema_path)
 
 
-@then('the schema should be processed successfully')
+@then("the schema should be processed successfully")
 def step_schema_processed_successfully(context):
     """Verify schema was processed successfully."""
     assert context.processed_data is not None
-    assert 'paths' in context.processed_data or 'paths_count' in context.processed_data
+    assert "paths" in context.processed_data or "paths_count" in context.processed_data
 
 
-@then('endpoints should be extracted')
+@then("endpoints should be extracted")
 def step_endpoints_extracted(context):
     """Verify endpoints extracted."""
     assert context.processed_data is not None
-    assert 'paths' in context.processed_data or 'paths_count' in context.processed_data
+    assert "paths" in context.processed_data or "paths_count" in context.processed_data
 
 
-@then('endpoint count should be greater than zero')
+@then("endpoint count should be greater than zero")
 def step_endpoint_count(context):
     """Verify endpoint count."""
-    if 'paths_count' in context.processed_data:
-        assert context.processed_data['paths_count'] > 0
-    elif 'paths' in context.processed_data:
-        assert len(context.processed_data['paths']) > 0
+    if "paths_count" in context.processed_data:
+        assert context.processed_data["paths_count"] > 0
+    elif "paths" in context.processed_data:
+        assert len(context.processed_data["paths"]) > 0
 
 
-@then('the analysis should complete successfully')
+@then("the analysis should complete successfully")
 def step_analysis_complete(context):
     """Verify analysis complete."""
     assert context.analysis_data is not None
 
 
-@then('complexity metrics should be calculated')
+@then("complexity metrics should be calculated")
 def step_complexity_calculated(context):
     """Verify complexity metrics."""
     assert context.analysis_data is not None
     # Complexity metrics are part of analysis_data
 
 
-@then('parameter information should be extracted')
+@then("parameter information should be extracted")
 def step_parameters_extracted(context):
     """Verify parameters extracted."""
     assert context.analysis_data is not None
-    assert 'endpoints' in context.analysis_data
-
+    assert "endpoints" in context.analysis_data

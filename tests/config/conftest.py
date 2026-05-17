@@ -12,6 +12,4 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Import all fixtures from main conftest
-from conftest import *  # noqa: F401, F403
-
-
+from conftest import *  # noqa: F403

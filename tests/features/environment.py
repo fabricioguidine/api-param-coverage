@@ -32,4 +32,3 @@ def after_scenario(context, scenario):
     """Clean up after each scenario."""
     # Clean up any temporary files created during scenario
     pass
-
