@@ -12,7 +12,7 @@ selenium==4.15.0
 
 # Code quality
 black==23.12.1
-flake8==6.1.0
+flake8==7.3.0
 flake8-docstrings==1.7.0
 isort==5.13.2
 mypy==1.7.1
