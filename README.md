@@ -1,12 +1,16 @@
 # API Parameter Coverage & Test Scenario Generator
 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+[![CI](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml/badge.svg)](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/fabricioguidine/api-param-coverage/branch/main/graph/badge.svg)](https://codecov.io/gh/fabricioguidine/api-param-coverage)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://pre-commit.com/)
 ![Tests](https://img.shields.io/badge/tests-224%20tests-blue.svg)
 ![Coverage](https://img.shields.io/badge/coverage-80%25+-green.svg)
 ![Swagger](https://img.shields.io/badge/Swagger-2.0-green.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
-![Type Checking](https://img.shields.io/badge/type%20checking-mypy-blue.svg)
-![Linting](https://img.shields.io/badge/linting-flake8-yellow.svg)
 
 A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger schemas using LLM-powered analysis and Business Requirement Document (BRD) integration. The tool automatically analyzes API schemas, cross-references them with business requirements, and generates comprehensive Gherkin test scenarios with detailed analytics.
 

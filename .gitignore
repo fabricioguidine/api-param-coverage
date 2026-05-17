@@ -20,12 +20,19 @@ wheels/
 .installed.cfg
 *.egg
 
-# Pytest
+# Pytest / Coverage
 .pytest_cache/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
 *.cover
 .hypothesis/
+
+# Linter / type checker caches
+.ruff_cache/
+.mypy_cache/
+.tox/
 
 # Virtual environments
 venv/
@@ -86,6 +93,10 @@ src/modules/brd/input_schema/*.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Agent/AI context (must not be committed)
+CLAUDE.md
+.claude/
 
 # Logs
 *.log
