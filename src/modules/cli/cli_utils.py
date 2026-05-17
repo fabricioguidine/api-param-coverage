@@ -46,7 +46,7 @@ class ProgressBar:
         bar = "=" * filled + "-" * (self.width - filled)
 
         elapsed = time.time() - self.start_time
-        if self.current > 0:
+        if self.current > 0 and elapsed > 0:
             rate = self.current / elapsed
             eta = (self.total - self.current) / rate if rate > 0 else 0
             eta_str = f"ETA: {eta:.1f}s"
