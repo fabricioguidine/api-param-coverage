@@ -124,9 +124,7 @@ def test_coverage_analyzer_detects_gaps(tmp_path):
     analysis = _analysis_data()
 
     # Only the GET requirement has a scenario; POST is left uncovered.
-    gherkin = (
-        "Feature: Users\n\n" "  Scenario: List users\n" '    When I send a GET request to "/users"\n' "    Then I get 200\n"
-    )
+    gherkin = 'Feature: Users\n\n  Scenario: List users\n    When I send a GET request to "/users"\n    Then I get 200\n'
 
     analyzer = CoverageAnalyzer(run_output_dir=tmp_path, run_timestamp="20260101_000000")
     report = analyzer.analyze_coverage(gherkin, brd, analysis)
