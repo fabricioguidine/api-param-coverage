@@ -2,14 +2,7 @@
 
 <img src=".github/assets/banner.svg" alt="api-param-coverage" width="100%">
 
-[![CI](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml/badge.svg)](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/fabricioguidine/api-param-coverage/branch/main/graph/badge.svg)](https://codecov.io/gh/fabricioguidine/api-param-coverage)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://pre-commit.com/)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#)
+[![CI](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml/badge.svg)](https://github.com/fabricioguidine/api-param-coverage/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/fabricioguidine/api-param-coverage/branch/main/graph/badge.svg)](https://codecov.io/gh/fabricioguidine/api-param-coverage) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/) [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://pre-commit.com/) [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)](#)
 
 </div>
 
@@ -339,4 +332,4 @@ api-param-coverage/
 
 ## License
 
-[MIT](LICENSE) © 2026 fabricioguidine
+[MIT](LICENSE)
