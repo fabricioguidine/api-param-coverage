@@ -54,7 +54,8 @@ A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger s
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.9 or higher (tested on 3.9–3.13)
+- Runs on Linux, macOS, and Windows
 - LLM API key (supports OpenAI, Groq, Anthropic, Google, Azure - auto-detected from key format)
 - Internet connection (for schema downloading)
 
@@ -67,14 +68,24 @@ A comprehensive Python tool for generating test scenarios from OpenAPI/Swagger s
    ```
 
 2. **Create a virtual environment**
+
+   Linux / macOS:
    ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   python3 -m venv .venv
+   source .venv/bin/activate
+   ```
+
+   Windows (PowerShell):
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\Activate.ps1
    ```
 
 3. **Install dependencies**
    ```bash
    pip install -r requirements.txt
+   # For development (tests, linters, type checking):
+   pip install -r requirements-dev.txt
    ```
 
 4. **Set up environment variables**
@@ -510,6 +521,12 @@ verbose: false
 
 ## 🧪 Testing
 
+The suite is hermetic and cross-platform: it uses synthetic OpenAPI/Swagger
+fixtures, writes only to pytest `tmp_path`, mocks the network, and never calls a
+live LLM. The CI workflow runs it on Linux, macOS, and Windows across Python
+3.9–3.13. Tests requiring network/LLM are marked and excluded by default in CI
+via `-m "not llm and not network and not slow and not performance"`.
+
 ### Running Tests
 
 ```bash
@@ -521,6 +538,12 @@ pytest -v
 
 # Run with coverage report
 pytest --cov=src --cov-report=html
+
+# Run only the hermetic, CI-equivalent selection
+pytest -m "not llm and not network and not slow and not performance"
+
+# Run the end-to-end pipeline suite (process -> analyze -> coverage -> CSV)
+pytest tests/e2e -v
 
 # Run specific test file
 pytest tests/test_analyzer.py
@@ -541,6 +564,18 @@ behave tests/features/ui_ux_*.feature
 
 # Run automated UI flow tests
 ```
+
+### Cross-Platform Compatibility
+
+The tool and its tests run identically on Linux, macOS, and Windows:
+
+- All filesystem paths are built with `pathlib`; no hardcoded separators or
+  `/tmp` / drive-letter paths. Run/output directories are created on demand.
+- Every text file is opened with `encoding="utf-8"`.
+- `main.py` guards console output by calling `sys.stdout/sys.stderr.reconfigure(encoding="utf-8")`
+  when available, so the Unicode status glyphs (`✓`, `⚠`, `→`, …) do not crash a
+  non-UTF-8 Windows console.
+- Schema downloads use OS-managed temporary directories (`tempfile`).
 
 ### Test Coverage
 

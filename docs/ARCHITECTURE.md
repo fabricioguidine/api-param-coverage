@@ -436,6 +436,37 @@ Extend `MetricsCollector` to track additional metrics.
 3. **File Paths**: User-provided paths are validated
 4. **Error Messages**: Don't expose sensitive information in error messages
 
+## Testing Architecture
+
+The test suite under `tests/` is layered and hermetic:
+
+| Layer | Location | Exercises |
+|-------|----------|-----------|
+| Unit | `tests/unit/` | Individual classes (analyzer, processor, validators, CLI, fetcher) in isolation |
+| Integration | `tests/integration/` | Multi-module pipelines (BRD workflow, processing pipeline) |
+| End-to-end | `tests/e2e/` | The real public pipeline `fetch → process → analyze → coverage filter → CSV`, and BRD cross-reference / `CoverageAnalyzer`, asserting the actual computed coverage numbers and CSV artifacts |
+| Security | `tests/security/` | Input validation hardening |
+| BDD | `tests/features/` | Behave feature specs for UI/UX flows |
+
+End-to-end tests use synthetic OpenAPI/Swagger fixtures, write only to pytest
+`tmp_path`, and patch `src.modules.swagger.schema_fetcher.requests.get` so no
+live HTTP or LLM call is ever made. This makes them deterministic and safe in CI.
+
+## Cross-Platform Architecture
+
+The codebase targets Linux, macOS, and Windows on Python 3.9–3.13:
+
+- **Paths**: all path construction goes through `pathlib.Path`; directories are
+  created with `mkdir(parents=True, exist_ok=True)`. Schema downloads land in
+  OS-managed temporary directories via `tempfile.mkdtemp`.
+- **Encoding**: every text file is opened with `encoding="utf-8"`; `main.py`
+  reconfigures `sys.stdout`/`sys.stderr` to UTF-8 when the stream supports it so
+  Unicode status glyphs never raise `UnicodeEncodeError` on a cp1252 Windows
+  console.
+- **CI matrix**: `.github/workflows/ci.yml` runs the test job across
+  `{ubuntu, macos, windows} × {3.9, 3.10, 3.11, 3.12, 3.13}` with
+  `fail-fast: false`, plus separate ruff lint, mypy, and bandit jobs.
+
 ## Future Enhancements
 
 1. **Plugin System**: Allow plugins for custom formats and providers

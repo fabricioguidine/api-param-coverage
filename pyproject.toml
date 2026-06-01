@@ -21,7 +21,7 @@ dependencies = [
 [project.optional-dependencies]
 docs = ["PyPDF2>=3.0.1", "python-docx>=1.1.0"]
 dev = [
-    "pytest>=7.4.3",
+    "pytest>=8.0",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.12.0",
     "behave>=1.2.6",
@@ -48,7 +48,7 @@ profile = "black"
 line_length = 127
 
 [tool.pytest.ini_options]
-minversion = "7.0"
+minversion = "8.0"
 testpaths = ["tests"]
 addopts = [
     "-ra",

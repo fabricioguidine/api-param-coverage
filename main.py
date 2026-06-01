@@ -14,6 +14,7 @@ Orchestrates the full workflow:
 """
 
 import shutil
+import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path
@@ -42,6 +43,13 @@ from src.modules.utils.constants import (
     MIN_COVERAGE_PERCENTAGE,
 )
 from src.modules.workflow import apply_brd_filter, apply_coverage_filter
+
+# Ensure Unicode glyphs in console output do not crash on non-UTF-8 terminals
+# (notably the default Windows console using cp1252).
+for _stream in (sys.stdout, sys.stderr):
+    reconfigure = getattr(_stream, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(encoding="utf-8")
 
 # Load environment variables from .env file
 load_dotenv()
